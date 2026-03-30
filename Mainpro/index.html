@@ -1,0 +1,3204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEGIT CLUB</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.auth-tab.active{background:var(--accent)!important;color:#fff!important;}
+.auth-form{display:block;}.auth-form:not(.active){display:none;}
+.wingo-tabs{display:flex;gap:6px;padding:12px 20px 0;overflow-x:auto;scrollbar-width:none;}
+.wingo-tabs::-webkit-scrollbar{display:none;}
+.wingo-tab{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer;border:1px solid rgba(255,80,130,0.3);background:rgba(255,80,130,0.08);color:rgba(255,150,180,0.7);transition:all 0.2s;}
+.wingo-tab.active{background:rgba(255,80,130,0.25);border-color:rgba(255,80,130,0.6);color:#ff6b9d;}
+.wg-home-grid{padding:0 16px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.wg-card{border-radius:14px;padding:14px 16px;cursor:pointer;border:1px solid rgba(255,80,130,0.2);background:linear-gradient(135deg,#1a0028,#2a003a);transition:transform 0.18s,box-shadow 0.18s;position:relative;overflow:hidden;}
+.wg-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(180,0,100,0.2);}
+.wg-card-label{font-size:10px;font-weight:800;color:rgba(255,150,180,0.7);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.wg-card-name{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:6px;}
+.wg-card-timer{font-family:'Rajdhani',sans-serif;font-size:14px;color:#ff80d4;font-weight:700;}
+.wg-card-play{position:absolute;bottom:10px;right:12px;font-size:11px;font-weight:700;color:#ff6bd6;}
+
+/* K3 Dice */
+.k3-die{width:54px;height:54px;background:linear-gradient(135deg,#1a1200,#2d2000);border:2px solid rgba(245,200,66,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:#f5c842;box-shadow:0 4px 12px rgba(245,200,66,0.2);}
+.k3-bet-btn{padding:12px 8px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all 0.2s;color:#fff;}
+.k3-big{background:linear-gradient(135deg,#dc2626,#991b1b);}
+.k3-small{background:linear-gradient(135deg,#16a34a,#166534);}
+.k3-odd{background:linear-gradient(135deg,#7c3aed,#5b21b6);}
+.k3-even{background:linear-gradient(135deg,#0284c7,#075985);}
+.k3-triple{background:linear-gradient(135deg,#d97706,#92400e);padding:14px;}
+.k3-odds{font-size:10px;opacity:0.8;font-weight:600;}
+.k3-bet-btn:hover{transform:translateY(-1px);filter:brightness(1.15);}
+.k3-sum-btn{padding:8px 4px;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.25);border-radius:8px;color:#f5c842;cursor:pointer;font-size:13px;font-weight:700;transition:all 0.2s;text-align:center;}
+.k3-sum-btn:hover{background:rgba(245,200,66,0.25);}
+
+/* Mines */
+.mines-tile{width:100%;aspect-ratio:1;background:linear-gradient(135deg,#1e1b4b,#2d2a5e);border:1px solid rgba(139,92,246,0.3);border-radius:10px;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.mines-tile:hover{background:linear-gradient(135deg,#2e2b6b,#3d3a7e);transform:scale(1.05);}
+.mines-tile.revealed-safe{background:linear-gradient(135deg,#14532d,#166534);border-color:rgba(34,197,94,0.5);}
+.mines-tile.revealed-mine{background:linear-gradient(135deg,#7f1d1d,#991b1b);border-color:rgba(239,68,68,0.5);}
+.mines-tile.show-mine{background:linear-gradient(135deg,#7f1d1d,#991b1b);border-color:rgba(239,68,68,0.5);}
+.mines-count-btn{padding:8px 14px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:8px;color:#a78bfa;cursor:pointer;font-weight:700;font-size:14px;transition:all 0.2s;}
+.mines-count-btn.selected{background:rgba(139,92,246,0.3);border-color:rgba(139,92,246,0.7);color:#fff;}
+
+/* Dragon Tiger */
+.dt-bet-btn{padding:14px 8px;border-radius:12px;border:none;cursor:pointer;font-weight:700;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all 0.2s;color:#fff;}
+.dt-dragon{background:linear-gradient(135deg,#7c3aed,#4c1d95);}
+.dt-tie{background:linear-gradient(135deg,#475569,#334155);}
+.dt-tiger{background:linear-gradient(135deg,#ea580c,#9a3412);}
+.dt-bet-btn:hover{transform:translateY(-2px);filter:brightness(1.2);}
+.dt-odds{font-size:11px;opacity:0.85;}
+.dt-hist-item{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;}
+
+/* Andar Bahar */
+.ab-bet-btn{padding:16px 8px;border-radius:12px;border:none;cursor:pointer;font-weight:700;font-size:15px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all 0.2s;color:#fff;}
+.ab-andar{background:linear-gradient(135deg,#16a34a,#166534);}
+.ab-bahar{background:linear-gradient(135deg,#dc2626,#991b1b);}
+.ab-bet-btn:hover{transform:translateY(-2px);filter:brightness(1.2);}
+.ab-odds{font-size:12px;opacity:0.85;}
+.ab-card{width:32px;height:44px;background:linear-gradient(135deg,#1e293b,#334155);border:1px solid rgba(148,163,184,0.3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+.sl-sym{background:#1e1a2e;border-radius:8px;padding:10px;text-align:center;font-size:24px;min-height:44px;display:flex;align-items:center;justify-content:center;}
+.ab-hist-item{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;}
+
+/* Wingo bottom tabs */
+.wm-bottom-tabs{display:flex;gap:0;border-top:1px solid rgba(255,80,130,0.2);margin-top:14px;background:rgba(10,0,18,0.6);border-radius:0 0 16px 16px;overflow:hidden;}
+.wm-btab{flex:1;padding:12px 6px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;color:rgba(255,150,180,0.55);border:none;background:transparent;transition:all 0.2s;letter-spacing:0.3px;}
+.wm-btab.active{color:#ff6b9d;background:rgba(255,80,130,0.12);border-top:2px solid #ff6b9d;}
+.wm-btab:hover:not(.active){color:rgba(255,150,180,0.85);background:rgba(255,80,130,0.06);}
+.wm-panel-header{display:flex;align-items:center;justify-content:space-between;padding:12px 4px 8px;}
+.wm-panel-title{font-size:13px;font-weight:700;color:#ff80d4;}
+.wm-pg-row{display:flex;align-items:center;gap:8px;}
+.wm-pgbtn{padding:4px 10px;border-radius:8px;border:1px solid rgba(255,80,130,0.35);background:rgba(255,80,130,0.1);color:#ff80d4;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.18s;}
+.wm-pgbtn:hover{background:rgba(255,80,130,0.25);}
+.wm-pgbtn:disabled{opacity:0.35;cursor:not-allowed;}
+.wm-pginfo{font-size:11px;color:rgba(255,150,180,0.7);min-width:44px;text-align:center;}
+.wm-loading{text-align:center;padding:22px;color:rgba(255,150,180,0.45);font-size:13px;}
+.wm-hr-won{color:#22d67a;font-weight:700;}
+.wm-hr-lost{color:#ff4d6a;font-weight:700;}
+
+/* ═══════════════════════════════════════════════
+   AVIATOR — CINEMATIC BET WINDOW OVERLAY (v2)
+═══════════════════════════════════════════════ */
+
+/* Full-screen backdrop */
+.av-bet-window{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  background:transparent;
+  pointer-events:none;
+}
+.av-bet-window.show{
+  display:flex;
+  pointer-events:all;
+}
+
+/* Dark cinematic backdrop with blur */
+.av-bw-backdrop{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 50% 40%, rgba(180,0,60,0.22) 0%, rgba(5,0,20,0.92) 60%);
+  backdrop-filter:blur(6px);
+  animation:avBackdropIn 0.4s ease both;
+}
+@keyframes avBackdropIn{from{opacity:0}to{opacity:1}}
+
+/* Particle canvas for explosion effect */
+#avBwParticles{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+/* The main card */
+.av-bw-card{
+  position:relative;
+  z-index:2;
+  width:min(88vw,380px);
+  background:linear-gradient(160deg,#0d0020 0%,#1a0035 40%,#0a0015 100%);
+  border:1.5px solid rgba(255,80,130,0.5);
+  border-radius:28px;
+  padding:28px 24px 22px;
+  text-align:center;
+  box-shadow:
+    0 0 0 1px rgba(255,80,130,0.08),
+    0 0 60px rgba(255,40,100,0.35),
+    0 0 120px rgba(180,0,80,0.18),
+    0 24px 64px rgba(0,0,0,0.9);
+  animation:avCardIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+  overflow:hidden;
+}
+@keyframes avCardIn{
+  from{transform:scale(0.6) translateY(40px);opacity:0}
+  to{transform:scale(1) translateY(0);opacity:1}
+}
+
+/* Animated scanlines overlay */
+.av-bw-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(255,255,255,0.012) 3px,
+    rgba(255,255,255,0.012) 4px
+  );
+  pointer-events:none;
+  border-radius:28px;
+}
+
+/* Glowing top edge */
+.av-bw-card::after{
+  content:'';
+  position:absolute;
+  top:0;left:10%;right:10%;
+  height:2px;
+  background:linear-gradient(90deg,transparent,#ff4d8a,#ff80c0,#ff4d8a,transparent);
+  animation:avTopGlow 2s ease-in-out infinite alternate;
+}
+@keyframes avTopGlow{
+  from{opacity:0.6;box-shadow:0 0 8px #ff4d8a}
+  to{opacity:1;box-shadow:0 0 20px #ff80c0,0 0 40px #ff4d8a}
+}
+
+/* Crash label */
+.av-bw-crash{
+  font-family:'Rajdhani',sans-serif;
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:-1px;
+  background:linear-gradient(135deg,#ff3060,#ff8c00,#ff3060);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:avCrashShine 2s linear infinite, avCrashBounce 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  margin-bottom:4px;
+  line-height:1;
+}
+@keyframes avCrashShine{
+  from{background-position:0% center}
+  to{background-position:200% center}
+}
+@keyframes avCrashBounce{
+  from{transform:scale(0.5) rotate(-5deg);opacity:0}
+  to{transform:scale(1) rotate(0deg);opacity:1}
+}
+
+/* Sub label */
+.av-bw-label{
+  font-size:10px;
+  color:rgba(255,140,180,0.7);
+  font-weight:800;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+
+/* ── TIMER RING ── */
+.av-bw-timer-ring{
+  width:100px;
+  height:100px;
+  margin:0 auto 20px;
+  position:relative;
+  filter:drop-shadow(0 0 12px rgba(255,80,130,0.6));
+}
+.av-bw-timer-ring svg{
+  transform:rotate(-90deg);
+  width:100px;height:100px;
+}
+.av-bw-timer-ring circle{fill:none;stroke-width:6;}
+.av-bw-timer-bg{stroke:rgba(255,80,130,0.12);}
+.av-bw-timer-arc{
+  stroke:url(#avTimerGrad);
+  stroke-linecap:round;
+  transition:stroke-dashoffset 0.95s linear, stroke 0.3s ease;
+}
+.av-bw-timer-num{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Rajdhani',sans-serif;
+  font-size:36px;
+  font-weight:900;
+  color:#fff;
+  text-shadow:0 0 20px rgba(255,100,150,0.8);
+  animation:avTimerPulse 1s ease-in-out infinite;
+}
+@keyframes avTimerPulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1)}
+  50%{transform:translate(-50%,-50%) scale(1.08)}
+}
+.av-bw-timer-label{
+  position:absolute;
+  bottom:6px;left:50%;
+  transform:translateX(-50%);
+  font-size:8px;font-weight:800;
+  letter-spacing:2px;color:rgba(255,150,190,0.6);
+  text-transform:uppercase;white-space:nowrap;
+}
+
+/* ── DIVIDER ── */
+.av-bw-divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,80,130,0.4),transparent);
+  margin:0 -4px 18px;
+}
+
+/* ── BET LABEL ── */
+.av-bw-bet-label{
+  font-size:10px;
+  color:rgba(255,160,200,0.6);
+  margin-bottom:12px;
+  font-weight:800;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+
+/* ── CHIPS ── */
+.av-bw-chips{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+  margin-bottom:18px;
+}
+.av-bw-chip{
+  padding:10px 4px;
+  border-radius:14px;
+  border:1.5px solid rgba(255,80,130,0.25);
+  background:rgba(255,40,100,0.07);
+  color:rgba(255,140,190,0.8);
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:0.5px;
+  position:relative;
+  overflow:hidden;
+}
+.av-bw-chip::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(255,80,160,0.2),transparent);
+  opacity:0;
+  transition:opacity 0.2s;
+}
+.av-bw-chip:hover::before,.av-bw-chip.selected::before{opacity:1}
+.av-bw-chip.selected{
+  border-color:#ff6bb0;
+  color:#fff;
+  background:rgba(255,60,120,0.22);
+  transform:translateY(-3px) scale(1.06);
+  box-shadow:0 6px 20px rgba(255,50,120,0.4),0 0 0 1px rgba(255,100,160,0.3);
+  text-shadow:0 0 10px rgba(255,150,200,0.8);
+}
+.av-bw-chip:hover:not(.selected){
+  transform:translateY(-2px) scale(1.04);
+  border-color:rgba(255,80,130,0.5);
+  color:#fff;
+}
+.av-bw-chip:active{transform:scale(0.95);}
+
+/* ── AMOUNT DISPLAY ── */
+.av-bw-amount-display{
+  font-family:'Rajdhani',sans-serif;
+  font-size:32px;
+  font-weight:900;
+  color:#fff;
+  margin-bottom:16px;
+  text-shadow:0 0 30px rgba(255,100,160,0.7);
+  animation:avAmtPop 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  letter-spacing:-0.5px;
+}
+@keyframes avAmtPop{
+  from{transform:scale(0.8);opacity:0.5}
+  to{transform:scale(1);opacity:1}
+}
+
+/* ── BET BUTTON ── */
+.av-bw-betbtn{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,#ff1a6e 0%,#e6005c 50%,#ff1a6e 100%);
+  background-size:200% auto;
+  color:#fff;
+  font-size:16px;
+  font-weight:900;
+  cursor:pointer;
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  transition:all 0.2s;
+  box-shadow:0 6px 24px rgba(255,30,110,0.5),0 0 0 0 rgba(255,80,150,0.4);
+  animation:avBtnPulse 2s ease-in-out infinite;
+  position:relative;
+  overflow:hidden;
+}
+.av-bw-betbtn::after{
+  content:'';
+  position:absolute;
+  top:-50%;left:-60%;
+  width:40%;height:200%;
+  background:rgba(255,255,255,0.15);
+  transform:skewX(-20deg);
+  animation:avBtnSheen 3s ease-in-out infinite;
+}
+@keyframes avBtnSheen{
+  0%,100%{left:-60%}
+  40%,60%{left:130%}
+}
+@keyframes avBtnPulse{
+  0%,100%{box-shadow:0 6px 24px rgba(255,30,110,0.5),0 0 0 0 rgba(255,80,150,0)}
+  50%{box-shadow:0 8px 32px rgba(255,30,110,0.7),0 0 0 8px rgba(255,80,150,0)}
+}
+.av-bw-betbtn:hover:not(:disabled){
+  background-position:right center;
+  transform:translateY(-2px);
+  box-shadow:0 10px 36px rgba(255,30,110,0.7);
+}
+.av-bw-betbtn:active:not(:disabled){transform:scale(0.97);}
+.av-bw-betbtn:disabled{
+  opacity:0.35;cursor:not-allowed;transform:none;
+  animation:none;
+  box-shadow:none;
+}
+.av-bw-betbtn:disabled::after{display:none;}
+
+/* ── STATUS MSG ── */
+.av-bw-placed{
+  font-size:13px;
+  color:#22d67a;
+  font-weight:800;
+  margin-top:10px;
+  min-height:20px;
+  letter-spacing:0.5px;
+  animation:avPlacedIn 0.3s ease both;
+}
+@keyframes avPlacedIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── URGENCY SHAKE when ≤3s ── */
+.av-bw-card.urgent{animation:avUrgentShake 0.4s ease both;}
+@keyframes avUrgentShake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-5px)}
+  40%{transform:translateX(5px)}
+  60%{transform:translateX(-3px)}
+  80%{transform:translateX(3px)}
+}
+
+/* ── EXIT ANIMATION ── */
+.av-bet-window.hiding .av-bw-card{
+  animation:avCardOut 0.35s ease both;
+}
+.av-bet-window.hiding .av-bw-backdrop{
+  animation:avBackdropOut 0.35s ease both;
+}
+@keyframes avCardOut{
+  from{transform:scale(1);opacity:1}
+  to{transform:scale(0.7) translateY(-30px);opacity:0}
+}
+@keyframes avBackdropOut{
+  from{opacity:1}to{opacity:0}
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+<!-- ═══ HOME PAGE ═══ -->
+<div class="page active" id="page-home">
+  <div class="topbar">
+    <div class="logo">LEGIT CLUB</div>
+    <div class="icons">
+      <div class="icon-btn" onclick="openNotifPanel()" id="notif-btn">🔔<div class="notif-dot"></div></div>
+      <div class="icon-btn" onclick="openDeposit()">⬇</div>
+    </div>
+  </div>
+
+  <div class="banner">
+    <img src="https://picsum.photos/430/150?random=10" alt="banner">
+    <div class="banner-overlay"></div>
+    <div class="banner-text"><h3>Win Big Today!</h3><p>🔥 Limited time bonus active</p></div>
+  </div>
+
+  <div class="announce">
+    <span class="announce-icon">📢</span>
+    <div class="announce-track"><span class="announce-text">User ***782 won ₹45,000 in Aviator &nbsp;•&nbsp; User ***234 won ₹12,500 in Vortex &nbsp;•&nbsp; New jackpot: ₹10,00,000! &nbsp;•&nbsp; Deposit ₹500 get ₹50 FREE! &nbsp;•&nbsp; User ***754 won ₹12,000 in Aviator &nbsp;•&nbsp; User ***859 won ₹30,000 in K3 Dice &nbsp;•&nbsp; User ***328 won ₹15,000 in Vortex &nbsp;•&nbsp; User ***792 won ₹9,000 in Vortex &nbsp;•&nbsp; User ***704 won ₹60,000 in Aviator &nbsp;•&nbsp; User ***130 won ₹10,000 in K3 Dice &nbsp;•&nbsp; User ***338 won ₹1,500 in Aviator &nbsp;•&nbsp; User ***674 won ₹20,000 in Mines &nbsp;•&nbsp; User ***325 won ₹75,000 in 5D Lottery &nbsp;•&nbsp; User ***928 won ₹5,000 in WinGo &nbsp;•&nbsp; User ***814 won ₹60,000 in TRX WinGo &nbsp;•&nbsp; User ***384 won ₹15,000 in K3 Dice &nbsp;•&nbsp; User ***881 won ₹40,000 in Vortex &nbsp;•&nbsp; User ***194 won ₹50,000 in Vortex &nbsp;•&nbsp; User ***467 won ₹45,000 in 5D Lottery &nbsp;•&nbsp; User ***926 won ₹8,000 in Slots &nbsp;•&nbsp; User ***649 won ₹12,000 in Mines &nbsp;•&nbsp; User ***180 won ₹2,000 in 5D Lottery &nbsp;•&nbsp; User ***949 won ₹4,000 in TRX WinGo &nbsp;•&nbsp; User ***691 won ₹20,000 in Vortex &nbsp;•&nbsp; User ***146 won ₹6,000 in K3 Dice &nbsp;•&nbsp; User ***891 won ₹35,000 in Vortex &nbsp;•&nbsp; User ***975 won ₹25,000 in Vortex &nbsp;•&nbsp; User ***489 won ₹30,000 in Slots &nbsp;•&nbsp; User ***750 won ₹45,000 in WinGo &nbsp;•&nbsp; User ***479 won ₹45,000 in K3 Dice &nbsp;•&nbsp; User ***786 won ₹30,000 in Vortex &nbsp;•&nbsp; User ***723 won ₹4,000 in WinGo &nbsp;•&nbsp; User ***646 won ₹9,000 in K3 Dice &nbsp;•&nbsp; User ***267 won ₹75,000 in Mines &nbsp;•&nbsp; User ***376 won ₹4,000 in K3 Dice &nbsp;•&nbsp; User ***801 won ₹40,000 in Aviator &nbsp;•&nbsp; User ***334 won ₹8,000 in TRX WinGo &nbsp;•&nbsp; User ***510 won ₹30,000 in Vortex &nbsp;•&nbsp; User ***316 won ₹2,500 in TRX WinGo &nbsp;•&nbsp; User ***317 won ₹4,000 in Slots &nbsp;•&nbsp; User ***505 won ₹4,000 in Slots &nbsp;•&nbsp; User ***246 won ₹30,000 in WinGo &nbsp;•&nbsp; User ***352 won ₹9,000 in 5D Lottery &nbsp;•&nbsp; User ***864 won ₹2,500 in Mines &nbsp;•&nbsp; User ***697 won ₹50,000 in TRX WinGo &nbsp;•&nbsp; User ***324 won ₹15,000 in Slots &nbsp;•&nbsp; User ***193 won ₹8,000 in Vortex &nbsp;•&nbsp; User ***256 won ₹4,000 in WinGo &nbsp;•&nbsp; User ***911 won ₹6,000 in Mines &nbsp;•&nbsp; User ***710 won ₹10,000 in Mines &nbsp;•&nbsp; User ***490 won ₹3,000 in Slots &nbsp;•&nbsp; User ***641 won ₹30,000 in Aviator &nbsp;•&nbsp; User ***796 won ₹9,000 in Vortex &nbsp;•&nbsp; User ***798 won ₹2,000 in 5D Lottery &nbsp;•&nbsp; User ***887 won ₹4,000 in TRX WinGo &nbsp;•&nbsp; User ***214 won ₹35,000 in Mines &nbsp;•&nbsp; User ***261 won ₹75,000 in Aviator &nbsp;•&nbsp; User ***839 won ₹9,000 in 5D Lottery &nbsp;•&nbsp; User ***612 won ₹18,000 in Vortex &nbsp;•&nbsp; User ***991 won ₹4,000 in 5D Lottery &nbsp;•&nbsp; User ***961 won ₹4,000 in K3 Dice &nbsp;•&nbsp; User ***482 won ₹18,000 in Aviator &nbsp;•&nbsp; User ***713 won ₹40,000 in Slots &nbsp;•&nbsp; User ***119 won ₹12,000 in TRX WinGo &nbsp;•&nbsp; User ***999 won ₹35,000 in K3 Dice &nbsp;•&nbsp; User ***159 won ₹25,000 in Vortex &nbsp;•&nbsp; User ***187 won ₹9,000 in Slots &nbsp;•&nbsp; User ***935 won ₹10,000 in WinGo &nbsp;•&nbsp; User ***231 won ₹6,000 in Slots &nbsp;•&nbsp; User ***662 won ₹18,000 in 5D Lottery &nbsp;•&nbsp; User ***640 won ₹3,000 in Mines &nbsp;•&nbsp; User ***652 won ₹9,000 in K3 Dice &nbsp;•&nbsp; User ***830 won ₹35,000 in Mines &nbsp;•&nbsp; User ***787 won ₹4,000 in TRX WinGo &nbsp;•&nbsp; User ***548 won ₹1,500 in Slots &nbsp;•&nbsp; User ***223 won ₹25,000 in K3 Dice &nbsp;•&nbsp; User ***165 won ₹40,000 in Aviator &nbsp;•&nbsp; User ***702 won ₹2,000 in K3 Dice &nbsp;•&nbsp; User ***107 won ₹10,000 in Aviator &nbsp;•&nbsp; User ***169 won ₹8,000 in TRX WinGo &nbsp;•&nbsp; User ***172 won ₹1,500 in K3 Dice &nbsp;•&nbsp; User ***385 won ₹6,000 in Slots &nbsp;•&nbsp; User ***319 won ₹2,000 in WinGo &nbsp;•&nbsp; User ***840 won ₹2,500 in Slots &nbsp;•&nbsp; User ***348 won ₹1,000 in Mines &nbsp;•&nbsp; User ***294 won ₹12,000 in Vortex &nbsp;•&nbsp; User ***774 won ₹60,000 in TRX WinGo &nbsp;•&nbsp; User ***533 won ₹60,000 in Slots &nbsp;•&nbsp; User ***984 won ₹9,000 in Aviator &nbsp;•&nbsp; User ***789 won ₹4,000 in Vortex &nbsp;•&nbsp; User ***162 won ₹50,000 in TRX WinGo &nbsp;•&nbsp; User ***919 won ₹12,000 in K3 Dice &nbsp;•&nbsp; User ***296 won ₹20,000 in Slots &nbsp;•&nbsp; User ***243 won ₹60,000 in WinGo &nbsp;•&nbsp; User ***573 won ₹25,000 in Vortex &nbsp;•&nbsp; User ***553 won ₹2,000 in Vortex &nbsp;•&nbsp; User ***151 won ₹4,000 in Aviator &nbsp;•&nbsp; User ***195 won ₹25,000 in WinGo &nbsp;•&nbsp; User ***516 won ₹1,000 in Slots &nbsp;•&nbsp; User ***318 won ₹50,000 in Aviator &nbsp;•&nbsp; User ***268 won ₹50,000 in Aviator &nbsp;•&nbsp; User ***499 won ₹30,000 in Slots &nbsp;•&nbsp; User ***392 won ₹60,000 in Slots &nbsp;•&nbsp; User ***258 won ₹20,000 in 5D Lottery</span></div>
+  </div>
+
+  <div class="wallet">
+    <div>
+      <div class="wallet-label">Wallet Balance</div>
+      <div class="wallet-amount" id="walletAmtHome">₹0.00</div>
+      <div class="wallet-sub" id="walletTodayHome">↑ +₹0.00 deposited</div>
+    </div>
+    <div class="wallet-btns">
+      <button class="btn-withdraw" onclick="openWithdraw()">Withdraw</button>
+      <button class="btn-deposit" onclick="openDeposit()">Deposit</button>
+    </div>
+  </div>
+
+  <div class="section-title">🎨 Win Go Games</div>
+  <div class="wg-home-grid">
+    <div class="wg-card" onclick="openWingoGame('wingo30s')">
+      <div class="wg-card-label">⚡ FASTEST</div>
+      <div class="wg-card-name">WIN GO</div>
+      <div class="wg-card-timer">30 Seconds</div>
+      <div class="wg-card-play">Play →</div>
+    </div>
+    <div class="wg-card" onclick="openWingoGame('wingo1m')">
+      <div class="wg-card-label">🔥 POPULAR</div>
+      <div class="wg-card-name">WIN GO</div>
+      <div class="wg-card-timer">1 Minute</div>
+      <div class="wg-card-play">Play →</div>
+    </div>
+    <div class="wg-card" onclick="openWingoGame('wingo3m')" style="border-color:rgba(255,150,0,0.3);background:linear-gradient(135deg,#1a1200,#2a1a00);">
+      <div class="wg-card-label" style="color:rgba(255,200,80,0.8);">👑 CLASSIC</div>
+      <div class="wg-card-name">WIN GO</div>
+      <div class="wg-card-timer" style="color:var(--gold);">3 Minutes <span style="font-size:10px;background:rgba(245,200,66,0.2);padding:2px 6px;border-radius:4px;margin-left:4px;">Next: <span id="banner-m">02</span>:<span id="banner-s">47</span></span></div>
+      <div class="wg-card-play" style="color:var(--gold);">Play →</div>
+    </div>
+    <div class="wg-card" onclick="openWingoGame('wingo5m')" style="border-color:rgba(79,142,247,0.3);background:linear-gradient(135deg,#001025,#001840);">
+      <div class="wg-card-label" style="color:rgba(120,180,255,0.8);">🎯 BIG WINS</div>
+      <div class="wg-card-name">WIN GO</div>
+      <div class="wg-card-timer" style="color:var(--accent);">5 Minutes</div>
+      <div class="wg-card-play" style="color:var(--accent);">Play →</div>
+    </div>
+  </div>
+
+  <div class="section-title">🔥 Other Games <span>See All →</span></div>
+  <div class="featured-games">
+    <div class="feat-card feat-aviator" onclick="openGame('aviatorOverlay')">
+      <div class="fc-overlay"></div>
+      <div style="position:absolute;right:0;top:0;bottom:0;width:55%;display:flex;align-items:center;justify-content:center;font-size:72px;filter:drop-shadow(0 0 20px rgba(255,80,80,0.5));transform:rotate(-15deg) translateX(10px);">✈️</div>
+      <div class="fc-badge">HOT 🔥</div>
+      <div class="fc-content">
+        <div class="fc-tag">LIVE GAME</div>
+        <div class="fc-name">AVIATOR</div>
+        <div class="fc-desc">Server-side rounds · Cash out anytime</div>
+        <div class="fc-play">▶ Play Now</div>
+      </div>
+    </div>
+    <div class="feat-card feat-vortex" onclick="openGame('vortexOverlay')">
+      <div class="fc-overlay"></div>
+      <div style="position:absolute;right:-5px;top:0;bottom:0;width:55%;display:flex;align-items:center;justify-content:center;font-size:80px;filter:drop-shadow(0 0 22px rgba(0,150,255,0.6));animation:spinSlow 6s linear infinite;">🌀</div>
+      <div class="fc-badge new-badge">NEW ✨</div>
+      <div class="fc-content">
+        <div class="fc-tag">TB GAME</div>
+        <div class="fc-name">VORTEX</div>
+        <div class="fc-desc">Spin &amp; win · Up to 100x</div>
+        <div class="fc-play">▶ Play Now</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:4px;">🎲 More Games</div>
+  <div class="wg-home-grid">
+    <div class="wg-card" onclick="openGame('k3Overlay')" style="border-color:rgba(255,165,0,0.3);background:linear-gradient(135deg,#1a1000,#2a1800);">
+      <div class="wg-card-label" style="color:rgba(255,200,80,0.8);">🎲 DICE</div>
+      <div class="wg-card-name">K3 DICE</div>
+      <div class="wg-card-timer" style="color:#f5c842;">1 Minute</div>
+      <div class="wg-card-play" style="color:#f5c842;">Play →</div>
+    </div>
+    <div class="wg-card" onclick="openGame('minesOverlay')" style="border-color:rgba(255,80,80,0.3);background:linear-gradient(135deg,#1a0000,#2a0808);">
+      <div class="wg-card-label" style="color:rgba(255,120,120,0.8);">💣 MINES</div>
+      <div class="wg-card-name">MINES</div>
+      <div class="wg-card-timer" style="color:#ff6b6b;">Pick tiles!</div>
+      <div class="wg-card-play" style="color:#ff6b6b;">Play →</div>
+    </div>
+    <div class="wg-card" onclick="openGame('dragonTigerOverlay')" style="border-color:rgba(180,0,255,0.3);background:linear-gradient(135deg,#0d0020,#1a0035);">
+      <div class="wg-card-label" style="color:rgba(200,100,255,0.8);">🐉 CARDS</div>
+      <div class="wg-card-name">DRAGON TIGER</div>
+      <div class="wg-card-timer" style="color:#c084fc;">Instant!</div>
+      <div class="wg-card-play" style="color:#c084fc;">Play →</div>
+    </div>
+    <div class="wg-card" onclick="openGame('andarBaharOverlay')" style="border-color:rgba(0,200,100,0.3);background:linear-gradient(135deg,#001a0a,#002a12);">
+      <div class="wg-card-label" style="color:rgba(80,220,140,0.8);">🃏 CARDS</div>
+      <div class="wg-card-name">ANDAR BAHAR</div>
+      <div class="wg-card-timer" style="color:#4ade80;">Classic!</div>
+      <div class="wg-card-play" style="color:#4ade80;">Play →</div>
+    </div>
+    <div class="wg-card" onclick="openGame('trxWingoOverlay')" style="border-color:rgba(0,200,255,0.3);background:linear-gradient(135deg,#001520,#002535);">
+      <div class="wg-card-label" style="color:rgba(0,200,255,0.8);">🔗 BLOCKCHAIN</div>
+      <div class="wg-card-name">TRX WIN GO</div>
+      <div class="wg-card-timer" id="trx-home-timer" style="color:#00cfff;">—</div>
+      <div class="wg-card-play" style="color:#00cfff;">Play →</div>
+    </div>
+    <div class="wg-card" onclick="openGame('fiveDOverlay')" style="border-color:rgba(255,215,0,0.3);background:linear-gradient(135deg,#1a1400,#2a2000);">
+      <div class="wg-card-label" style="color:rgba(255,215,0,0.8);">🎲 LOTTERY</div>
+      <div class="wg-card-name">5D LOTTERY</div>
+      <div class="wg-card-timer" id="fd-home-timer" style="color:#ffd700;">—</div>
+      <div class="wg-card-play" style="color:#ffd700;">Play →</div>
+    </div>
+    <div class="wg-card" onclick="openGame('slotsOverlay')" style="border-color:rgba(255,100,200,0.3);background:linear-gradient(135deg,#1a0015,#2a0025);">
+      <div class="wg-card-label" style="color:rgba(255,100,200,0.8);">🎰 CASINO</div>
+      <div class="wg-card-name">SLOTS</div>
+      <div class="wg-card-timer" style="color:#ff64c8;">Instant!</div>
+      <div class="wg-card-play" style="color:#ff64c8;">Play →</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY PAGE ═══ -->
+<div class="page" id="page-activity">
+  <div class="topbar"><div class="logo">LEGIT CLUB</div></div>
+  <div class="page-header"><div class="page-title">Activity</div><div class="page-subtitle">Your complete transaction history</div></div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-label">Total Won</div><div class="stat-value green" id="statWon">₹0.00</div></div>
+    <div class="stat-card"><div class="stat-label">Total Lost</div><div class="stat-value red" id="statLost">₹0.00</div></div>
+    <div class="stat-card"><div class="stat-label">Deposited</div><div class="stat-value gold" id="statDep">₹0.00</div></div>
+    <div class="stat-card"><div class="stat-label">Withdrawn</div><div class="stat-value blue" id="statWith">₹0.00</div></div>
+  </div>
+  <div class="activity-filter">
+    <div class="filter-chip active" onclick="filterActivity(this,'all')">All</div>
+    <div class="filter-chip" onclick="filterActivity(this,'win')">Wins</div>
+    <div class="filter-chip" onclick="filterActivity(this,'loss')">Losses</div>
+    <div class="filter-chip" onclick="filterActivity(this,'deposit')">Deposits</div>
+    <div class="filter-chip" onclick="filterActivity(this,'withdraw')">Withdrawals</div>
+  </div>
+  <div class="activity-list" id="activityList"><div style="text-align:center;padding:40px;color:var(--muted);font-size:14px;">No activity yet.</div></div>
+</div>
+
+<!-- ═══ PROMO PAGE ═══ -->
+<div class="page" id="page-promo">
+  <div class="topbar"><div class="logo">LEGIT CLUB</div></div>
+  <div class="promo-hero"><div class="promo-hero-title">🎁 Promotions</div><div class="promo-hero-sub">Exclusive bonuses &amp; rewards</div></div>
+  <div class="promo-list">
+    <div class="promo-card gold-strip">
+      <div class="promo-badge hot">🔥 HOT</div>
+      <div class="promo-amount">₹500 Bonus</div>
+      <div class="promo-title">Welcome Deposit Bonus</div>
+      <div class="promo-desc">Deposit ₹500 or more and get ₹50 FREE added instantly. New users only.</div>
+      <div class="promo-footer"><div class="promo-expires">⏰ Expires: 31 Mar 2026</div><button class="promo-btn gold" onclick="claimPromo(this,'Welcome Deposit','₹50')">Claim Now</button></div>
+    </div>
+    <div class="promo-card green-strip">
+      <div class="promo-badge new">✨ NEW</div>
+      <div class="promo-amount">₹50 Cashback</div>
+      <div class="promo-title">Daily Cashback</div>
+      <div class="promo-desc">Lost today? Get ₹50 cashback credited to your wallet.</div>
+      <div class="promo-footer"><div class="promo-expires">⏰ Daily reset: Midnight</div><button class="promo-btn green" onclick="claimPromo(this,'Daily Cashback','₹50')">Activate</button></div>
+    </div>
+    <div class="promo-card red-strip" style="border-left-color:var(--gold);">
+      <div class="promo-badge vip">🤝 REFER</div>
+      <div class="promo-amount">₹50 Reward</div>
+      <div class="promo-title">Refer &amp; Earn</div>
+      <div class="promo-desc">Share your code. When your friend deposits ₹100+, you both benefit — you get <b style="color:var(--gold)">₹50</b> instantly in your wallet!</div>
+      <div class="promo-footer"><div class="promo-expires">🔗 Your code: <b id="refCode" style="color:var(--gold)">91C-XXXX</b></div><button class="promo-btn gold" onclick="copyReferral()">📋 Copy Code</button></div>
+    </div>
+  </div>
+  <div style="height:20px;"></div>
+</div>
+
+<!-- ═══ ACCOUNT PAGE ═══ -->
+<div class="page" id="page-account">
+  <div class="topbar"><div class="logo">LEGIT CLUB</div></div>
+  <div class="account-header">
+    <div class="avatar">👤</div>
+    <div class="account-info">
+      <div class="account-name" id="accName">Player91</div>
+      <div class="account-id" id="accId">ID: #000000</div>
+      <div class="account-level">👑 VIP Bronze · Level 2</div>
+    </div>
+  </div>
+  <div class="account-balance">
+    <div class="balance-row"><div><div class="wallet-label">Wallet Balance</div><div class="wallet-amount" id="walletAmtAcc">₹0.00</div></div></div>
+    <div class="balance-row-btns">
+      <button class="balance-btn dep" onclick="openDeposit()">+ Deposit</button>
+      <button class="balance-btn wit" onclick="openWithdraw()">Withdraw</button>
+    </div>
+  </div>
+  <!-- Referral Card -->
+  <div style="margin:0 16px 16px;background:linear-gradient(135deg,#1a0a00,#2a1500);border:1.5px solid rgba(245,200,66,0.35);border-radius:18px;padding:18px 20px;">
+    <div style="font-size:12px;color:rgba(245,200,66,0.7);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">🤝 Refer &amp; Earn ₹50</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:14px;">Share your code. When your friend deposits ₹100+, you get <b style="color:var(--gold)">₹50</b> credited to your wallet!</div>
+    <div style="display:flex;align-items:center;gap:10px;background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.25);border-radius:10px;padding:10px 14px;margin-bottom:12px;">
+      <span style="font-size:13px;color:rgba(255,255,255,0.5);">Your Code:</span>
+      <span id="accRefCode" style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:900;color:var(--gold);letter-spacing:2px;flex:1;">91C-XXXX</span>
+      <button onclick="copyReferral()" style="background:linear-gradient(135deg,#f5c842,#e6a800);color:#000;border:none;border-radius:8px;padding:6px 14px;font-weight:800;font-size:12px;cursor:pointer;">📋 COPY</button>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.4);text-align:center;">No limit — earn ₹50 for every friend who deposits!</div>
+  </div>
+  <div class="account-menu">
+    <div class="menu-item" onclick="showProfileEdit()"><div class="menu-item-icon" style="background:rgba(79,142,247,0.15);">👤</div><div class="menu-item-text"><div class="menu-item-title">Edit Profile</div><div class="menu-item-sub">Change name, password</div></div><div class="menu-arrow">›</div></div>
+    <div class="menu-item" onclick="goTo('activity')"><div class="menu-item-icon" style="background:rgba(34,214,122,0.15);">📊</div><div class="menu-item-text"><div class="menu-item-title">Transaction History</div><div class="menu-item-sub">Bets, deposits, withdrawals</div></div><div class="menu-arrow">›</div></div>
+    <div class="menu-item" onclick="goTo('wager')"><div class="menu-item-icon" style="background:rgba(245,200,0,0.15);">🎯</div><div class="menu-item-text"><div class="menu-item-title">Wager Progress</div><div class="menu-item-sub">Track bonus wagering requirement</div></div><div class="menu-arrow">›</div></div>
+    <div class="menu-item" onclick="showToast('📞 Support: support@legitclub.in','rgba(79,142,247,0.5)')"><div class="menu-item-icon" style="background:rgba(79,142,247,0.15);">📞</div><div class="menu-item-text"><div class="menu-item-title">Help &amp; Support</div><div class="menu-item-sub">24/7 customer support</div></div><div class="menu-arrow">›</div></div>
+  </div>
+  <button class="logout-btn" onclick="confirmLogout()">🚪 Log Out</button>
+</div>
+
+<!-- ═══ WAGER PAGE ═══ -->
+<div class="page" id="page-wager">
+  <div class="topbar"><div class="logo">LEGIT CLUB</div></div>
+  <div class="page-header">
+    <div class="page-title">🎯 Wager Progress</div>
+    <div class="page-subtitle">Complete wagering to unlock withdrawal</div>
+  </div>
+  <div style="margin:0 16px 16px;background:linear-gradient(135deg,#0d0020,#1a0035);border:1.5px solid rgba(255,80,130,0.35);border-radius:18px;padding:22px 20px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(circle,rgba(255,80,130,0.12),transparent 70%);border-radius:50%;transform:translate(30px,-30px);pointer-events:none;"></div>
+    <div style="font-size:12px;color:rgba(255,150,180,0.7);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Wagering Requirement</div>
+    <div style="font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:900;color:#fff;line-height:1;margin-bottom:4px;">₹<span id="wg-completed">0</span> <span style="font-size:18px;color:rgba(255,150,180,0.6);">/ ₹<span id="wg-required">200</span></span></div>
+    <div style="font-size:12px;color:rgba(255,150,180,0.55);margin-bottom:18px;">total wagered (bonus + deposit bets count)</div>
+    <div style="background:rgba(255,80,130,0.12);border-radius:100px;height:14px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(255,80,130,0.2);">
+      <div id="wg-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#ff1a6e,#ff80c0);border-radius:100px;transition:width 0.8s cubic-bezier(0.34,1.2,0.64,1);"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(255,150,180,0.5);">
+      <span>0%</span>
+      <span id="wg-pct-label" style="color:#ff80c0;font-weight:700;">0% complete</span>
+      <span>100%</span>
+    </div>
+  </div>
+  <div id="wg-status-banner" style="margin:0 16px 16px;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.3);">
+    <span style="font-size:22px;" id="wg-status-icon">⏳</span>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:#f5c842;" id="wg-status-title">Wagering In Progress</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:2px;" id="wg-status-desc">Bet ₹<span id="wg-remaining">200</span> more to unlock withdrawal.</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 16px 16px;">
+    <div class="stat-card"><div class="stat-label">Total Deposited</div><div class="stat-value gold" id="wg-total-dep">₹0.00</div></div>
+    <div class="stat-card"><div class="stat-label">Bonus Balance</div><div class="stat-value" style="color:#ff80d4;" id="wg-bonus-bal">₹0.00</div></div>
+    <div class="stat-card"><div class="stat-label">Total Wagered</div><div class="stat-value blue" id="wg-wagered">₹0.00</div></div>
+    <div class="stat-card"><div class="stat-label">Still Needed</div><div class="stat-value red" id="wg-needed">₹200.00</div></div>
+  </div>
+  <div style="margin:0 16px 16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px 16px;">
+    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;">📋 Wagering Rules</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:22px;height:22px;min-width:22px;background:rgba(255,80,130,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#ff80c0;margin-top:1px;">1</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5;">When you register, you get <b style="color:#22d67a;">₹50 bonus</b>. You must wager <b style="color:#fff;">₹100</b> (2× bonus) to unlock withdrawal.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:22px;height:22px;min-width:22px;background:rgba(255,80,130,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#ff80c0;margin-top:1px;">2</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5;"><b style="color:#22d67a;">Bonus bets DO count</b> toward wagering. Play any game using your bonus balance and it will progress your wager.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:22px;height:22px;min-width:22px;background:rgba(255,80,130,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#ff80c0;margin-top:1px;">3</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5;">If you <b style="color:#fff;">deposit money</b>, an additional wager of <b style="color:#fff;">2× deposit amount</b> is added on top of any remaining bonus wager.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:22px;height:22px;min-width:22px;background:rgba(255,80,130,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#ff80c0;margin-top:1px;">4</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5;">Complete the full wager using <b style="color:#22d67a;">bonus only (no deposit needed)</b> and withdrawal will unlock automatically. ✅</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin:0 16px 100px;display:flex;flex-direction:column;gap:10px;">
+    <button class="btn-primary gold" onclick="openDeposit()">💰 Deposit (Adds Extra Wager)</button>
+    <button class="btn-primary blue" onclick="openWithdraw()" id="wg-withdraw-btn" style="opacity:0.4;cursor:not-allowed;" disabled>🏧 Withdraw (Complete Wager First)</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     CRICKET PAGE
+════════════════════════════════════════ -->
+<div class="page" id="page-cricket">
+
+  <!-- Header -->
+  <div class="cr-header">
+    <div class="cr-header-bg"></div>
+    <div class="cr-header-content">
+      <div class="cr-logo">🏏</div>
+      <div>
+        <div class="cr-header-title">CRICKET BETTING</div>
+        <div class="cr-header-sub">Live odds · Real-time markets</div>
+      </div>
+      <div class="cr-live-pill" id="crLivePill" style="display:none">● LIVE</div>
+    </div>
+  </div>
+
+  <!-- Sub-tabs: Matches / My Bets -->
+  <div class="cr-tabs">
+    <div class="cr-tab active" id="crTabMatches" onclick="crSwitchTab('matches')">🏟 Matches</div>
+    <div class="cr-tab" id="crTabMyBets" onclick="crSwitchTab('mybets')">📋 My Bets</div>
+  </div>
+
+  <!-- MATCHES PANEL -->
+  <div id="crPanelMatches" style="width:100%">
+
+    <!-- Filter pills -->
+    <div class="cr-filters">
+      <div class="cr-filter" id="crF-upcoming" onclick="crFilter('upcoming')">Upcoming</div>
+      <div class="cr-filter" id="crF-live" onclick="crFilter('live')">🔴 Live</div>
+      <div class="cr-filter" id="crF-ipl" onclick="crFilter('ipl')" style="background:linear-gradient(135deg,rgba(0,120,255,0.18),rgba(255,80,0,0.12));border-color:rgba(0,150,255,0.4);color:#60b0ff;font-weight:800;">🏆 IPL</div>
+      <div class="cr-filter" id="crF-completed" onclick="crFilter('completed')">Completed</div>
+      <div class="cr-filter active" id="crF-all" onclick="crFilter('all')">All</div>
+    </div>
+
+    <!-- Match list -->
+    <div id="crMatchList" class="cr-match-list">
+      <div class="cr-loading">
+        <div class="cr-spinner"></div>
+        <div>Loading matches…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY BETS PANEL -->
+  <div id="crPanelMyBets" style="display:none;width:100%">
+    <div id="crMyBetsList" class="cr-mybets-list">
+      <div class="cr-loading"><div class="cr-spinner"></div><div>Loading bets…</div></div>
+    </div>
+  </div>
+
+  <!-- MATCH DETAIL VIEW (slides up from bottom) -->
+  <div id="crMatchDetail" class="cr-detail-overlay" style="display:none">
+    <div class="cr-detail-sheet">
+      <div class="cr-detail-handle"></div>
+
+      <!-- Detail header -->
+      <div class="cr-detail-header">
+        <div class="cr-detail-back" onclick="crCloseDetail()">‹</div>
+        <div class="cr-detail-title" id="crDetailTitle">Match</div>
+        <div class="cr-detail-badge" id="crDetailBadge">LIVE</div>
+      </div>
+
+      <!-- Score card -->
+      <div class="cr-scoreboard" id="crScoreboard">
+        <div class="cr-score-team" id="crScoreTeamA">
+          <div class="cr-team-short" id="crScoreTeamAShort">—</div>
+          <div class="cr-team-score" id="crScoreTeamAScore">—</div>
+        </div>
+        <div class="cr-score-vs">
+          <div class="cr-score-over" id="crScoreOver">Over 0.0</div>
+          <div class="cr-score-vs-txt">VS</div>
+          <div class="cr-score-batting" id="crScoreBatting"></div>
+        </div>
+        <div class="cr-score-team" id="crScoreTeamB">
+          <div class="cr-team-short" id="crScoreTeamBShort">—</div>
+          <div class="cr-team-score" id="crScoreTeamBScore">—</div>
+        </div>
+      </div>
+
+      <!-- Live run rate bar -->
+      <div class="cr-rr-bar" id="crRRBar" style="display:none">
+        <span id="crRRText"></span>
+        <span id="crTargetText"></span>
+      </div>
+
+      <!-- Commentary ticker -->
+      <div class="cr-commentary" id="crCommentary"></div>
+
+      <!-- Markets (collapsible groups) -->
+      <div class="cr-markets-label">BETTING MARKETS</div>
+      <div id="crMarketsList" class="cr-markets-list"></div>
+
+    </div>
+  </div>
+
+  <!-- STICKY BET SLIP (fixed at bottom, always accessible) -->
+  <div id="crBetSlip" class="cr-bet-slip-sticky" style="display:none">
+    <div class="cr-slip-top">
+      <div class="cr-slip-left">
+        <div class="cr-slip-type" id="crSlipType">BACK</div>
+        <div class="cr-slip-choice" id="crBetSlipChoice">Choice</div>
+        <div class="cr-slip-mkt" id="crBetSlipMkt">Market</div>
+      </div>
+      <div class="cr-slip-right">
+        <div class="cr-slip-odds" id="crBetSlipOdds">1.85x</div>
+        <div class="cr-slip-close" onclick="crCancelBet()">✕</div>
+      </div>
+    </div>
+    <div class="cr-bet-amounts">
+      <div class="cr-quick-amt" onclick="crSetAmt(100)">₹100</div>
+      <div class="cr-quick-amt" onclick="crSetAmt(500)">₹500</div>
+      <div class="cr-quick-amt" onclick="crSetAmt(1000)">₹1K</div>
+      <div class="cr-quick-amt" onclick="crSetAmt(5000)">₹5K</div>
+    </div>
+    <div class="cr-bet-input-row">
+      <input type="number" id="crBetAmount" placeholder="Enter amount (min ₹10)" min="10" max="50000" oninput="crUpdatePotential()" />
+      <div class="cr-potential" id="crPotentialWin">Win: ₹0</div>
+    </div>
+    <div class="cr-bet-actions">
+      <button class="cr-btn-cancel" onclick="crCancelBet()">Cancel</button>
+      <button class="cr-btn-place" onclick="crPlaceBet()">Place Bet 🏏</button>
+    </div>
+  </div>
+
+</div>
+<!-- END CRICKET PAGE -->
+</div><!-- .app -->
+
+<!-- ─── NOTIFICATION PANEL ─── -->
+<!-- ─── NOTIFICATION PANEL ─── -->
+<!-- ═══════════════════════════════════════════════════════
+     EPIC ANIMATED AD POSTER SYSTEM
+═══════════════════════════════════════════════════════ -->
+<style>
+/* ── Ad Poster Overlay ── */
+#adPosterOverlay {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.92);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+#adPosterOverlay.show { display:flex; }
+
+/* ── Poster Container ── */
+.ad-poster-wrap {
+  position:relative;
+  width:min(92vw,400px);
+  animation:adSlideIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both;
+}
+@keyframes adSlideIn {
+  from { transform:scale(0.6) translateY(60px); opacity:0; }
+  to   { transform:scale(1)   translateY(0);    opacity:1; }
+}
+.ad-poster-wrap.slide-out {
+  animation:adSlideOut 0.4s ease forwards;
+}
+@keyframes adSlideOut {
+  to { transform:scale(0.8) translateY(-40px); opacity:0; }
+}
+
+/* ── Dots ── */
+.ad-dots {
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:16px;
+}
+.ad-dot {
+  width:8px; height:8px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.25);
+  transition:all 0.3s;
+  cursor:pointer;
+}
+.ad-dot.active { width:24px; border-radius:4px; background:#fff; }
+
+/* ── Skip button ── */
+.ad-skip-btn {
+  position:absolute;
+  top:-14px; right:-14px;
+  width:36px; height:36px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.12);
+  border:1.5px solid rgba(255,255,255,0.25);
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+  z-index:10;
+  backdrop-filter:blur(4px);
+}
+.ad-skip-btn:hover { background:rgba(255,80,80,0.4); border-color:rgba(255,80,80,0.7); }
+
+/* ── Next button ── */
+.ad-next-btn {
+  width:100%;
+  margin-top:12px;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  transition:all 0.2s;
+}
+
+/* ══════════════════════════════════════
+   POSTER 1 — DEPOSIT ₹1 (Gold/Green)
+══════════════════════════════════════ */
+.poster-1 {
+  border-radius:24px;
+  background:linear-gradient(145deg,#0a1a00,#0d2800,#051000);
+  border:2px solid rgba(80,220,80,0.5);
+  overflow:hidden;
+  position:relative;
+  padding:28px 22px 22px;
+  box-shadow:0 0 60px rgba(40,220,40,0.25), 0 0 120px rgba(20,140,20,0.15), inset 0 1px 0 rgba(120,255,60,0.2);
+}
+/* Animated glow orb */
+.p1-orb {
+  position:absolute;
+  top:-60px; left:50%;
+  transform:translateX(-50%);
+  width:260px; height:260px;
+  background:radial-gradient(circle,rgba(80,255,60,0.18) 0%,rgba(20,200,20,0.08) 50%,transparent 70%);
+  animation:orbPulse1 3s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes orbPulse1 {
+  0%,100% { transform:translateX(-50%) scale(1);   opacity:0.7; }
+  50%      { transform:translateX(-50%) scale(1.2); opacity:1;   }
+}
+/* Floating coins */
+.p1-coin {
+  position:absolute;
+  font-size:20px;
+  animation:coinFloat linear infinite;
+  pointer-events:none;
+  filter:drop-shadow(0 0 6px rgba(255,215,0,0.8));
+}
+@keyframes coinFloat {
+  0%   { transform:translateY(100%) rotate(0deg);   opacity:0;   }
+  10%  { opacity:1; }
+  90%  { opacity:1; }
+  100% { transform:translateY(-120px) rotate(360deg); opacity:0; }
+}
+.p1-badge {
+  display:inline-block;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:2px;
+  padding:4px 12px;
+  border-radius:20px;
+  text-transform:uppercase;
+  margin-bottom:14px;
+  box-shadow:0 4px 12px rgba(34,197,94,0.5);
+  animation:badgePop 0.5s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes badgePop {
+  from { transform:scale(0); opacity:0; }
+  to   { transform:scale(1); opacity:1; }
+}
+.p1-amount {
+  font-family:'Rajdhani',sans-serif;
+  font-size:76px;
+  font-weight:900;
+  line-height:1;
+  background:linear-gradient(135deg,#86efac,#22c55e,#4ade80,#bbf7d0);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shimmerGreen 2s linear infinite, amtBounce 0.6s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+  display:block;
+}
+@keyframes shimmerGreen {
+  from { background-position:0% center; }
+  to   { background-position:200% center; }
+}
+@keyframes amtBounce {
+  from { transform:scale(0.3) translateY(20px); opacity:0; }
+  to   { transform:scale(1)   translateY(0);    opacity:1; }
+}
+.p1-label {
+  font-family:'Rajdhani',sans-serif;
+  font-size:22px;
+  font-weight:800;
+  color:rgba(187,247,208,0.9);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-top:-4px;
+  margin-bottom:16px;
+  animation:fadeUp 0.5s 0.4s both;
+}
+.p1-feature-row {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:20px;
+  animation:fadeUp 0.5s 0.5s both;
+}
+.p1-feature {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(34,197,94,0.08);
+  border:1px solid rgba(34,197,94,0.2);
+  border-radius:10px;
+  padding:8px 12px;
+  font-size:13px;
+  color:rgba(187,247,208,0.9);
+  font-weight:600;
+}
+.p1-feature-icon {
+  font-size:18px;
+  filter:drop-shadow(0 0 6px rgba(34,197,94,0.8));
+}
+.p1-world-tag {
+  text-align:center;
+  font-size:11px;
+  color:rgba(134,239,172,0.6);
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:8px;
+  animation:fadeUp 0.5s 0.6s both;
+}
+@keyframes fadeUp {
+  from { transform:translateY(16px); opacity:0; }
+  to   { transform:translateY(0);    opacity:1; }
+}
+/* Scanline effect */
+.p1-scanlines {
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,0,0.015) 3px,rgba(0,255,0,0.015) 4px);
+  pointer-events:none;
+  border-radius:24px;
+}
+/* Corner accents */
+.p1-corner {
+  position:absolute;
+  width:20px; height:20px;
+  border-color:rgba(34,197,94,0.6);
+  border-style:solid;
+  pointer-events:none;
+}
+.p1-corner.tl { top:10px; left:10px; border-width:2px 0 0 2px; border-radius:4px 0 0 0; }
+.p1-corner.tr { top:10px; right:10px; border-width:2px 2px 0 0; border-radius:0 4px 0 0; }
+.p1-corner.bl { bottom:10px; left:10px; border-width:0 0 2px 2px; border-radius:0 0 0 4px; }
+.p1-corner.br { bottom:10px; right:10px; border-width:0 2px 2px 0; border-radius:0 0 4px 0; }
+
+/* ══════════════════════════════════════
+   POSTER 2 — WITHDRAW ₹50 (Pink/Gold)
+══════════════════════════════════════ */
+.poster-2 {
+  border-radius:24px;
+  background:linear-gradient(145deg,#1a0010,#2a0020,#0a0008);
+  border:2px solid rgba(255,80,180,0.5);
+  overflow:hidden;
+  position:relative;
+  padding:28px 22px 22px;
+  box-shadow:0 0 60px rgba(255,60,160,0.25), 0 0 120px rgba(180,0,100,0.15), inset 0 1px 0 rgba(255,100,200,0.2);
+}
+.p2-orb {
+  position:absolute;
+  top:-60px; left:50%;
+  transform:translateX(-50%);
+  width:280px; height:280px;
+  background:radial-gradient(circle,rgba(255,80,160,0.2) 0%,rgba(200,0,120,0.08) 50%,transparent 70%);
+  animation:orbPulse2 2.5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes orbPulse2 {
+  0%,100% { transform:translateX(-50%) scale(1);   opacity:0.7; }
+  50%      { transform:translateX(-50%) scale(1.3); opacity:1;   }
+}
+/* Trophy particles */
+.p2-particle {
+  position:absolute;
+  font-size:16px;
+  animation:particleFly linear infinite;
+  pointer-events:none;
+}
+@keyframes particleFly {
+  0%   { transform:translateY(110%) scale(0) rotate(0deg); opacity:0; }
+  20%  { opacity:1; transform:scale(1); }
+  80%  { opacity:1; }
+  100% { transform:translateY(-100px) scale(0.5) rotate(180deg); opacity:0; }
+}
+.p2-badge {
+  display:inline-block;
+  background:linear-gradient(135deg,#ff1a8c,#c2006a);
+  color:#fff;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:2px;
+  padding:4px 12px;
+  border-radius:20px;
+  text-transform:uppercase;
+  margin-bottom:14px;
+  box-shadow:0 4px 12px rgba(255,30,140,0.5);
+  animation:badgePop 0.5s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.p2-amount {
+  font-family:'Rajdhani',sans-serif;
+  font-size:76px;
+  font-weight:900;
+  line-height:1;
+  background:linear-gradient(135deg,#fda4d4,#ff6bb3,#ff1a8c,#ffd700,#ff6bb3);
+  background-size:300% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shimmerPink 2s linear infinite, amtBounce 0.6s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+  display:block;
+}
+@keyframes shimmerPink {
+  from { background-position:0% center; }
+  to   { background-position:300% center; }
+}
+.p2-label {
+  font-family:'Rajdhani',sans-serif;
+  font-size:22px;
+  font-weight:800;
+  color:rgba(253,164,212,0.9);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-top:-4px;
+  margin-bottom:16px;
+  animation:fadeUp 0.5s 0.4s both;
+}
+.p2-feature-row {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:20px;
+  animation:fadeUp 0.5s 0.5s both;
+}
+.p2-feature {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(255,80,160,0.08);
+  border:1px solid rgba(255,80,160,0.2);
+  border-radius:10px;
+  padding:8px 12px;
+  font-size:13px;
+  color:rgba(253,164,212,0.9);
+  font-weight:600;
+}
+.p2-feature-icon {
+  font-size:18px;
+  filter:drop-shadow(0 0 6px rgba(255,80,160,0.8));
+}
+.p2-world-tag {
+  text-align:center;
+  font-size:11px;
+  color:rgba(253,164,212,0.6);
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:8px;
+  animation:fadeUp 0.5s 0.6s both;
+}
+.p2-corner {
+  position:absolute;
+  width:20px; height:20px;
+  border-color:rgba(255,80,160,0.6);
+  border-style:solid;
+  pointer-events:none;
+}
+.p2-corner.tl { top:10px; left:10px; border-width:2px 0 0 2px; border-radius:4px 0 0 0; }
+.p2-corner.tr { top:10px; right:10px; border-width:2px 2px 0 0; border-radius:0 4px 0 0; }
+.p2-corner.bl { bottom:10px; left:10px; border-width:0 0 2px 2px; border-radius:0 0 0 4px; }
+.p2-corner.br { bottom:10px; right:10px; border-width:0 2px 2px 0; border-radius:0 0 4px 0; }
+
+/* Notification panel */
+#notifPanel {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+}
+</style>
+
+<!-- AD POSTER OVERLAY -->
+<div id="adPosterOverlay">
+  <div class="ad-poster-wrap" id="adPosterWrap">
+
+    <!-- CLOSE BUTTON -->
+    <button class="ad-skip-btn" onclick="closeAdPosters()" title="Close">✕</button>
+
+    <!-- ── POSTER 1: DEPOSIT ₹1 ── -->
+    <div id="adPoster1" class="poster-1">
+      <!-- Scanlines -->
+      <div class="p1-scanlines"></div>
+      <!-- Corner accents -->
+      <div class="p1-corner tl"></div><div class="p1-corner tr"></div>
+      <div class="p1-corner bl"></div><div class="p1-corner br"></div>
+      <!-- Glow orb -->
+      <div class="p1-orb"></div>
+      <!-- Floating coins -->
+      <span class="p1-coin" style="left:8%;animation-duration:3.2s;animation-delay:0s;">🪙</span>
+      <span class="p1-coin" style="left:22%;animation-duration:4.1s;animation-delay:0.8s;">💰</span>
+      <span class="p1-coin" style="left:55%;animation-duration:3.7s;animation-delay:1.5s;">🪙</span>
+      <span class="p1-coin" style="left:75%;animation-duration:4.5s;animation-delay:0.3s;">💎</span>
+      <span class="p1-coin" style="left:88%;animation-duration:3.4s;animation-delay:2s;">🪙</span>
+      <!-- Content -->
+      <div style="position:relative;z-index:2;text-align:center;">
+        <div class="p1-badge">🌍 World's #1 Gaming Platform</div>
+        <span class="p1-amount">₹1</span>
+        <div class="p1-label">Minimum Deposit</div>
+        <div class="p1-feature-row" style="text-align:left;">
+          <div class="p1-feature"><span class="p1-feature-icon">🚀</span>Start winning with just ONE rupee — no minimum barrier</div>
+          <div class="p1-feature"><span class="p1-feature-icon">⚡</span>Instant credit · Zero processing fee · 24/7 active</div>
+          <div class="p1-feature"><span class="p1-feature-icon">🎁</span>Get ₹50 FREE bonus on your very first deposit</div>
+          <div class="p1-feature"><span class="p1-feature-icon">👑</span>Play all games — Aviator, WinGo, Mines & more</div>
+        </div>
+        <div class="p1-world-tag">🏆 Only platform on earth with ₹1 deposits</div>
+        <button class="ad-next-btn" id="adBtn1"
+          style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;box-shadow:0 8px 24px rgba(34,197,94,0.5);"
+          onclick="goToAdPoster2()">
+          Next →
+        </button>
+      </div>
+    </div>
+
+    <!-- ── POSTER 2: WITHDRAW ₹50 ── -->
+    <div id="adPoster2" class="poster-2" style="display:none;">
+      <!-- Corner accents -->
+      <div class="p2-corner tl"></div><div class="p2-corner tr"></div>
+      <div class="p2-corner bl"></div><div class="p2-corner br"></div>
+      <!-- Glow orb -->
+      <div class="p2-orb"></div>
+      <!-- Floating particles -->
+      <span class="p2-particle" style="left:6%; animation-duration:3.8s;animation-delay:0s;">🏆</span>
+      <span class="p2-particle" style="left:25%;animation-duration:4.2s;animation-delay:1s;">💸</span>
+      <span class="p2-particle" style="left:50%;animation-duration:3.5s;animation-delay:0.5s;">👑</span>
+      <span class="p2-particle" style="left:72%;animation-duration:4.8s;animation-delay:1.8s;">💸</span>
+      <span class="p2-particle" style="left:90%;animation-duration:3.2s;animation-delay:2.2s;">🏆</span>
+      <!-- Content -->
+      <div style="position:relative;z-index:2;text-align:center;">
+        <div class="p2-badge">👑 King Of Withdrawals</div>
+        <span class="p2-amount">₹50</span>
+        <div class="p2-label">Minimum Withdrawal</div>
+        <div class="p2-feature-row" style="text-align:left;">
+          <div class="p2-feature"><span class="p2-feature-icon">💸</span>Withdraw as low as ₹50 — your money, your rules</div>
+          <div class="p2-feature"><span class="p2-feature-icon">⚡</span>Instant UPI payout — hits your account in seconds</div>
+          <div class="p2-feature"><span class="p2-feature-icon">🔒</span>100% safe & secure · Bank-level encryption</div>
+          <div class="p2-feature"><span class="p2-feature-icon">🌍</span>No other platform offers ₹50 withdrawals worldwide</div>
+        </div>
+        <div class="p2-world-tag">🌏 In the world only LEGIT CLUB allows this</div>
+        <button class="ad-next-btn" id="adBtn2"
+          style="background:linear-gradient(135deg,#ff1a8c,#c2006a);color:#fff;box-shadow:0 8px 24px rgba(255,30,140,0.5);"
+          onclick="closeAdPosters()">
+          🎮 Start Playing Now!
+        </button>
+      </div>
+    </div>
+
+    <!-- Dots -->
+    <div class="ad-dots" id="adDots">
+      <div class="ad-dot active" onclick="goToAdPoster1()"></div>
+      <div class="ad-dot" onclick="goToAdPoster2()"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div id="notifPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;width:calc(100% - 40px);max-width:380px;max-height:70vh;overflow-y:auto;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="margin:0;font-size:16px">🔔 Notifications</h3>
+      <button id="notif-close-btn" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:22px;cursor:pointer;padding:0 4px;line-height:1;">✕</button>
+    </div>
+    <div id="notif-list">
+      <!-- Ad poster teasers inside notification panel -->
+      <div class="notif-item" onclick="showAdPosters()" style="cursor:pointer;border:1px solid rgba(34,197,94,0.3);background:rgba(34,197,94,0.06);border-radius:10px;margin-bottom:6px;">
+        <div class="notif-icon" style="background:rgba(34,214,122,0.15)">💰</div>
+        <div class="notif-body">
+          <div class="notif-title" style="color:#22d67a;">₹1 Minimum Deposit — World's Only!</div>
+          <div class="notif-sub">Tap to see our exclusive offer. Start playing with just ₹1.</div>
+        </div>
+      </div>
+      <div class="notif-item" onclick="showAdPosters()" style="cursor:pointer;border:1px solid rgba(255,80,160,0.3);background:rgba(255,80,160,0.06);border-radius:10px;margin-bottom:6px;">
+        <div class="notif-icon" style="background:rgba(255,80,130,0.15)">👑</div>
+        <div class="notif-body">
+          <div class="notif-title" style="color:#ff80d4;">₹50 Withdrawal — King of Payouts!</div>
+          <div class="notif-sub">Withdraw your winnings instantly. No platform does it better.</div>
+        </div>
+      </div>
+      <div class="notif-item"><div class="notif-icon" style="background:rgba(34,214,122,0.15)">🎉</div><div class="notif-body"><div class="notif-title">Welcome to Legit Club!</div><div class="notif-sub">Your account is active. Start playing now.</div></div></div>
+      <div class="notif-item"><div class="notif-icon" style="background:rgba(255,215,0,0.15)">💰</div><div class="notif-body"><div class="notif-title">Deposit Bonus Active</div><div class="notif-sub">Get ₹100 FREE bonus on your first deposit!</div></div></div>
+      <div class="notif-item"><div class="notif-icon" style="background:rgba(79,142,247,0.15)">📢</div><div class="notif-body"><div class="notif-title">New Game: Vortex</div><div class="notif-sub">Try the new Vortex game with 1000x max win!</div></div></div>
+      <div class="notif-item"><div class="notif-icon" style="background:rgba(255,80,130,0.15)">🎁</div><div class="notif-body"><div class="notif-title">Referral Bonus</div><div class="notif-sub">Invite friends and earn ₹50 per referral.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── BOTTOM NAV ─── -->
+<div class="bottom-nav">
+  <div class="nav-item active" id="nav-home" onclick="goTo('home')"><span class="nav-icon">🏠</span>Home</div>
+  <div class="nav-item" id="nav-activity" onclick="goTo('activity')"><span class="nav-icon">⚡</span>Activity</div>
+  <div class="nav-item nav-cricket-btn" id="nav-cricket" onclick="goTo('cricket')"><span class="nav-icon">🏏</span>Cricket</div>
+  <div class="nav-item" id="nav-promo" onclick="goTo('promo')"><span class="nav-icon">🎁</span>Promo</div>
+  <div class="nav-item" id="nav-account" onclick="goTo('account')"><span class="nav-icon">👤</span>Account</div>
+</div>
+
+<!-- ─── DEPOSIT MODAL ─── -->
+<div class="modal-overlay" id="depositModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="color:var(--gold);">💰 Deposit Funds</div>
+    <div class="modal-sub">Add money to your wallet instantly</div>
+    <div class="input-label">Select Amount</div>
+    <div class="amount-chips">
+      <div class="amount-chip selected" onclick="selectChip(this,'dep')">₹1</div>
+      <div class="amount-chip" onclick="selectChip(this,'dep')">₹10</div>
+      <div class="amount-chip" onclick="selectChip(this,'dep')">₹50</div>
+      <div class="amount-chip" onclick="selectChip(this,'dep')">₹100</div>
+      <div class="amount-chip" onclick="selectChip(this,'dep')">₹500</div>
+    </div>
+    <div class="input-group"><div class="input-label">Or Enter Amount</div><input class="input-field" id="depAmount" type="number" placeholder="Enter custom amount (₹)" min="100"></div>
+    <div class="input-label" style="margin-bottom:10px;">Pay via UPI QR</div>
+    <div style="background:rgba(79,142,247,0.08);border:1px solid rgba(79,142,247,0.18);border-radius:12px;padding:12px;margin-bottom:14px;">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img id="depQrImg" alt="UPI QR" style="width:92px;height:92px;border-radius:10px;background:#111;border:1px solid rgba(255,255,255,0.08);object-fit:cover;display:none">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">UPI ID</div>
+          <div id="depUpiVpa" style="font-size:15px;font-weight:700;word-break:break-all">—</div>
+          <div id="depUpiName" style="font-size:12px;color:var(--muted);margin-top:4px"></div>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.72);line-height:1.4">
+        1) Pay using any UPI app. 2) Take screenshot (make sure <b>UTR/Ref No.</b> is visible). 3) Submit below.
+      </div>
+    </div>
+    <div class="input-group"><div class="input-label">UTR / Ref No.</div><input class="input-field" id="depUtr" type="text" placeholder="e.g. 123456789012" autocomplete="off"></div>
+    <div class="input-group"><div class="input-label">Your UPI ID (optional)</div><input class="input-field" id="depPayerUpi" type="text" placeholder="e.g. yourname@upi (optional)"></div>
+    <div class="input-group">
+      <div class="input-label">Payment Screenshot (UTR visible)</div>
+      <input class="input-field" id="depScreenshot" type="file" accept="image/*">
+      <div style="margin-top:6px;font-size:12px;color:var(--muted);line-height:1.4">
+        Make sure the screenshot clearly shows <b>UTR/Ref No</b>, amount, and status (Success).
+      </div>
+    </div>
+    <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:10px;padding:12px;margin-bottom:18px;">
+      <div class="info-row" style="padding:6px 0;border-bottom:none;"><span class="info-key">Min deposit</span><span class="info-val" style="color:var(--green);">₹1</span></div>
+      <div class="info-row" style="padding:6px 0;border-bottom:none;"><span class="info-key">Bonus</span><span class="info-val" style="color:var(--gold);">+20% on ₹500+</span></div>
+    </div>
+    <button class="btn-primary gold" onclick="processDeposit()">✅ Submit UTR</button>
+    <button style="width:100%;margin-top:10px;padding:12px;border:none;background:none;color:var(--muted);font-size:14px;cursor:pointer;" onclick="closeModal('depositModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- ─── WITHDRAW MODAL ─── -->
+<div class="modal-overlay" id="withdrawModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="color:var(--accent);">🏧 Withdraw Funds</div>
+    <div class="modal-sub">Transfer winnings to your bank</div>
+    <div id="witWagerWarn" style="display:none;background:rgba(245,160,0,0.12);border:1px solid rgba(245,160,0,0.35);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:#fbbf24;line-height:1.5;"></div>
+    <div class="input-label">Available Balance</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;" id="witAvailAmt">₹0.00</span>
+      <span style="font-size:12px;color:var(--green);font-weight:600;">Available</span>
+    </div>
+    <div class="input-label">Select Amount</div>
+    <div class="amount-chips">
+      <div class="amount-chip selected" onclick="selectChip(this,'wit')">₹50</div>
+      <div class="amount-chip" onclick="selectChip(this,'wit')">₹100</div>
+      <div class="amount-chip" onclick="selectChip(this,'wit')">₹500</div>
+      <div class="amount-chip" onclick="selectChip(this,'wit')">₹2000</div>
+    </div>
+    <div class="input-group"><div class="input-label">Or Enter Amount</div><input class="input-field" id="witAmount" type="number" placeholder="Enter withdrawal amount (₹)" min="100"></div>
+    <div class="input-group"><div class="input-label">UPI ID / Bank Account</div><input class="input-field" id="witAccount" type="text" placeholder="e.g. name@upi or Account No."></div>
+    <button class="btn-primary blue" onclick="processWithdraw()">🏧 Request Withdrawal</button>
+    <button style="width:100%;margin-top:10px;padding:12px;border:none;background:none;color:var(--muted);font-size:14px;cursor:pointer;" onclick="closeModal('withdrawModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- ─── PROFILE MODAL ─── -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏️ Edit Profile</div>
+    <div class="input-group"><div class="input-label">Display Name</div><input class="input-field" id="editName" type="text" placeholder="Your display name"></div>
+    <div class="input-group"><div class="input-label">New Password (optional)</div><input class="input-field" id="editPass" type="password" placeholder="Leave blank to keep current"></div>
+    <button class="btn-primary gold" onclick="saveProfile()">💾 Save Changes</button>
+    <button style="width:100%;margin-top:10px;padding:12px;border:none;background:none;color:var(--muted);font-size:14px;cursor:pointer;" onclick="closeModal('profileModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- ─── SUCCESS OVERLAY ─── -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card" id="successCard">
+    <div class="success-icon" id="successIcon">✅</div>
+    <div class="success-title green" id="successTitle">Success!</div>
+    <div class="success-msg" id="successMsg">Your transaction was successful.</div>
+    <button class="success-close" id="successClose" onclick="closeSuccess()">Done</button>
+  </div>
+</div>
+
+<!-- ─── WIN GO GAME MODAL (shared for all variants) ─── -->
+<div class="game-overlay" id="wingoOverlay">
+  <div class="game-modal">
+    <div class="wm-topbar">
+      <div class="wm-back" onclick="closeGame('wingoOverlay')">←</div>
+      <div class="wm-title" id="wmTitle">🎨 WIN GO 3 Min</div>
+      <div class="wm-info">ℹ️</div>
+    </div>
+    <div class="wingo-tabs">
+      <div class="wingo-tab active" onclick="switchWingoTab(this,'wingo30s')">30 Sec</div>
+      <div class="wingo-tab" onclick="switchWingoTab(this,'wingo1m')">1 Min</div>
+      <div class="wingo-tab active" onclick="switchWingoTab(this,'wingo3m')">3 Min</div>
+      <div class="wingo-tab" onclick="switchWingoTab(this,'wingo5m')">5 Min</div>
+    </div>
+    <div class="wm-body">
+      <div class="wm-timer-hero">
+        <div><div class="wm-period-label">Period</div><div class="wm-period-num" id="wm-period">—</div></div>
+        <div class="wm-countdown">
+          <div class="wm-countdown-label">Time Left</div>
+          <div class="wm-clock"><div class="wm-tbox" id="wm-m">00</div><div class="wm-colon">:</div><div class="wm-tbox" id="wm-s">00</div></div>
+        </div>
+      </div>
+      <div style="text-align:right;padding:2px 4px 6px;font-size:13px;color:#aaa">💰 Balance: <b id="wm-bal-display" style="color:#22d67a">₹0</b></div>
+      <div class="wm-results" id="wm-results-row"><span class="wm-result-label">Last:</span></div>
+      <div class="wm-section-title">Select Color</div>
+      <div class="wm-color-btns">
+        <button class="wm-cbtn wm-green" onclick="wingoBet('Green','2x')"><span class="cb-icon">🟢</span>Green<span class="cb-odds">Win 2×</span></button>
+        <button class="wm-cbtn wm-violet" onclick="wingoBet('Violet','4.5x')"><span class="cb-icon">🟣</span>Violet<span class="cb-odds">Win 4.5×</span></button>
+        <button class="wm-cbtn wm-red" onclick="wingoBet('Red','2x')"><span class="cb-icon">🔴</span>Red<span class="cb-odds">Win 2×</span></button>
+      </div>
+      <div class="wm-section-title">Big / Small <span style="color:#888;font-size:10px;">(Numbers 5–9 = Big · 0–4 = Small · 2×)</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 4px;margin-bottom:14px;">
+        <button class="k3-bet-btn k3-big" onclick="wingoBet('Big','2x')">BIG 📈<span class="k3-odds">5–9 · Win 2×</span></button>
+        <button class="k3-bet-btn k3-small" onclick="wingoBet('Small','2x')">SMALL 📉<span class="k3-odds">0–4 · Win 2×</span></button>
+      </div>
+      <div class="wm-section-title">Select Number</div>
+      <div class="wm-nums">
+        <button class="wm-nbtn wm-n0" onclick="wingoBet('0','9x')">0</button>
+        <button class="wm-nbtn wm-n1" onclick="wingoBet('1','9x')">1</button>
+        <button class="wm-nbtn wm-n2" onclick="wingoBet('2','9x')">2</button>
+        <button class="wm-nbtn wm-n3" onclick="wingoBet('3','9x')">3</button>
+        <button class="wm-nbtn wm-n4" onclick="wingoBet('4','9x')">4</button>
+        <button class="wm-nbtn wm-n5" onclick="wingoBet('5','9x')">5</button>
+        <button class="wm-nbtn wm-n6" onclick="wingoBet('6','9x')">6</button>
+        <button class="wm-nbtn wm-n7" onclick="wingoBet('7','9x')">7</button>
+        <button class="wm-nbtn wm-n8" onclick="wingoBet('8','9x')">8</button>
+        <button class="wm-nbtn wm-n9" onclick="wingoBet('9','9x')">9</button>
+      </div>
+      <div class="wm-bet-section">
+        <div class="wm-bet-title">Bet Amount <span id="wm-bet-total" style="color:#ff80d4;font-size:12px;margin-left:8px;"></span></div>
+        <div class="wm-bet-amounts">
+          <div class="wm-amt selected" onclick="selectAmt(this,'wm')">₹10</div>
+          <div class="wm-amt" onclick="selectAmt(this,'wm')">₹50</div>
+          <div class="wm-amt" onclick="selectAmt(this,'wm')">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'wm')">₹500</div>
+          <div class="wm-amt" onclick="selectAmt(this,'wm')">₹1000</div>
+        </div>
+      </div>
+      <!-- ── Bottom Tab Bar ─────────────────────────── -->
+      <div class="wm-bottom-tabs">
+        <div class="wm-btab active" id="wm-btab-history" onclick="switchWmPanel('history')">📋 History</div>
+        <div class="wm-btab" id="wm-btab-mybets" onclick="switchWmPanel('mybets')">🎯 My Bets</div>
+      </div>
+
+      <!-- ── History Panel ─────────────────────────── -->
+      <div id="wm-panel-history" style="display:block">
+        <div class="wm-panel-header">
+          <span class="wm-panel-title">📋 Game History</span>
+          <div class="wm-pg-row">
+            <button class="wm-pgbtn" onclick="wmHistPage(-1)">&#8249; Prev</button>
+            <span class="wm-pginfo" id="wm-hist-pginfo">Page 1</span>
+            <button class="wm-pgbtn" onclick="wmHistPage(1)">Next &#8250;</button>
+          </div>
+        </div>
+        <div class="wm-history">
+          <div class="wm-history-head"><span>Period</span><span>Num</span><span>Color</span><span>Big/Small</span></div>
+          <div id="wm-hist-body-full"><div class="wm-loading">Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- ── My Bets Panel ──────────────────────────── -->
+      <div id="wm-panel-mybets" style="display:none">
+        <div class="wm-panel-header">
+          <span class="wm-panel-title">🎯 My Bets</span>
+          <div class="wm-pg-row">
+            <button class="wm-pgbtn" onclick="wmMyBetsPage(-1)">&#8249; Prev</button>
+            <span class="wm-pginfo" id="wm-mybets-pginfo">Page 1</span>
+            <button class="wm-pgbtn" onclick="wmMyBetsPage(1)">Next &#8250;</button>
+          </div>
+        </div>
+        <div class="wm-history">
+          <div class="wm-history-head"><span>Period</span><span>Bet</span><span>Result</span><span>P&amp;L</span></div>
+          <div id="wm-mybets-body"><div class="wm-loading">Login to see bets</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── AVIATOR GAME MODAL ─── -->
+<div class="game-overlay" id="aviatorOverlay">
+  <div class="game-modal av25-modal">
+
+    <!-- TOP BAR -->
+    <div class="wm-topbar">
+      <button class="wm-back" onclick="closeGame('aviatorOverlay')">&#8592;</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:20px;">✈️</span>
+        <span style="font-weight:800;font-size:16px;letter-spacing:1px;color:#fff;">AVIATOR</span>
+      </div>
+      <div class="av25-bal-pill" id="av25BalPill">₹<span id="av25Bal">—</span></div>
+    </div>
+
+    <!-- FLIGHT CANVAS -->
+    <div class="av25-canvas-wrap" id="av25Wrap">
+      <canvas id="av25Canvas"></canvas>
+      <div class="av25-mult-overlay" id="av25MultOverlay">
+        <div class="av25-mult" id="av25Mult">1.00×</div>
+        <div class="av25-status" id="av25Status">⏳ Place your bet!</div>
+        <!-- Countdown bar — only visible during waiting phase -->
+        <div class="av25-countdown-bar-wrap" id="av25CountdownWrap" style="display:none;">
+          <div class="av25-countdown-bar" id="av25CountdownBar"></div>
+          <span class="av25-countdown-num" id="av25CountdownNum">10</span>
+        </div>
+      </div>
+      <!-- Plane -->
+      <div class="av25-plane" id="av25Plane">✈️</div>
+      <!-- Crash flash -->
+      <div class="av25-crash-flash" id="av25CrashFlash"></div>
+    </div>
+
+    <!-- HISTORY STRIP -->
+    <div class="av25-hist-strip" id="av25HistStrip"></div>
+
+    <!-- BET PANEL -->
+    <div class="av25-bet-panel" id="av25BetPanel">
+      <!-- Amount row -->
+      <div class="av25-amt-label">
+        <span>Bet Amount</span>
+        <span class="av25-amt-running" id="av25AmtRunning"></span>
+      </div>
+      <div class="av25-chips">
+        <div class="av25-chip sel" onclick="av25ChipClick(this,10)">₹10</div>
+        <div class="av25-chip" onclick="av25ChipClick(this,50)">₹50</div>
+        <div class="av25-chip" onclick="av25ChipClick(this,100)">₹100</div>
+        <div class="av25-chip" onclick="av25ChipClick(this,500)">₹500</div>
+        <div class="av25-chip" onclick="av25ChipClick(this,1000)">₹1K</div>
+        <div class="av25-chip" onclick="av25ChipClick(this,2000)">₹2K</div>
+        <div class="av25-chip" onclick="av25ChipClick(this,5000)">₹5K</div>
+      </div>
+      <div class="av25-custom-row">
+        <input type="number" id="av25CustomInput" placeholder="Custom amount (₹10 – ₹50,000)"
+          min="10" max="50000" oninput="av25CustomInput(this.value)" />
+        <button class="av25-clear-btn" onclick="av25ClearAmt()">✕</button>
+      </div>
+
+      <!-- BET / CASHOUT buttons -->
+      <div class="av25-btn-row">
+        <button class="av25-bet-btn" id="av25BetBtn" onclick="av25PlaceBet()">BET NOW</button>
+        <button class="av25-cash-btn" id="av25CashBtn" onclick="av25CashOut()" disabled>CASH OUT</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="wm-bottom-tabs" style="margin-top:8px;">
+      <div class="wm-btab active" id="av25TabHistory" onclick="av25SwitchTab('history')">📋 History</div>
+      <div class="wm-btab" id="av25TabMybets" onclick="av25SwitchTab('mybets')">🎯 My Bets</div>
+    </div>
+
+    <!-- HISTORY PANEL -->
+    <div id="av25PanelHistory">
+      <div class="wm-panel-header">
+        <span class="wm-panel-title">📋 Game History</span>
+        <div class="wm-pg-row">
+          <button class="wm-pgbtn" onclick="av25HistPage(-1)">&#8249; Prev</button>
+          <span class="wm-pginfo" id="av25HistPgInfo">Page 1</span>
+          <button class="wm-pgbtn" onclick="av25HistPage(1)">Next &#8250;</button>
+        </div>
+      </div>
+      <div class="wm-history">
+        <div class="wm-history-head"><span>Period</span><span>Crash</span><span>Bets</span><span>Payout</span></div>
+        <div id="av25HistBody"></div>
+      </div>
+    </div>
+
+    <!-- MY BETS PANEL -->
+    <div id="av25PanelMybets" style="display:none;">
+      <div class="wm-panel-header">
+        <span class="wm-panel-title">🎯 My Bets</span>
+        <div class="wm-pg-row">
+          <button class="wm-pgbtn" onclick="av25MybetsPage(-1)">&#8249; Prev</button>
+          <span class="wm-pginfo" id="av25MybetsPgInfo">Page 1</span>
+          <button class="wm-pgbtn" onclick="av25MybetsPage(1)">Next &#8250;</button>
+        </div>
+      </div>
+      <div class="wm-history">
+        <div class="wm-history-head"><span>Period</span><span>Bet</span><span>Mult</span><span>Result</span></div>
+        <div id="av25MybetsBody"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── VORTEX GAME MODAL ─── -->
+<div class="game-overlay" id="vortexOverlay">
+  <div class="game-modal">
+    <div class="wm-topbar">
+      <div class="wm-back" onclick="closeGame('vortexOverlay')">←</div>
+      <div class="wm-title">🌀 VORTEX</div>
+      <div class="wm-info">ℹ️</div>
+    </div>
+    <div class="wm-body">
+      <div class="vx-canvas-wrap">
+        <div class="vx-spinner-outer">
+          <div class="vx-spinner-ring"></div><div class="vx-spinner-ring"></div><div class="vx-spinner-ring"></div>
+          <div class="vx-center-num" id="vxNum">?</div>
+        </div>
+        <div class="vx-status" id="vxStatus">Place your bet!</div>
+        <div style="font-size:13px;color:#aaa;margin-top:4px">💰 Balance: <b id="vx-bal-display" style="color:#22d67a">₹0</b></div>
+        <div class="result-overlay" id="vxResultOverlay">
+          <div class="result-big" id="vxResultBig"></div>
+          <div class="result-sub" id="vxResultSub"></div>
+        </div>
+      </div>
+      <div class="vx-history" id="vxHistRow">
+        <div class="vx-hist-item" style="background:#dc2626">8</div>
+        <div class="vx-hist-item" style="background:#16a34a">3</div>
+        <div class="vx-hist-item" style="background:#7c3aed">7</div>
+      </div>
+      <div class="wm-section-title" style="color:#6bb8ff;">Select Bet Type</div>
+      <div class="vx-bet-grid">
+        <button class="vx-bet-btn vx-btn-low" onclick="vxBet('Low (1-3)','3x')">Low 1-3<span class="vx-odds">Win 3×</span></button>
+        <button class="vx-bet-btn vx-btn-mid" onclick="vxBet('Mid (4-6)','3x')">Mid 4-6<span class="vx-odds">Win 3×</span></button>
+        <button class="vx-bet-btn vx-btn-high" onclick="vxBet('High (7-9)','3x')">High 7-9<span class="vx-odds">Win 3×</span></button>
+        <button class="vx-bet-btn vx-btn-x" onclick="vxBet('Zero','9x')">ZERO<span class="vx-odds">Win 9×</span></button>
+        <button class="vx-bet-btn vx-btn-even" onclick="vxBet('Even','2x')">EVEN<span class="vx-odds">Win 2×</span></button>
+        <button class="vx-bet-btn vx-btn-odd" onclick="vxBet('Odd','2x')">ODD<span class="vx-odds">Win 2×</span></button>
+      </div>
+      <div class="wm-section-title" style="color:#6bb8ff;">Bet Amount <span id="vx-bet-total" style="color:#6bb8ff;font-size:12px;margin-left:8px;font-weight:700;"></span></div>
+      <div class="vx-amounts">
+        <div class="vx-amt selected" onclick="selectAmt(this,'vx')">₹10</div>
+        <div class="vx-amt" onclick="selectAmt(this,'vx')">₹50</div>
+        <div class="vx-amt" onclick="selectAmt(this,'vx')">₹100</div>
+        <div class="vx-amt" onclick="selectAmt(this,'vx')">₹500</div>
+        <div class="vx-amt" onclick="selectAmt(this,'vx')">₹1000</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─── K3 DICE GAME MODAL ─── -->
+<div class="game-overlay" id="k3Overlay">
+  <div class="game-modal">
+    <div class="wm-topbar">
+      <div class="wm-back" onclick="closeGame('k3Overlay')">←</div>
+      <div class="wm-title">🎲 K3 DICE</div>
+      <div class="wm-info">ℹ️</div>
+    </div>
+    <div class="wm-body">
+      <div class="wm-timer-hero">
+        <div><div class="wm-period-label">Period</div><div class="wm-period-num" id="k3-period">—</div></div>
+        <div class="wm-countdown">
+          <div class="wm-countdown-label">Time Left</div>
+          <div class="wm-clock"><div class="wm-tbox" id="k3-m">01</div><div class="wm-colon">:</div><div class="wm-tbox" id="k3-s">00</div></div>
+        <div style="font-size:13px;color:#aaa;margin-top:6px">💰 <b id="k3-bal-display" style="color:#22d67a">₹0</b></div>
+        </div>
+      </div>
+      <!-- Dice display -->
+      <div id="k3-dice-display" style="display:flex;justify-content:center;gap:16px;padding:18px 0;background:rgba(245,200,66,0.05);border-radius:14px;margin-bottom:14px;">
+        <div class="k3-die" id="k3d1">?</div>
+        <div class="k3-die" id="k3d2">?</div>
+        <div class="k3-die" id="k3d3">?</div>
+      </div>
+      <div id="k3-sum-display" style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:14px;color:var(--muted);margin-bottom:14px;">Sum: —</div>
+      <!-- Bet options -->
+      <div class="wm-section-title">Big / Small / Odd / Even</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:0 4px;margin-bottom:14px;">
+        <button class="k3-bet-btn k3-big"   onclick="k3Bet('Big','1.95x')">BIG<span class="k3-odds">11–17</span></button>
+        <button class="k3-bet-btn k3-small" onclick="k3Bet('Small','1.95x')">SMALL<span class="k3-odds">4–10</span></button>
+        <button class="k3-bet-btn k3-odd"   onclick="k3Bet('Odd','1.95x')">ODD<span class="k3-odds">1.95×</span></button>
+        <button class="k3-bet-btn k3-even"  onclick="k3Bet('Even','1.95x')">EVEN<span class="k3-odds">1.95×</span></button>
+      </div>
+      <div class="wm-section-title">Triple (Any)</div>
+      <div style="padding:0 4px;margin-bottom:14px;">
+        <button class="k3-bet-btn k3-triple" style="width:100%;" onclick="k3Bet('Triple','24x')">TRIPLE ANY 🎯<span class="k3-odds">24×</span></button>
+      </div>
+      <div class="wm-section-title">Sum Total</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:0 4px;margin-bottom:14px;">
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:4','50x')">4<br><span style="font-size:9px;">50×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:5','20x')">5<br><span style="font-size:9px;">20×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:6','14x')">6<br><span style="font-size:9px;">14×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:7','8x')">7<br><span style="font-size:9px;">8×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:8','6x')">8<br><span style="font-size:9px;">6×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:9','4x')">9<br><span style="font-size:9px;">4×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:10','3x')">10<br><span style="font-size:9px;">3×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:11','3x')">11<br><span style="font-size:9px;">3×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:12','4x')">12<br><span style="font-size:9px;">4×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:13','6x')">13<br><span style="font-size:9px;">6×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:14','8x')">14<br><span style="font-size:9px;">8×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:15','14x')">15<br><span style="font-size:9px;">14×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:16','20x')">16<br><span style="font-size:9px;">20×</span></button>
+        <button class="k3-sum-btn" onclick="k3Bet('Sum:17','50x')">17<br><span style="font-size:9px;">50×</span></button>
+      </div>
+      <div class="wm-bet-section">
+        <div class="wm-bet-title">Bet Amount <span id="k3-bet-total" style="color:#f5c842;font-size:12px;margin-left:8px;"></span></div>
+        <div class="wm-bet-amounts">
+          <div class="wm-amt selected" onclick="selectAmt(this,'k3')">₹10</div>
+          <div class="wm-amt" onclick="selectAmt(this,'k3')">₹50</div>
+          <div class="wm-amt" onclick="selectAmt(this,'k3')">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'k3')">₹500</div>
+          <div class="wm-amt" onclick="selectAmt(this,'k3')">₹1000</div>
+        </div>
+      </div>
+      <!-- K3 tabs -->
+      <div class="wm-bottom-tabs">
+        <div class="wm-btab active" id="k3-btab-history" onclick="switchK3Panel('history')">📋 History</div>
+        <div class="wm-btab" id="k3-btab-mybets" onclick="switchK3Panel('mybets')">🎯 My Bets</div>
+      </div>
+      <div id="k3-panel-history" style="display:block">
+        <div class="wm-panel-header">
+          <span class="wm-panel-title">📋 Game History</span>
+          <div class="wm-pg-row">
+            <button class="wm-pgbtn" onclick="k3HistPage(-1)">&#8249; Prev</button>
+            <span class="wm-pginfo" id="k3-hist-pginfo">Page 1</span>
+            <button class="wm-pgbtn" onclick="k3HistPage(1)">Next &#8250;</button>
+          </div>
+        </div>
+        <div class="wm-history">
+          <div class="wm-history-head"><span>Period</span><span>Dice</span><span>Sum</span><span>Big/Small</span></div>
+          <div id="k3-hist-body"><div class="wm-loading">Loading...</div></div>
+        </div>
+      </div>
+      <div id="k3-panel-mybets" style="display:none">
+        <div class="wm-panel-header">
+          <span class="wm-panel-title">🎯 My Bets</span>
+          <div class="wm-pg-row">
+            <button class="wm-pgbtn" onclick="k3MyBetsPage(-1)">&#8249; Prev</button>
+            <span class="wm-pginfo" id="k3-mybets-pginfo">Page 1</span>
+            <button class="wm-pgbtn" onclick="k3MyBetsPage(1)">Next &#8250;</button>
+          </div>
+        </div>
+        <div class="wm-history">
+          <div class="wm-history-head"><span>Period</span><span>Bet</span><span>Dice</span><span>P&amp;L</span></div>
+          <div id="k3-mybets-body"><div class="wm-loading">Login to see bets</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MINES GAME MODAL ─── -->
+<div class="game-overlay" id="minesOverlay">
+  <div class="game-modal">
+    <div class="wm-topbar">
+      <div class="wm-back" onclick="minesQuit()">←</div>
+      <div class="wm-title">💣 MINES</div>
+      <div class="wm-info">ℹ️</div>
+    </div>
+    <div class="wm-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 4px;margin-bottom:14px;">
+        <div>
+          <div style="font-size:11px;color:var(--muted);">Multiplier</div>
+          <div id="mines-mult" style="font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:#22d67a;">1.00×</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;color:var(--muted);">Potential Win</div>
+          <div id="mines-payout" style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#f5c842;">₹0</div>
+        </div>
+      </div>
+      <!-- 5x5 Grid -->
+      <div id="mines-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0 4px;margin-bottom:16px;"></div>
+      <!-- Controls -->
+      <div style="text-align:right;padding:4px 4px 0;font-size:13px;color:#aaa">💰 Balance: <b id="mines-bal-display" style="color:#22d67a">₹0</b></div>
+      <div id="mines-setup" style="">
+        <div class="wm-section-title">Mines Count</div>
+        <div style="display:flex;gap:8px;padding:0 4px;margin-bottom:12px;flex-wrap:wrap;">
+          <div class="mines-count-btn selected" onclick="selectMinesCount(this,1)">1</div>
+          <div class="mines-count-btn" onclick="selectMinesCount(this,3)">3</div>
+          <div class="mines-count-btn" onclick="selectMinesCount(this,5)">5</div>
+          <div class="mines-count-btn" onclick="selectMinesCount(this,10)">10</div>
+          <div class="mines-count-btn" onclick="selectMinesCount(this,15)">15</div>
+          <div class="mines-count-btn" onclick="selectMinesCount(this,24)">24</div>
+        </div>
+        <div class="wm-bet-section">
+          <div class="wm-bet-title">Bet Amount <span id="mines-bet-total" style="color:#a78bfa;font-size:12px;margin-left:8px;"></span></div>
+          <div class="wm-bet-amounts">
+            <div class="wm-amt selected" onclick="selectAmt(this,'mines')">₹10</div>
+            <div class="wm-amt" onclick="selectAmt(this,'mines')">₹50</div>
+            <div class="wm-amt" onclick="selectAmt(this,'mines')">₹100</div>
+            <div class="wm-amt" onclick="selectAmt(this,'mines')">₹500</div>
+            <div class="wm-amt" onclick="selectAmt(this,'mines')">₹1000</div>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-top:12px;background:linear-gradient(135deg,#dc2626,#991b1b);" onclick="minesStart()">💣 Start Game</button>
+      </div>
+      <div id="mines-playing" style="display:none;">
+        <button class="btn-primary" style="background:linear-gradient(135deg,#16a34a,#15803d);" onclick="minesCashout()">💰 Cash Out</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── DRAGON vs TIGER MODAL ─── -->
+<div class="game-overlay" id="dragonTigerOverlay">
+  <div class="game-modal">
+    <div class="wm-topbar">
+      <div class="wm-back" onclick="closeGame('dragonTigerOverlay')">←</div>
+      <div class="wm-title">🐉 DRAGON vs TIGER 🐯</div>
+      <div class="wm-info">ℹ️</div>
+    </div>
+    <div class="wm-body">
+      <!-- Card display area -->
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;padding:16px 8px;background:rgba(120,0,255,0.06);border-radius:16px;margin-bottom:16px;">
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:#c084fc;font-weight:700;margin-bottom:8px;">🐉 DRAGON</div>
+          <div id="dt-dragon-card" style="width:60px;height:84px;background:linear-gradient(135deg,#7c3aed,#4c1d95);border-radius:10px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;border:2px solid rgba(196,132,252,0.4);">?</div>
+        </div>
+        <div style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--muted);">VS</div>
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:#fb923c;font-weight:700;margin-bottom:8px;">🐯 TIGER</div>
+          <div id="dt-tiger-card" style="width:60px;height:84px;background:linear-gradient(135deg,#ea580c,#9a3412);border-radius:10px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;border:2px solid rgba(251,146,60,0.4);">?</div>
+        </div>
+      </div>
+      <div style="text-align:right;padding:0 4px 8px;font-size:13px;color:#aaa">💰 Balance: <b id="dt-bal-display" style="color:#22d67a">₹0</b></div>
+      <div id="dt-result-msg" style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--muted);margin-bottom:16px;min-height:28px;">Pick your side!</div>
+      <!-- Bet buttons -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;padding:0 4px;">
+        <button class="dt-bet-btn dt-dragon" onclick="dtBet('Dragon')">🐉 Dragon<span class="dt-odds">1.95×</span></button>
+        <button class="dt-bet-btn dt-tie"    onclick="dtBet('Tie')">🤝 Tie<span class="dt-odds">8×</span></button>
+        <button class="dt-bet-btn dt-tiger"  onclick="dtBet('Tiger')">🐯 Tiger<span class="dt-odds">1.95×</span></button>
+      </div>
+      <div class="wm-bet-section">
+        <div class="wm-bet-title">Bet Amount <span id="dt-bet-total" style="color:#c084fc;font-size:12px;margin-left:8px;"></span></div>
+        <div class="wm-bet-amounts">
+          <div class="wm-amt selected" onclick="selectAmt(this,'dt')">₹10</div>
+          <div class="wm-amt" onclick="selectAmt(this,'dt')">₹50</div>
+          <div class="wm-amt" onclick="selectAmt(this,'dt')">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'dt')">₹500</div>
+          <div class="wm-amt" onclick="selectAmt(this,'dt')">₹1000</div>
+        </div>
+      </div>
+      <!-- History -->
+      <div class="wm-section-title" style="margin-top:14px;">Recent Results</div>
+      <div id="dt-history" style="display:flex;gap:6px;flex-wrap:wrap;padding:0 4px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── ANDAR BAHAR MODAL ─── -->
+<div class="game-overlay" id="andarBaharOverlay">
+  <div class="game-modal">
+    <div class="wm-topbar">
+      <div class="wm-back" onclick="closeGame('andarBaharOverlay')">←</div>
+      <div class="wm-title">🃏 ANDAR BAHAR</div>
+      <div class="wm-info">ℹ️</div>
+    </div>
+    <div class="wm-body">
+      <!-- Middle card -->
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">MIDDLE CARD</div>
+        <div id="ab-middle-card" style="width:70px;height:98px;background:linear-gradient(135deg,#1e40af,#1d4ed8);border-radius:12px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff;border:2px solid rgba(96,165,250,0.5);">?</div>
+      </div>
+      <!-- Andar / Bahar card rows -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div>
+          <div style="font-size:11px;color:#4ade80;font-weight:700;text-align:center;margin-bottom:8px;">ANDAR 🟢</div>
+          <div id="ab-andar-cards" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:40px;background:rgba(34,197,94,0.05);border-radius:10px;padding:8px;"></div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:#f87171;font-weight:700;text-align:center;margin-bottom:8px;">BAHAR 🔴</div>
+          <div id="ab-bahar-cards" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:40px;background:rgba(239,68,68,0.05);border-radius:10px;padding:8px;"></div>
+        </div>
+      </div>
+      <div style="text-align:right;padding:0 4px 8px;font-size:13px;color:#aaa">💰 Balance: <b id="ab-bal-display" style="color:#22d67a">₹0</b></div>
+      <div id="ab-result-msg" style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--muted);margin-bottom:16px;min-height:28px;">Pick Andar or Bahar!</div>
+      <!-- Bet buttons -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;padding:0 4px;">
+        <button class="ab-bet-btn ab-andar" onclick="abBet('Andar')">ANDAR 🟢<span class="ab-odds">1.9×</span></button>
+        <button class="ab-bet-btn ab-bahar" onclick="abBet('Bahar')">BAHAR 🔴<span class="ab-odds">2.0×</span></button>
+      </div>
+      <div class="wm-bet-section">
+        <div class="wm-bet-title">Bet Amount <span id="ab-bet-total" style="color:#4ade80;font-size:12px;margin-left:8px;"></span></div>
+        <div class="wm-bet-amounts">
+          <div class="wm-amt selected" onclick="selectAmt(this,'ab')">₹10</div>
+          <div class="wm-amt" onclick="selectAmt(this,'ab')">₹50</div>
+          <div class="wm-amt" onclick="selectAmt(this,'ab')">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'ab')">₹500</div>
+          <div class="wm-amt" onclick="selectAmt(this,'ab')">₹1000</div>
+        </div>
+      </div>
+      <!-- History -->
+      <div class="wm-section-title" style="margin-top:14px;">Recent Results</div>
+      <div id="ab-history" style="display:flex;gap:6px;flex-wrap:wrap;padding:0 4px;"></div>
+    </div>
+  </div>
+</div>
+
+<div class="bet-toast" id="betToast"></div>
+
+<!-- ─── AUTH OVERLAY ─── -->
+<div class="game-overlay" id="authOverlay" style="z-index:9999;align-items:center;justify-content:center;overflow-y:auto;">
+  <div style="width:100%;max-width:420px;background:var(--bg);border-radius:22px;padding:28px 22px 32px;border:1px solid var(--border);box-shadow:0 40px 80px rgba(0,0,0,0.7);margin:16px auto;">
+
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:20px;">
+      <div class="logo" style="font-size:30px;margin-bottom:4px;">LEGIT CLUB</div>
+      <div style="font-size:13px;color:var(--muted);">Login or create an account to play</div>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:0;background:var(--surface2);border-radius:10px;padding:4px;margin-bottom:22px;">
+      <button id="tab-login" class="auth-tab active" onclick="switchAuthTab('login')" style="flex:1;padding:10px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-weight:700;font-size:14px;cursor:pointer;">🔑 Login</button>
+      <button id="tab-register" class="auth-tab" onclick="switchAuthTab('register')" style="flex:1;padding:10px;border:none;border-radius:8px;background:none;color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;">➕ Register</button>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         LOGIN FORM
+         Step 1: Phone + Email → Send OTP
+         Step 2: Enter OTP → Login
+    ══════════════════════════════════════ -->
+    <div id="form-login" class="auth-form active">
+
+      <!-- Step 1: credentials -->
+      <div id="login-step-1">
+        <div style="text-align:center;margin-bottom:18px;">
+          <div style="font-size:32px;margin-bottom:6px;">🔑</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.5;">Enter your phone &amp; email — we'll send a code to your email.</div>
+        </div>
+        <input id="login-phone" type="tel" placeholder="📱 Registered Phone Number"
+          style="width:100%;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;margin-bottom:10px;box-sizing:border-box;outline:none;"
+          onkeydown="if(event.key==='Enter') loginSendOtp()">
+        <input id="login-email" type="email" placeholder="📧 Registered Email Address"
+          style="width:100%;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;margin-bottom:12px;box-sizing:border-box;outline:none;"
+          onkeydown="if(event.key==='Enter') loginSendOtp()">
+        <div id="loginError1" style="display:none;margin-bottom:10px;font-size:13px;color:#f87171;text-align:center;"></div>
+        <button id="login-send-btn" onclick="loginSendOtp()"
+          style="width:100%;padding:15px;background:linear-gradient(135deg,#4f8ef7,#2563eb);border:none;border-radius:10px;font-size:16px;font-weight:700;color:#fff;cursor:pointer;">
+          Send OTP to Email
+        </button>
+        <div style="margin-top:14px;text-align:center;font-size:13px;color:var(--muted);">
+          New here? <button onclick="switchAuthTab('register')" style="background:none;border:none;color:#7c6fff;font-weight:700;cursor:pointer;font-size:13px;">Create an account →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: OTP -->
+      <div id="login-step-2" style="display:none;">
+        <div style="text-align:center;margin-bottom:18px;">
+          <div style="font-size:32px;margin-bottom:6px;">📬</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">OTP sent to your email:</div>
+          <div id="login-sent-to" style="font-size:14px;color:var(--text);font-weight:700;word-break:break-all;"></div>
+        </div>
+        <input id="login-otp-input" type="tel" maxlength="6" placeholder="000000"
+          style="width:100%;padding:16px;background:var(--surface2);border:2px solid rgba(79,142,247,0.4);border-radius:10px;color:var(--text);font-size:28px;margin-bottom:12px;box-sizing:border-box;outline:none;text-align:center;letter-spacing:12px;font-weight:700;"
+          oninput="this.value=this.value.replace(/\D/g,'').slice(0,6)"
+          onkeydown="if(event.key==='Enter') loginVerifyOtp()">
+        <div id="loginError2" style="display:none;margin-bottom:10px;font-size:13px;color:#f87171;text-align:center;"></div>
+        <button id="login-verify-btn" onclick="loginVerifyOtp()"
+          style="width:100%;padding:15px;background:linear-gradient(135deg,#22d67a,#16a34a);border:none;border-radius:10px;font-size:16px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:12px;">
+          Verify &amp; Login ✓
+        </button>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
+          <span style="font-size:13px;color:var(--muted);">Didn't get it?</span>
+          <button id="login-resend-btn" onclick="loginResendOtp()" style="background:none;border:none;color:#7c6fff;font-size:13px;font-weight:700;cursor:pointer;padding:0;">Resend OTP</button>
+          <span id="login-cooldown-timer" style="font-size:12px;color:var(--muted);display:none;"></span>
+        </div>
+        <div style="margin-top:12px;text-align:center;">
+          <button onclick="loginGoBack()" style="background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;">← Change details</button>
+        </div>
+      </div>
+
+    </div><!-- /form-login -->
+
+    <!-- ══════════════════════════════════════
+         REGISTER FORM
+         Fields: Name, Phone, Password, Referral
+         Then: Email → Send OTP → Verify → ✅ Green banner → Submit
+    ══════════════════════════════════════ -->
+    <div id="form-register" class="auth-form">
+
+      <!-- ✅ Email verified banner (shown after OTP verified) -->
+      <div id="reg-verified-banner" style="display:none;background:linear-gradient(135deg,rgba(34,214,122,0.15),rgba(22,163,74,0.1));border:1.5px solid rgba(34,214,122,0.5);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#22d67a;text-align:center;font-weight:700;">
+        ✅ Email Verified: <span id="reg-verified-email"></span>
+      </div>
+
+      <!-- Step 1: Basic info -->
+      <div id="reg-step-1">
+        <input id="reg-name" type="text" placeholder="👤 Full Name *"
+          style="width:100%;padding:13px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;margin-bottom:10px;box-sizing:border-box;outline:none;">
+        <input id="reg-phone" type="tel" placeholder="📱 Phone Number *"
+          style="width:100%;padding:13px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;margin-bottom:10px;box-sizing:border-box;outline:none;">
+        <input id="reg-pass" type="password" placeholder="🔒 Password (min 6 chars) *"
+          style="width:100%;padding:13px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;margin-bottom:10px;box-sizing:border-box;outline:none;">
+        <input id="reg-ref" type="text" placeholder="🎁 Referral Code (optional)"
+          style="width:100%;padding:13px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;margin-bottom:10px;box-sizing:border-box;outline:none;">
+
+        <!-- Email + OTP inline block -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;">
+          <div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">📧 Verify Your Email *</div>
+          <div style="display:flex;gap:8px;margin-bottom:0;" id="reg-email-row">
+            <input id="reg-email-input" type="email" placeholder="your@email.com"
+              style="flex:1;padding:12px 14px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;box-sizing:border-box;outline:none;"
+              onkeydown="if(event.key==='Enter') regSendEmailOtp()">
+            <button id="reg-email-otp-btn" onclick="regSendEmailOtp()"
+              style="padding:12px 14px;background:linear-gradient(135deg,#7c6fff,#5b4fff);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
+              Send OTP
+            </button>
+          </div>
+          <!-- OTP input row — hidden until OTP sent -->
+          <div id="reg-otp-row" style="display:none;margin-top:10px;">
+            <input id="reg-otp-input" type="tel" maxlength="6" placeholder="Enter 6-digit OTP"
+              style="width:100%;padding:13px;background:rgba(0,0,0,0.3);border:2px solid rgba(124,111,255,0.4);border-radius:8px;color:var(--text);font-size:22px;box-sizing:border-box;outline:none;text-align:center;letter-spacing:10px;font-weight:700;"
+              oninput="this.value=this.value.replace(/\D/g,'').slice(0,6)"
+              onkeydown="if(event.key==='Enter') regVerifyEmailOtp()">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+              <button id="reg-otp-verify-btn" onclick="regVerifyEmailOtp()"
+                style="flex:1;padding:11px;background:linear-gradient(135deg,#22d67a,#16a34a);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-right:8px;">
+                Verify ✓
+              </button>
+              <div style="text-align:right;">
+                <button id="reg-resend-btn" onclick="regResendEmailOtp()" style="background:none;border:none;color:#7c6fff;font-size:12px;font-weight:700;cursor:pointer;padding:0;display:block;">Resend</button>
+                <span id="reg-otp-cooldown" style="font-size:11px;color:var(--muted);display:none;"></span>
+              </div>
+            </div>
+          </div>
+          <div id="regEmailError" style="display:none;margin-top:8px;font-size:12px;color:#f87171;text-align:center;"></div>
+        </div>
+
+        <input id="reg-email-verified" type="hidden" value="">
+        <div id="regError" style="display:none;margin-bottom:10px;font-size:13px;color:#f87171;text-align:center;"></div>
+        <button id="reg-btn" onclick="doRegister()"
+          style="width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;font-size:16px;font-weight:700;color:#1a1200;cursor:pointer;opacity:0.4;cursor:not-allowed;" disabled>
+          Create Account
+        </button>
+        <div style="margin-top:14px;text-align:center;font-size:13px;color:var(--muted);">
+          Already have an account? <button onclick="switchAuthTab('login')" style="background:none;border:none;color:#7c6fff;font-weight:700;cursor:pointer;font-size:13px;">Login →</button>
+        </div>
+      </div>
+
+    </div><!-- /form-register -->
+
+  </div>
+</div>
+<script>
+function switchWingoTab(el, gid) {
+  document.querySelectorAll('.wingo-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  openWingoGame(gid);
+}
+</script>
+<script src="app.js"></script>
+<!-- ─── TRX WINGO MODAL ─── -->
+
+<!-- ─── TRX WIN GO MODAL ─── -->
+<div class="game-overlay" id="trxWingoOverlay">
+  <div class="game-modal" style="background:#000d1a;border-top:1px solid rgba(0,200,255,0.3);box-shadow:0 -20px 60px rgba(0,100,200,0.25)">
+    <div class="wm-topbar" style="background:linear-gradient(180deg,#001825,#000d1a)">
+      <div class="wm-back" onclick="closeGame('trxWingoOverlay')">←</div>
+      <div class="wm-title" style="background:linear-gradient(135deg,#00cfff,#0080ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent">TRX WIN GO</div>
+      <div class="wm-info" style="font-size:12px;color:#00cfff;-webkit-text-fill-color:#00cfff">₹<span id="trx-wm-bal">0</span></div>
+    </div>
+    <div class="wm-body">
+      <div class="wm-timer-hero" style="background:linear-gradient(135deg,#001520,#002535)">
+        <div>
+          <div class="wm-period-label">Period</div>
+          <div class="wm-period-num" id="trx-period-num">—</div>
+          <div style="font-size:10px;color:#444;font-family:monospace;margin-top:4px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="trx-wm-hash">hash: —</div>
+        </div>
+        <div class="wm-countdown">
+          <div class="wm-countdown-label" style="color:#00cfff">Time Left</div>
+          <div class="wm-clock">
+            <div class="wm-tbox" id="trx-wm-m" style="border-color:rgba(0,200,255,0.4);color:#00cfff">01</div>
+            <div class="wm-colon" style="color:#00cfff">:</div>
+            <div class="wm-tbox" id="trx-wm-s" style="border-color:rgba(0,200,255,0.4);color:#00cfff">00</div>
+          </div>
+        </div>
+      </div>
+      <div class="wm-results" id="trx-wm-history">
+        <span class="wm-result-label">Last</span>
+      </div>
+      <div class="wm-bet-section">
+        <div class="wm-bet-title">Bet Amount</div>
+        <div class="wm-bet-amounts">
+          <div class="wm-amt selected" onclick="selectAmt(this,'trxAmt',10)">₹10</div>
+          <div class="wm-amt" onclick="selectAmt(this,'trxAmt',50)">₹50</div>
+          <div class="wm-amt" onclick="selectAmt(this,'trxAmt',100)">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'trxAmt',500)">₹500</div>
+        </div>
+      </div>
+      <input type="hidden" id="trxAmt" value="10">
+      <div class="wm-section-title">Pick Number</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0 20px 14px">
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#166534,#22d67a)" onclick="placeTrxBet('1',1.95)">1</button>
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#991b1b,#dc2626)" onclick="placeTrxBet('2',1.95)">2</button>
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#166534,#22d67a)" onclick="placeTrxBet('3',1.95)">3</button>
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#991b1b,#dc2626)" onclick="placeTrxBet('4',1.95)">4</button>
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#5b21b6,#a855f7)" onclick="placeTrxBet('5',1.95)">5</button>
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#991b1b,#dc2626)" onclick="placeTrxBet('6',1.95)">6</button>
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#166534,#22d67a)" onclick="placeTrxBet('7',1.95)">7</button>
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#991b1b,#dc2626)" onclick="placeTrxBet('8',1.95)">8</button>
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#166534,#22d67a)" onclick="placeTrxBet('9',1.95)">9</button>
+        <button class="wg-num-btn" style="background:linear-gradient(135deg,#5b21b6,#a855f7)" onclick="placeTrxBet('0',1.95)">0</button>
+      </div>
+      <div class="wm-color-btns">
+        <button class="wm-cbtn" style="background:linear-gradient(135deg,#14532d,#22c55e)" onclick="placeTrxBet('Green',1.95)"><span class="cb-icon">🟢</span>Green<span style="font-size:11px;opacity:0.8">1.95×</span></button>
+        <button class="wm-cbtn" style="background:linear-gradient(135deg,#4c1d95,#8b5cf6)" onclick="placeTrxBet('Violet',1.95)"><span class="cb-icon">🟣</span>Violet<span style="font-size:11px;opacity:0.8">1.95×</span></button>
+        <button class="wm-cbtn" style="background:linear-gradient(135deg,#7f1d1d,#ef4444)" onclick="placeTrxBet('Red',1.95)"><span class="cb-icon">🔴</span>Red<span style="font-size:11px;opacity:0.8">1.95×</span></button>
+      </div>
+      <div class="wm-section-title" style="color:#00cfff;">Big / Small <span style="color:#444;font-size:10px;">(5–9 = Big · 0–4 = Small)</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px 14px;">
+        <button class="k3-bet-btn k3-big" onclick="placeTrxBet('Big',1.95)">BIG 📈<span class="k3-odds">5–9 · 1.95×</span></button>
+        <button class="k3-bet-btn k3-small" onclick="placeTrxBet('Small',1.95)">SMALL 📉<span class="k3-odds">0–4 · 1.95×</span></button>
+      </div>
+      <div id="trx-wm-msg" style="min-height:32px;padding:0 20px"></div>
+      <!-- TRX tabs -->
+      <div class="wm-bottom-tabs" style="border-color:rgba(0,200,255,0.2)">
+        <div class="wm-btab active" id="trx-btab-history" onclick="switchTrxPanel('history')" style="color:rgba(0,200,255,0.55)">📋 History</div>
+        <div class="wm-btab" id="trx-btab-mybets" onclick="switchTrxPanel('mybets')" style="color:rgba(0,200,255,0.55)">🎯 My Bets</div>
+      </div>
+      <div id="trx-panel-history" style="display:block">
+        <div class="wm-panel-header">
+          <span class="wm-panel-title" style="color:#00cfff">📋 Game History</span>
+          <div class="wm-pg-row">
+            <button class="wm-pgbtn" onclick="trxHistPage(-1)" style="border-color:rgba(0,200,255,0.3);color:#00cfff">&#8249; Prev</button>
+            <span class="wm-pginfo" id="trx-hist-pginfo">Page 1</span>
+            <button class="wm-pgbtn" onclick="trxHistPage(1)" style="border-color:rgba(0,200,255,0.3);color:#00cfff">Next &#8250;</button>
+          </div>
+        </div>
+        <div class="wm-history">
+          <div class="wm-history-head"><span>Period</span><span>Num</span><span>Color</span><span>Hash</span></div>
+          <div id="trx-hist-body"><div class="wm-loading">Loading...</div></div>
+        </div>
+      </div>
+      <div id="trx-panel-mybets" style="display:none">
+        <div class="wm-panel-header">
+          <span class="wm-panel-title" style="color:#00cfff">🎯 My Bets</span>
+          <div class="wm-pg-row">
+            <button class="wm-pgbtn" onclick="trxMyBetsPage(-1)" style="border-color:rgba(0,200,255,0.3);color:#00cfff">&#8249; Prev</button>
+            <span class="wm-pginfo" id="trx-mybets-pginfo">Page 1</span>
+            <button class="wm-pgbtn" onclick="trxMyBetsPage(1)" style="border-color:rgba(0,200,255,0.3);color:#00cfff">Next &#8250;</button>
+          </div>
+        </div>
+        <div class="wm-history">
+          <div class="wm-history-head"><span>Period</span><span>Bet</span><span>Result</span><span>P&amp;L</span></div>
+          <div id="trx-mybets-body"><div class="wm-loading">Login to see bets</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── 5D LOTTERY MODAL ─── -->
+<div class="game-overlay" id="fiveDOverlay">
+  <div class="game-modal" style="background:#0d0900;border-top:1px solid rgba(255,200,0,0.3);box-shadow:0 -20px 60px rgba(180,120,0,0.2)">
+    <div class="wm-topbar" style="background:linear-gradient(180deg,#1a1000,#0d0900)">
+      <div class="wm-back" onclick="closeGame('fiveDOverlay')">←</div>
+      <div class="wm-title" style="background:linear-gradient(135deg,#ffd700,#ff9500);-webkit-background-clip:text;-webkit-text-fill-color:transparent">5D LOTTERY</div>
+      <div class="wm-info" style="font-size:12px;color:#ffd700;-webkit-text-fill-color:#ffd700">₹<span id="fd-wm-bal">0</span></div>
+    </div>
+    <div class="wm-body">
+      <div class="wm-timer-hero" style="background:linear-gradient(135deg,#1a1200,#2a1e00)">
+        <div>
+          <div class="wm-period-label">Period</div>
+          <div class="wm-period-num" id="fd-wm-period">—</div>
+        </div>
+        <div class="wm-countdown">
+          <div class="wm-countdown-label" style="color:#ffd700">Time Left</div>
+          <div class="wm-clock">
+            <div class="wm-tbox" id="fd-wm-m" style="border-color:rgba(255,200,0,0.4);color:#ffd700">03</div>
+            <div class="wm-colon" style="color:#ffd700">:</div>
+            <div class="wm-tbox" id="fd-wm-s" style="border-color:rgba(255,200,0,0.4);color:#ffd700">00</div>
+          </div>
+        </div>
+      </div>
+      <div id="fd-wm-history" style="padding:10px 20px"></div>
+      <div class="wm-bet-section">
+        <div class="wm-bet-title">Bet Amount</div>
+        <div class="wm-bet-amounts">
+          <div class="wm-amt selected" onclick="selectAmt(this,'fdAmt',10)">₹10</div>
+          <div class="wm-amt" onclick="selectAmt(this,'fdAmt',50)">₹50</div>
+          <div class="wm-amt" onclick="selectAmt(this,'fdAmt',100)">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'fdAmt',500)">₹500</div>
+        </div>
+      </div>
+      <input type="hidden" id="fdAmt" value="10">
+      <div class="wm-section-title">Pick Position</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 20px 12px">
+        <button class="wm-amt" id="fd-sel-A" onclick="fdSelectPos('A')">A (1st)</button>
+        <button class="wm-amt" id="fd-sel-B" onclick="fdSelectPos('B')">B (2nd)</button>
+        <button class="wm-amt" id="fd-sel-C" onclick="fdSelectPos('C')">C (3rd)</button>
+        <button class="wm-amt" id="fd-sel-D" onclick="fdSelectPos('D')">D (4th)</button>
+        <button class="wm-amt" id="fd-sel-E" onclick="fdSelectPos('E')">E (5th)</button>
+        <button class="wm-amt" id="fd-sel-sum" onclick="fdSelectPos('sum')">SUM</button>
+      </div>
+      <div class="wm-section-title">Big / Small / Odd / Even <span style="color:#888;font-size:10px">(1.95×)</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:0 20px 12px">
+        <button class="k3-bet-btn k3-big" onclick="placeFiveDbet('Big')">BIG<span class="k3-odds">≥5</span></button>
+        <button class="k3-bet-btn k3-small" onclick="placeFiveDbet('Small')">SMALL<span class="k3-odds">≤4</span></button>
+        <button class="k3-bet-btn k3-odd" onclick="placeFiveDbet('Odd')">ODD<span class="k3-odds">1.95×</span></button>
+        <button class="k3-bet-btn k3-even" onclick="placeFiveDbet('Even')">EVEN<span class="k3-odds">1.95×</span></button>
+      </div>
+      <div class="wm-section-title">Exact Digit <span style="color:#888;font-size:10px">(9×)</span></div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0 20px 16px">
+        <button class="k3-sum-btn" onclick="placeFiveDbet('0')">0<br><span style="font-size:9px">9×</span></button>
+        <button class="k3-sum-btn" onclick="placeFiveDbet('1')">1<br><span style="font-size:9px">9×</span></button>
+        <button class="k3-sum-btn" onclick="placeFiveDbet('2')">2<br><span style="font-size:9px">9×</span></button>
+        <button class="k3-sum-btn" onclick="placeFiveDbet('3')">3<br><span style="font-size:9px">9×</span></button>
+        <button class="k3-sum-btn" onclick="placeFiveDbet('4')">4<br><span style="font-size:9px">9×</span></button>
+        <button class="k3-sum-btn" onclick="placeFiveDbet('5')">5<br><span style="font-size:9px">9×</span></button>
+        <button class="k3-sum-btn" onclick="placeFiveDbet('6')">6<br><span style="font-size:9px">9×</span></button>
+        <button class="k3-sum-btn" onclick="placeFiveDbet('7')">7<br><span style="font-size:9px">9×</span></button>
+        <button class="k3-sum-btn" onclick="placeFiveDbet('8')">8<br><span style="font-size:9px">9×</span></button>
+        <button class="k3-sum-btn" onclick="placeFiveDbet('9')">9<br><span style="font-size:9px">9×</span></button>
+      </div>
+      <div id="fd-wm-msg" style="min-height:32px;padding:0 20px"></div>
+      <!-- 5D tabs -->
+      <div class="wm-bottom-tabs" style="border-color:rgba(255,200,0,0.2)">
+        <div class="wm-btab active" id="fd-btab-history" onclick="switchFdPanel('history')" style="color:rgba(255,200,0,0.55)">📋 History</div>
+        <div class="wm-btab" id="fd-btab-mybets" onclick="switchFdPanel('mybets')" style="color:rgba(255,200,0,0.55)">🎯 My Bets</div>
+      </div>
+      <div id="fd-panel-history" style="display:block">
+        <div class="wm-panel-header">
+          <span class="wm-panel-title" style="color:#ffd700">📋 Game History</span>
+          <div class="wm-pg-row">
+            <button class="wm-pgbtn" onclick="fdHistPage(-1)" style="border-color:rgba(255,200,0,0.3);color:#ffd700">&#8249; Prev</button>
+            <span class="wm-pginfo" id="fd-hist-pginfo">Page 1</span>
+            <button class="wm-pgbtn" onclick="fdHistPage(1)" style="border-color:rgba(255,200,0,0.3);color:#ffd700">Next &#8250;</button>
+          </div>
+        </div>
+        <div class="wm-history">
+          <div class="wm-history-head"><span>Period</span><span>Result</span><span>Sum</span><span>Big/Small</span></div>
+          <div id="fd-hist-body"><div class="wm-loading">Loading...</div></div>
+        </div>
+      </div>
+      <div id="fd-panel-mybets" style="display:none">
+        <div class="wm-panel-header">
+          <span class="wm-panel-title" style="color:#ffd700">🎯 My Bets</span>
+          <div class="wm-pg-row">
+            <button class="wm-pgbtn" onclick="fdMyBetsPage(-1)" style="border-color:rgba(255,200,0,0.3);color:#ffd700">&#8249; Prev</button>
+            <span class="wm-pginfo" id="fd-mybets-pginfo">Page 1</span>
+            <button class="wm-pgbtn" onclick="fdMyBetsPage(1)" style="border-color:rgba(255,200,0,0.3);color:#ffd700">Next &#8250;</button>
+          </div>
+        </div>
+        <div class="wm-history">
+          <div class="wm-history-head"><span>Period</span><span>Bet</span><span>Result</span><span>P&amp;L</span></div>
+          <div id="fd-mybets-body"><div class="wm-loading">Login to see bets</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLOTS MODAL ─── -->
+<div class="game-overlay" id="slotsOverlay">
+  <div class="game-modal" style="background:#0e0018;border-top:1px solid rgba(255,80,200,0.3);box-shadow:0 -20px 60px rgba(180,0,150,0.2)">
+    <div class="wm-topbar" style="background:linear-gradient(180deg,#1a0028,#0e0018)">
+      <div class="wm-back" onclick="closeGame('slotsOverlay')">←</div>
+      <div class="wm-title" style="background:linear-gradient(135deg,#ff64c8,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent">SLOTS</div>
+      <div class="wm-info" style="font-size:12px;color:#ff64c8;-webkit-text-fill-color:#ff64c8">₹<span id="sl-wm-bal">0</span></div>
+    </div>
+    <div class="wm-body">
+      <div style="background:linear-gradient(135deg,#1a0028,#2a003a);padding:20px;margin-bottom:4px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto 14px">
+          <div style="display:flex;flex-direction:column;gap:8px" id="reel-0">
+            <div class="sl-sym">🍋</div><div class="sl-sym sl-midrow">🍋</div><div class="sl-sym">🍋</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px" id="reel-1">
+            <div class="sl-sym">🍋</div><div class="sl-sym sl-midrow">🍋</div><div class="sl-sym">🍋</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px" id="reel-2">
+            <div class="sl-sym">🍋</div><div class="sl-sym sl-midrow">🍋</div><div class="sl-sym">🍋</div>
+          </div>
+        </div>
+        <div style="border:2px solid rgba(255,100,200,0.5);border-radius:6px;padding:4px 0;text-align:center;font-size:11px;color:#ff64c8;letter-spacing:2px;margin-bottom:12px">— WIN LINE —</div>
+        <div id="sl-result-msg" style="min-height:28px;font-size:16px;font-weight:700;text-align:center"></div>
+      </div>
+      <div class="wm-bet-section">
+        <div class="wm-bet-title">Bet Amount</div>
+        <div class="wm-bet-amounts">
+          <div class="wm-amt selected" onclick="selectAmt(this,'slAmt',10)">₹10</div>
+          <div class="wm-amt" onclick="selectAmt(this,'slAmt',50)">₹50</div>
+          <div class="wm-amt" onclick="selectAmt(this,'slAmt',100)">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'slAmt',500)">₹500</div>
+        </div>
+      </div>
+      <input type="hidden" id="slAmt" value="10">
+      <div style="padding:14px 20px">
+        <button id="sl-spin-btn" onclick="spinSlots()" style="width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#c026d3,#7c3aed);color:#fff;font-size:20px;font-weight:700;cursor:pointer;letter-spacing:2px;font-family:'Rajdhani',sans-serif;box-shadow:0 8px 24px rgba(160,0,200,0.4)">🎰 SPIN</button>
+      </div>
+      <div class="wm-section-title">Paytable</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 20px 20px;font-size:13px">
+        <div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);border-radius:8px;padding:8px 10px">💎💎💎 <b style="color:#ffd700;float:right">50×</b></div>
+        <div style="background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.15);border-radius:8px;padding:8px 10px">7️⃣7️⃣7️⃣ <b style="color:#ffd700;float:right">25×</b></div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px">⭐⭐⭐ <b style="color:#ffd700;float:right">15×</b></div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px">🔔🔔🔔 <b style="color:#ffd700;float:right">10×</b></div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px">🍀🍀🍀 <b style="color:#ffd700;float:right">8×</b></div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px">🍇🍇🍇 <b style="color:#ffd700;float:right">5×</b></div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px">🍒🍒🍒 <b style="color:#ffd700;float:right">3×</b></div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px">🍋🍋🍋 <b style="color:#ffd700;float:right">2×</b></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WIN CELEBRATION OVERLAY ═══ -->
+<div id="winCelebration" onclick="closeWinCelebration()">
+  <div class="win-backdrop"></div>
+  <div class="win-ring" id="winRing1"></div>
+  <div class="win-ring" id="winRing2" style="animation-delay:0.2s"></div>
+  <div class="win-card" id="winCard">
+    <div class="win-card-label">🎉 You Won!</div>
+    <span class="win-trophy">🏆</span>
+    <div class="win-amount-wrap">
+      <div class="win-amount-label">Prize</div>
+      <div class="win-amount" id="winAmount">+₹0</div>
+    </div>
+    <div class="win-new-balance">New Balance: <b id="winNewBalance">₹0</b></div>
+    <div class="win-tap-close">TAP ANYWHERE TO CLOSE</div>
+  </div>
+</div>
+
+
+<style>
+/* ═══════════════ CRICKET PAGE STYLES ═══════════════ */
+
+#page-cricket {
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #040c06;
+  flex-direction: column;
+  padding-bottom: 180px;
+}
+
+.nav-cricket-btn { position: relative; }
+.nav-cricket-btn::before {
+  content: 'LIVE';
+  position: absolute;
+  top: 2px; right: 2px;
+  background: #ff4500;
+  color: #fff;
+  font-size: 7px;
+  font-weight: 900;
+  padding: 1px 4px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* Header */
+.cr-header {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #0d1f00 0%, #0a1600 50%, #001a0d 100%);
+}
+.cr-header-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(0,255,100,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cr-header-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px 12px;
+}
+.cr-logo { font-size: 28px; }
+.cr-header-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+.cr-header-sub { font-size: 11px; color: rgba(0,255,100,0.6); }
+.cr-live-pill {
+  margin-left: auto;
+  background: rgba(255,50,50,0.15);
+  border: 1px solid rgba(255,50,50,0.4);
+  color: #ff4444;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 20px;
+  animation: livePulse 2s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%,100% { opacity:1; border-color:rgba(255,50,50,0.4); }
+  50% { opacity:0.6; border-color:rgba(255,50,50,0.8); }
+}
+
+/* Tabs */
+.cr-tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid rgba(0,255,100,0.15);
+  background: rgba(0,10,0,0.5);
+}
+.cr-tab {
+  flex: 1;
+  text-align: center;
+  padding: 11px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+}
+.cr-tab.active {
+  color: #00ff64;
+  border-bottom-color: #00ff64;
+  background: rgba(0,255,100,0.05);
+}
+
+/* Filters */
+.cr-filters {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cr-filters::-webkit-scrollbar { display: none; }
+.cr-filter {
+  white-space: nowrap;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(0,255,100,0.2);
+  background: rgba(0,255,100,0.05);
+  color: rgba(0,255,100,0.6);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cr-filter.active {
+  background: rgba(0,255,100,0.18);
+  border-color: rgba(0,255,100,0.5);
+  color: #00ff64;
+}
+
+/* Match list */
+.cr-match-list {
+  padding: 8px 10px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.cr-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 0;
+  color: rgba(0,255,100,0.4);
+  font-size: 13px;
+}
+.cr-spinner {
+  width: 28px; height: 28px;
+  border: 3px solid rgba(0,255,100,0.15);
+  border-top-color: #00ff64;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── MATCH CARD — Bookie Style ── */
+.cr-match-card {
+  background: #0a1208;
+  border: 1px solid rgba(0,255,100,0.12);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.cr-match-card.live-card {
+  border-color: rgba(255,80,50,0.25);
+  background: #110a04;
+}
+.cr-match-card.live-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff4500, #ff8c00, #ff4500);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* Card top row: tournament + status */
+.cr-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 4px;
+}
+.cr-card-tournament {
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(0,255,100,0.5);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.cr-card-status-pill {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.cr-pill-live { background: rgba(255,60,0,0.2); color: #ff6040; border: 1px solid rgba(255,60,0,0.35); }
+.cr-pill-upcoming { background: rgba(0,200,255,0.1); color: #40d0ff; border: 1px solid rgba(0,200,255,0.25); }
+.cr-pill-completed { background: rgba(150,150,150,0.1); color: #aaa; border: 1px solid rgba(150,150,150,0.2); }
+
+/* Teams row */
+.cr-card-teams {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px 4px;
+  gap: 6px;
+}
+.cr-card-team { flex: 1; text-align: center; }
+.cr-card-team-short {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+.cr-card-team-full { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 1px; }
+.cr-card-team-score {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #00ff64;
+  margin-top: 2px;
+}
+.cr-card-mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 46px;
+}
+.cr-card-vs { font-size: 12px; font-weight: 900; color: rgba(255,255,255,0.25); }
+.cr-card-time { font-size: 10px; color: rgba(0,200,255,0.7); text-align: center; }
+
+/* Live score ticker strip */
+.cr-live-ticker {
+  background: rgba(255,80,0,0.08);
+  border-top: 1px solid rgba(255,80,0,0.12);
+  border-bottom: 1px solid rgba(255,80,0,0.12);
+  padding: 4px 12px;
+  font-size: 11px;
+  color: rgba(255,180,50,0.9);
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cr-live-ticker .cr-rr { color: rgba(0,255,100,0.7); }
+
+/* ── BOOKIE-STYLE ODDS ON CARD ── */
+.cr-card-odds-section {
+  padding: 6px 10px 4px;
+}
+.cr-odds-label {
+  font-size: 9px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.cr-odds-col-labels {
+  display: grid;
+  grid-template-columns: 1fr 28px 1fr;
+  gap: 3px;
+  margin-bottom: 3px;
+  padding: 0 2px;
+}
+.cr-col-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  text-align: center;
+}
+.cr-col-lbl.back-lbl { color: #5b9bd5; }
+.cr-col-lbl.lay-lbl { color: #c96a99; }
+
+.cr-odds-row {
+  display: grid;
+  gap: 3px;
+  margin-bottom: 3px;
+}
+.cr-odds-row-3 { grid-template-columns: 1fr 28px 1fr; }
+.cr-odds-row-2 { grid-template-columns: 1fr 1fr; }
+
+.cr-odds-team-name {
+  font-size: 9px;
+  color: rgba(255,255,255,0.45);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 2px;
+}
+
+.cr-back-btn, .cr-lay-btn {
+  padding: 6px 4px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  position: relative;
+  overflow: hidden;
+}
+.cr-back-btn {
+  background: #1a3a5c;
+  border: 1px solid #2a5a8c;
+  color: #72b8f5;
+}
+.cr-lay-btn {
+  background: #3d1a2e;
+  border: 1px solid #6d2a4e;
+  color: #e880b5;
+}
+.cr-vs-spacer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: rgba(255,255,255,0.2);
+  font-weight: 700;
+}
+.cr-back-btn:active { background: #1e4a74; transform: scale(0.96); }
+.cr-lay-btn:active { background: #4d2040; transform: scale(0.96); }
+
+/* Odds flash animations */
+@keyframes oddsUp {
+  0%   { background: #1a5c2a; border-color: #00cc44; }
+  100% { background: #1a3a5c; border-color: #2a5a8c; }
+}
+@keyframes oddsDown {
+  0%   { background: #5c1a1a; border-color: #cc2200; }
+  100% { background: #3d1a2e; border-color: #6d2a4e; }
+}
+.cr-back-btn.flash-up { animation: oddsUp 1.5s ease forwards; }
+.cr-lay-btn.flash-down { animation: oddsDown 1.5s ease forwards; }
+
+/* Session odds on card */
+.cr-session-strip {
+  background: rgba(0,0,0,0.25);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cr-session-strip::-webkit-scrollbar { display: none; }
+.cr-session-label {
+  font-size: 9px;
+  color: rgba(255,200,0,0.6);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cr-session-pair {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.cr-session-back, .cr-session-lay {
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cr-session-back { background: #1a3a5c; color: #72b8f5; }
+.cr-session-lay  { background: #3d1a2e; color: #e880b5; }
+
+/* Card footer */
+.cr-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px 8px;
+}
+.cr-card-venue { font-size: 10px; color: rgba(255,255,255,0.25); }
+.cr-card-open-btn {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(0,255,100,0.7);
+  cursor: pointer;
+  padding: 3px 8px;
+  border: 1px solid rgba(0,255,100,0.2);
+  border-radius: 8px;
+}
+.cr-card-closed-txt {
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
+}
+
+/* Live match banner (shown on Upcoming tab when live matches exist) */
+.cr-live-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #1a0800, #2a0f00);
+  border: 1.5px solid rgba(255,80,0,0.45);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  animation: bannerPulse 2.5s ease-in-out infinite;
+}
+.cr-live-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff4500, #ff8c00, #ff4500);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+@keyframes bannerPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,80,0,0); }
+  50%      { box-shadow: 0 0 16px 2px rgba(255,80,0,0.18); }
+}
+.cr-live-banner-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #ff4500;
+  flex-shrink: 0;
+  animation: livePulse 1.2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(255,69,0,0.7);
+}
+.cr-live-banner-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 3px;
+}
+.cr-live-banner-sub {
+  font-size: 12px;
+  color: rgba(255,150,50,0.85);
+  font-weight: 600;
+}
+
+/* Empty state */
+.cr-empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: rgba(255,255,255,0.3);
+}
+.cr-empty-icon { font-size: 48px; margin-bottom: 12px; }
+.cr-empty-txt { font-size: 14px; }
+
+/* My Bets */
+.cr-mybets-list {
+  padding: 12px 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.cr-bet-card {
+  background: #0a1208;
+  border: 1px solid rgba(0,255,100,0.1);
+  border-radius: 14px;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.cr-bet-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+}
+.cr-bet-pending::before { background: #ffc107; }
+.cr-bet-won::before { background: #00ff64; }
+.cr-bet-lost::before { background: #ff4444; }
+.cr-bet-refunded::before { background: #888; }
+.cr-bet-match { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.cr-bet-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.cr-bet-choice { font-size: 13px; font-weight: 700; color: #fff; }
+.cr-bet-odds { font-size: 12px; color: rgba(0,255,100,0.7); }
+.cr-bet-amount { font-size: 14px; font-weight: 700; color: #fff; }
+.cr-bet-status-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 10px;
+}
+.cr-status-pending { background: rgba(255,193,7,0.15); color: #ffc107; }
+.cr-status-won { background: rgba(0,255,100,0.15); color: #00ff64; }
+.cr-status-lost { background: rgba(255,68,68,0.15); color: #ff6666; }
+.cr-status-refunded { background: rgba(136,136,136,0.15); color: #aaa; }
+.cr-bet-payout { font-size: 13px; font-weight: 700; }
+.cr-bet-payout.won-payout { color: #00ff64; }
+
+/* DETAIL OVERLAY */
+.cr-detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: #040c06;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.cr-detail-sheet {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #071409 0%, #040c06 100%);
+  border-radius: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 220px;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+  animation: slideUp 0.25s ease-out;
+}
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.cr-detail-handle { display: none; }
+.cr-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid rgba(0,255,100,0.1);
+}
+.cr-detail-back {
+  font-size: 26px;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+}
+.cr-detail-title {
+  flex: 1;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+.cr-detail-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(255,60,0,0.2);
+  color: #ff6040;
+  border: 1px solid rgba(255,60,0,0.3);
+}
+
+/* Scoreboard */
+.cr-scoreboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(0,255,100,0.03);
+  border-bottom: 1px solid rgba(0,255,100,0.08);
+}
+.cr-score-team { flex: 1; text-align: center; }
+.cr-team-short {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+.cr-team-score {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #00ff64;
+  margin-top: 4px;
+  min-height: 22px;
+}
+.cr-score-vs { text-align: center; padding: 0 8px; }
+.cr-score-over { font-size: 10px; color: rgba(0,255,100,0.6); margin-bottom: 4px; }
+.cr-score-vs-txt {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.3);
+}
+.cr-score-batting { font-size: 10px; color: rgba(255,200,0,0.7); margin-top: 4px; }
+
+/* Run rate bar (detail view) */
+.cr-rr-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background: rgba(255,80,0,0.06);
+  border-bottom: 1px solid rgba(255,80,0,0.1);
+  font-size: 11px;
+  color: rgba(255,180,50,0.85);
+  font-weight: 600;
+}
+
+.cr-commentary {
+  padding: 8px 16px;
+  font-size: 12px;
+  color: rgba(255,200,0,0.7);
+  font-style: italic;
+  text-align: center;
+  min-height: 20px;
+}
+.cr-markets-label {
+  padding: 12px 16px 6px;
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(0,255,100,0.5);
+  letter-spacing: 1.5px;
+}
+
+/* Collapsible market groups */
+.cr-markets-list {
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cr-market-group {}
+.cr-market-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  background: rgba(0,255,100,0.05);
+  border: 1px solid rgba(0,255,100,0.1);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-bottom: 0;
+}
+.cr-market-group-header.open {
+  border-radius: 10px 10px 0 0;
+  border-bottom-color: transparent;
+}
+.cr-market-group-header:hover { background: rgba(0,255,100,0.09); }
+.cr-mgh-left { display: flex; align-items: center; gap: 8px; }
+.cr-mgh-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+.cr-mgh-count {
+  font-size: 10px;
+  background: rgba(0,255,100,0.12);
+  color: #00cc55;
+  padding: 2px 7px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+.cr-mgh-right { display: flex; align-items: center; gap: 6px; }
+.cr-market-status {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 7px;
+}
+.cr-mkt-open { background: rgba(0,255,100,0.1); color: #00ff64; }
+.cr-mkt-locked { background: rgba(255,165,0,0.1); color: #ffa500; }
+.cr-mkt-settled { background: rgba(150,150,150,0.1); color: #888; }
+.cr-mgh-arrow {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  transition: transform 0.2s;
+}
+.cr-mgh-arrow.open { transform: rotate(180deg); }
+
+.cr-market-group-body {
+  display: none;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(0,255,100,0.1);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 8px;
+  gap: 6px;
+  flex-direction: column;
+}
+.cr-market-group-body.open { display: flex; }
+
+/* Options inside market (Back/Lay style) */
+.cr-options-grid {
+  display: grid;
+  padding: 4px 0;
+  gap: 6px;
+}
+.cr-options-2 { grid-template-columns: 1fr 1fr; }
+.cr-options-3 { grid-template-columns: 1fr 1fr 1fr; }
+.cr-options-4 { grid-template-columns: 1fr 1fr; }
+.cr-options-many { grid-template-columns: 1fr 1fr; }
+
+.cr-option-btn {
+  background: #1a3a5c;
+  border: 1px solid #2a5a8c;
+  border-radius: 8px;
+  padding: 9px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.cr-option-btn:hover { background: #1e4a74; border-color: #3a7abc; }
+.cr-option-btn.selected { border-color: #00ff64; background: rgba(0,255,100,0.15); }
+.cr-option-btn.winner-opt { border-color: rgba(0,255,100,0.6); background: rgba(0,255,100,0.1); }
+.cr-option-btn.cr-option-closed { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+.cr-option-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+.cr-option-odds {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #72b8f5;
+  line-height: 1;
+}
+.cr-option-odds-unit { font-size: 10px; color: rgba(114,184,245,0.6); }
+.cr-option-btn.flash-up { animation: oddsUp 1.5s ease forwards; }
+.cr-option-btn.flash-down { animation: oddsDown 1.5s ease forwards; }
+
+/* ── STICKY BET SLIP ── */
+.cr-bet-slip-sticky {
+  position: fixed;
+  bottom: 60px;
+  left: 0; right: 0;
+  z-index: 600;
+  background: linear-gradient(180deg, #0d1f08, #091405);
+  border-top: 2px solid #00cc44;
+  padding: 12px 14px 10px;
+  box-shadow: 0 -8px 32px rgba(0,200,80,0.2);
+  animation: slipUp 0.25s cubic-bezier(0.34,1.2,0.64,1);
+}
+@keyframes slipUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.cr-slip-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.cr-slip-left { flex: 1; }
+.cr-slip-type {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 3px;
+  background: #1a3a5c;
+  color: #72b8f5;
+  letter-spacing: 0.5px;
+}
+.cr-slip-choice { font-size: 15px; font-weight: 700; color: #fff; }
+.cr-slip-mkt { font-size: 11px; color: rgba(0,255,100,0.6); margin-top: 1px; }
+.cr-slip-right { display: flex; align-items: center; gap: 10px; }
+.cr-slip-odds {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #00ff64;
+}
+.cr-slip-close {
+  font-size: 18px;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  padding: 4px;
+}
+.cr-bet-amounts {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.cr-quick-amt {
+  background: rgba(0,255,100,0.08);
+  border: 1px solid rgba(0,255,100,0.2);
+  border-radius: 8px;
+  padding: 7px 4px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #00ff64;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cr-quick-amt:active { background: rgba(0,255,100,0.2); }
+.cr-bet-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.cr-bet-input-row input {
+  flex: 1;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,255,100,0.25);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  width: 0;
+}
+.cr-bet-input-row input:focus { border-color: #00ff64; }
+.cr-potential {
+  font-size: 12px;
+  font-weight: 700;
+  color: #00ff64;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: right;
+}
+.cr-bet-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 8px;
+}
+.cr-btn-cancel {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 12px;
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cr-btn-place {
+  background: linear-gradient(135deg, #00cc55, #008833);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,200,80,0.3);
+}
+.cr-btn-place:active { filter: brightness(0.9); }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,2331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LEGIT CLUB — Admin Panel</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0d0f1a;color:#e0e0e0;display:flex;min-height:100vh}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#1a1d2e}::-webkit-scrollbar-thumb{background:#3a3d5c;border-radius:3px}
+/* SIDEBAR */
+#sidebar{width:220px;background:#131628;border-right:1px solid #252840;flex-shrink:0;overflow-y:auto;position:fixed;height:100vh;z-index:100}
+#sidebar h1{padding:18px 16px;font-size:16px;color:#7c6fff;border-bottom:1px solid #252840;font-weight:700}
+.nav-section{padding:10px 12px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:9px 16px;cursor:pointer;font-size:13px;color:#aaa;transition:.2s;border-left:3px solid transparent}
+.nav-item:hover{color:#fff;background:#1e2136}
+.nav-item.active{color:#7c6fff;border-left-color:#7c6fff;background:#1a1e38}
+.nav-item .icon{width:18px;text-align:center}
+/* MAIN */
+#main{margin-left:220px;flex:1;padding:24px;overflow-y:auto;min-height:100vh}
+.page{display:none}.page.active{display:block}
+h2{font-size:20px;margin-bottom:18px;color:#fff;font-weight:600}
+h3{font-size:15px;margin-bottom:12px;color:#ccc;font-weight:600}
+/* CARDS */
+.card{background:#131628;border:1px solid #252840;border-radius:12px;padding:20px;margin-bottom:16px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.stat-card{background:#131628;border:1px solid #252840;border-radius:10px;padding:16px;text-align:center}
+.stat-card .val{font-size:24px;font-weight:700;color:#7c6fff}
+.stat-card .lbl{font-size:12px;color:#888;margin-top:4px}
+/* GRID LAYOUTS */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+/* TABLES */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#1e2136;color:#aaa;padding:10px 12px;text-align:left;font-weight:500;font-size:12px}
+td{padding:9px 12px;border-bottom:1px solid #1e2136;color:#ccc}
+tr:hover td{background:#1a1d2e}
+/* CONTROLS */
+input,select{background:#1e2136;border:1px solid #2e3258;border-radius:8px;padding:9px 12px;color:#fff;font-size:13px;width:100%;outline:none}
+input:focus,select:focus{border-color:#7c6fff}
+.btn{border:none;border-radius:8px;padding:10px 18px;cursor:pointer;font-size:13px;font-weight:600;transition:.2s}
+.btn-primary{background:#7c6fff;color:#fff}.btn-primary:hover{background:#6a5de8}
+.btn-danger{background:#e74c3c;color:#fff}.btn-danger:hover{background:#c0392b}
+.btn-success{background:#27ae60;color:#fff}.btn-success:hover{background:#219a52}
+.btn-warn{background:#e67e22;color:#fff}.btn-warn:hover{background:#d35400}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-group{display:flex;gap:8px;flex-wrap:wrap}
+/* NUMBER BUTTONS */
+.num-btns{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0}
+.num-btn{border:none;border-radius:6px;padding:10px 0;cursor:pointer;font-weight:700;font-size:15px;transition:.2s}
+.num-btn:hover{transform:scale(1.05)}
+/* COLOR BUTTONS */
+.color-btn-green{background:#22d67a;color:#fff}
+.color-btn-red{background:#ff4d6a;color:#fff}
+.color-btn-violet{background:#a855f7;color:#fff}
+/* TIMER BADGE */
+.timer-badge{display:inline-block;background:#252840;border-radius:20px;padding:6px 16px;font-size:18px;font-weight:700;color:#7c6fff;min-width:60px;text-align:center}
+/* RESULT DOTS */
+.dot{display:inline-block;width:24px;height:24px;border-radius:50%;color:#fff;font-size:11px;font-weight:700;line-height:24px;text-align:center;margin:2px}
+/* DICE */
+.dice-sel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:10px 0}
+.dice-sel select{text-align:center;font-size:16px}
+.dice-preview{background:#1e2136;border-radius:8px;padding:10px;text-align:center;font-size:14px;margin:8px 0}
+/* MINES GRID */
+.mines-mini-grid{display:grid;grid-template-columns:repeat(5,24px);gap:3px}
+.mines-mini-cell{width:24px;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:11px}
+/* SLOTS REEL */
+.reel-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:150px;margin:8px auto}
+.reel-cell{background:#252840;border-radius:6px;padding:8px;text-align:center;font-size:20px}
+/* BADGE */
+.badge{display:inline-block;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.badge-green{background:#1a3a2a;color:#22d67a}
+.badge-red{background:#3a1a1a;color:#ff4d6a}
+@keyframes godmodePulse{0%,100%{box-shadow:0 0 8px rgba(220,38,38,0.6)}50%{box-shadow:0 0 20px rgba(220,38,38,0.9),0 0 40px rgba(124,58,237,0.5)}}
+.badge-violet{background:#2a1a3a;color:#a855f7}
+.badge-blue{background:#1a2a3a;color:#4fc3f7}
+.badge-gray{background:#2a2a2a;color:#aaa}
+/* ALERTS */
+.alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px}
+.alert-success{background:#1a3a2a;border:1px solid #27ae60;color:#2ecc71}
+.alert-error{background:#3a1a1a;border:1px solid #e74c3c;color:#ff6b6b}
+.alert-info{background:#1a2a3a;border:1px solid #4fc3f7;color:#81d4fa}
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid #252840;margin-bottom:16px}
+.tab{padding:9px 16px;cursor:pointer;font-size:13px;color:#888;border-bottom:2px solid transparent;transition:.2s}
+.tab.active{color:#7c6fff;border-bottom-color:#7c6fff}
+.tab-content{display:none}.tab-content.active{display:block}
+/* PERIOD ID */
+.period-id{font-size:11px;color:#666;font-family:monospace}
+/* HASH */
+.hash{font-size:11px;color:#666;font-family:monospace;word-break:break-all}
+
+/* LIVE FEED */
+.feed-wrap{max-height:calc(100vh - 160px);overflow-y:auto}
+.feed-item{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid #1a1d2e;transition:.15s}
+.feed-item:hover{background:#141728}
+.feed-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.fi-win{background:rgba(34,214,122,0.15)}
+.fi-loss{background:rgba(255,77,106,0.15)}
+.fi-deposit{background:rgba(79,142,247,0.15)}
+.fi-withdraw{background:rgba(245,200,66,0.15)}
+.fi-bonus{background:rgba(168,85,247,0.15)}
+.feed-info{min-width:0}
+.feed-name{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.feed-note{font-size:11px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.feed-right{text-align:right;flex-shrink:0}
+.feed-amt{font-size:14px;font-weight:700}
+.feed-time{font-size:11px;color:#555;margin-top:2px}
+.feed-filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.feed-chip{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #252840;background:#1a1d2e;color:#aaa;transition:.2s}
+.feed-chip.active,.feed-chip:hover{background:#7c6fff;color:#fff;border-color:#7c6fff}
+/* PLAYER PROFILE DRAWER */
+#playerDrawer{position:fixed;right:0;top:0;bottom:0;width:700px;background:#0f1120;border-left:1px solid #252840;z-index:500;transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,0.6)}
+#playerDrawer.open{transform:translateX(0)}
+.drawer-header{padding:20px 24px;border-bottom:1px solid #1e2136;display:flex;align-items:center;gap:14px;position:sticky;top:0;background:#0f1120;z-index:10}
+.drawer-close{width:32px;height:32px;border-radius:50%;background:#1e2136;border:none;color:#aaa;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.drawer-close:hover{background:#7c6fff;color:#fff}
+.drawer-body{padding:20px 24px}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.pstat{background:#131628;border:1px solid #1e2136;border-radius:10px;padding:14px;text-align:center}
+.pstat-val{font-size:20px;font-weight:700;color:#7c6fff}
+.pstat-lbl{font-size:11px;color:#888;margin-top:4px}
+.bet-row{display:grid;grid-template-columns:90px 1fr 70px 70px 60px;gap:8px;padding:8px 10px;border-bottom:1px solid #111827;font-size:12px;align-items:center}
+.bet-row:hover{background:#131628}
+.bet-row-head{font-size:11px;color:#555;font-weight:600;padding:6px 10px;border-bottom:1px solid #1e2136;display:grid;grid-template-columns:90px 1fr 70px 70px 60px;gap:8px}
+.won-badge{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.won-badge.w{background:#1a3a2a;color:#22d67a}
+.won-badge.l{background:#3a1a1a;color:#ff4d6a}
+/* P&L TABLE */
+.pnl-row{display:grid;grid-template-columns:160px 1fr 1fr 1fr 80px;gap:8px;padding:10px 14px;border-bottom:1px solid #111827;align-items:center;font-size:13px}
+.pnl-row:hover{background:#141728}
+.pnl-head{font-size:11px;color:#555;font-weight:600;padding:7px 14px;background:#1a1d2e;display:grid;grid-template-columns:160px 1fr 1fr 1fr 80px;gap:8px;border-radius:6px 6px 0 0}
+.profit-bar-wrap{background:#1a1d2e;border-radius:4px;height:8px;overflow:hidden}
+.profit-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,#22d67a,#4fc3f7)}
+</style>
+</head>
+<body>
+<div id="sidebar">
+  <h1>⚡ LEGIT CLUB Admin</h1>
+  <div class="nav-section">Overview</div>
+  <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">📊</span> Dashboard</div>
+  <div class="nav-section">Prediction Games</div>
+  <div class="nav-item" onclick="showPage('wingo',this)"><span class="icon">🎯</span> Win Go</div>
+  <div class="nav-item" onclick="showPage('trxwingo',this)"><span class="icon">🔗</span> TRX Win Go</div>
+  <div class="nav-item" onclick="showPage('fived',this)"><span class="icon">🎲</span> 5D Lottery</div>
+  <div class="nav-item" onclick="showPage('k3',this)"><span class="icon">🎰</span> K3 Dice</div>
+  <div class="nav-section">Live Games</div>
+  <div class="nav-item" onclick="showPage('aviator',this)"><span class="icon">✈️</span> Aviator</div>
+  <div class="nav-item" onclick="showPage('mines',this)"><span class="icon">💣</span> Mines</div>
+  <div class="nav-item" onclick="showPage('slots',this)"><span class="icon">🎰</span> Slots</div>
+  <div class="nav-section">Card Games</div>
+  <div class="nav-item" onclick="showPage('cardgames',this)"><span class="icon">🃏</span> Card Games</div>
+  <div class="nav-section">🏏 Cricket Betting</div>
+  <div class="nav-item" onclick="showPage('cricket',this)" style="color:#4ade80"><span class="icon">🏏</span> Cricket</div>
+  <div class="nav-section">Intelligence</div>
+  <div class="nav-item" onclick="showPage('feed',this)"><span class="icon">📡</span> Live Feed</div>
+  <div class="nav-item" onclick="showPage('pnl',this)"><span class="icon">📈</span> P&L by Game</div>
+  <div class="nav-section">Management</div>
+  <div class="nav-item" onclick="showPage('users',this)"><span class="icon">👥</span> Users</div>
+  <div class="nav-item" onclick="showPage('deposits',this)"><span class="icon">💰</span> Deposits</div>
+  <div class="nav-item" onclick="showPage('withdrawals',this)"><span class="icon">💸</span> Withdrawals</div>
+</div>
+
+<div id="main">
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+  <h2>📊 Dashboard</h2>
+
+  <!-- ── GLOBAL GOD MODE CONTROL ── -->
+  <div id="global-godmode-panel" style="margin-bottom:20px;border-radius:14px;border:2px solid rgba(220,38,38,0.3);background:rgba(15,5,5,0.8);padding:18px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:200px;">
+      <div style="font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#ff4d6a;margin-bottom:4px;">😈 Global God Mode</div>
+      <div id="global-godmode-status" style="font-size:12px;color:#888;">Status: checking...</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div id="global-godmode-indicator" style="width:14px;height:14px;border-radius:50%;background:#333;transition:all 0.3s;"></div>
+      <button id="global-godmode-btn" onclick="toggleGlobalGodMode()"
+        style="padding:12px 28px;border-radius:10px;border:none;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:0.5px;transition:all 0.2s;background:linear-gradient(135deg,#3a1a1a,#2a0a0a);color:#ff4d6a;border:1.5px solid rgba(255,50,50,0.3);">
+        😈 Enable Global God Mode
+      </button>
+    </div>
+    <div style="font-size:11px;color:#555;max-width:220px;line-height:1.5;">
+      When ON — every user loses every bet on every game instantly. No exceptions.
+    </div>
+  </div>
+
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card"><div class="val" id="s-users">—</div><div class="lbl">Total Users</div></div>
+    <div class="stat-card"><div class="val" id="s-deposit">—</div><div class="lbl">Total Deposited</div></div>
+    <div class="stat-card"><div class="val" id="s-withdraw">—</div><div class="lbl">Total Withdrawn</div></div>
+    <div class="stat-card"><div class="val" id="s-profit">—</div><div class="lbl">House Profit (WinGo)</div></div>
+    <div class="stat-card"><div class="val" id="s-pending-dep">—</div><div class="lbl">Pending Deposits</div></div>
+    <div class="stat-card"><div class="val" id="s-pending">—</div><div class="lbl">Pending Withdrawals</div></div>
+    <div class="stat-card"><div class="val" id="s-rounds">—</div><div class="lbl">Win Go Rounds</div></div>
+  </div>
+  <div class="card">
+    <h3>Today's Activity</h3>
+    <div class="stats-grid" id="today-grid">
+      <div class="stat-card"><div class="val" id="t-deposit">—</div><div class="lbl">Today Deposits</div></div>
+      <div class="stat-card"><div class="val" id="t-withdraw">—</div><div class="lbl">Today Withdrawals</div></div>
+      <div class="stat-card"><div class="val" id="t-users">—</div><div class="lbl">New Users Today</div></div>
+      <div class="stat-card"><div class="val" id="t-rounds">—</div><div class="lbl">Rounds Today</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- WIN GO -->
+<div id="page-wingo" class="page">
+  <h2>🎯 Win Go Control</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Set Result</h3>
+      <div style="margin-bottom:10px">
+        <label style="font-size:12px;color:#888">Game Mode</label>
+        <select id="wg-gameId" onchange="loadWingoState()">
+          <option value="wingo30s">30 Seconds</option>
+          <option value="wingo1m">1 Minute</option>
+          <option value="wingo3m" selected>3 Minutes</option>
+          <option value="wingo5m">5 Minutes</option>
+        </select>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div>Timer: <span class="timer-badge" id="wg-timer">—</span></div>
+        <div class="period-id" id="wg-period">—</div>
+      </div>
+      <div style="margin-bottom:8px">
+        <div style="font-size:12px;color:#888;margin-bottom:6px">Quick Pick by Color</div>
+        <div class="btn-group">
+          <button class="btn btn-sm" style="background:#22d67a;color:#fff" onclick="wingoColorPick('Green')">🟢 Green</button>
+          <button class="btn btn-sm" style="background:#ff4d6a;color:#fff" onclick="wingoColorPick('Red')">🔴 Red</button>
+          <button class="btn btn-sm" style="background:#a855f7;color:#fff" onclick="wingoColorPick('Violet')">🟣 Violet</button>
+        </div>
+      </div>
+      <div class="num-btns" id="wg-nums"></div>
+      <div style="margin:8px 0">Selected: <b id="wg-sel" style="color:#7c6fff;font-size:18px">—</b></div>
+      <button class="btn btn-primary" style="width:100%" onclick="setWingoResult()">✅ Set Result</button>
+      <div id="wg-msg" style="margin-top:8px"></div>
+      <div style="margin-top:12px">Last 8: <span id="wg-history-dots"></span></div>
+    </div>
+    <div class="card">
+      <h3>Recent Rounds</h3>
+      <div id="wg-rounds-table"><div style="color:#888;font-size:13px">Loading...</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📊 Current Round — Live Bets Breakdown</h3>
+    <div id="wg-live-bets" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px"><div style="color:#888;font-size:13px">Loading...</div></div>
+  </div>
+</div>
+
+<!-- TRX WINGO -->
+<div id="page-trxwingo" class="page">
+  <h2>🔗 TRX Win Go Control</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Set Result</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>Timer: <span class="timer-badge" id="trx-timer">—</span></div>
+        <div class="period-id" id="trx-period">—</div>
+      </div>
+      <div style="margin-bottom:8px">
+        <div style="font-size:12px;color:#888;margin-bottom:6px">Quick Color Pick</div>
+        <div class="btn-group">
+          <button class="btn btn-sm color-btn-green" onclick="trxColorPick('Green')">🟢 Green</button>
+          <button class="btn btn-sm color-btn-red" onclick="trxColorPick('Red')">🔴 Red</button>
+          <button class="btn btn-sm color-btn-violet" onclick="trxColorPick('Violet')">🟣 Violet</button>
+        </div>
+      </div>
+      <div class="num-btns" id="trx-nums"></div>
+      <div style="margin:8px 0">Selected: <b id="trx-sel" style="color:#7c6fff;font-size:18px">—</b></div>
+      <div style="font-size:12px;color:#888;margin-bottom:6px">ℹ️ Result queued — applied at round end via TRX hash simulation</div>
+      <button class="btn btn-primary" style="width:100%" onclick="setTrxResult()">✅ Set TRX Result</button>
+      <div id="trx-msg" style="margin-top:8px"></div>
+    </div>
+    <div class="card">
+      <h3>Recent Rounds</h3>
+      <div id="trx-rounds-table"><div style="color:#888;font-size:13px">Loading...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5D LOTTERY -->
+<div id="page-fived" class="page">
+  <h2>🎲 5D Lottery Control</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Set Result (5 Digits A-E, each 0-9)</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>Timer: <span class="timer-badge" id="fd-timer">—</span></div>
+        <div class="period-id" id="fd-period">—</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px">
+        <div><label style="font-size:11px;color:#888">A</label><select id="fd-a">${[...Array(10)].map((_,i)=>`<option>${i}</option>`).join('')}</select></div>
+        <div><label style="font-size:11px;color:#888">B</label><select id="fd-b">${[...Array(10)].map((_,i)=>`<option>${i}</option>`).join('')}</select></div>
+        <div><label style="font-size:11px;color:#888">C</label><select id="fd-c">${[...Array(10)].map((_,i)=>`<option>${i}</option>`).join('')}</select></div>
+        <div><label style="font-size:11px;color:#888">D</label><select id="fd-d">${[...Array(10)].map((_,i)=>`<option>${i}</option>`).join('')}</select></div>
+        <div><label style="font-size:11px;color:#888">E</label><select id="fd-e">${[...Array(10)].map((_,i)=>`<option>${i}</option>`).join('')}</select></div>
+      </div>
+      <div id="fd-preview" class="dice-preview"></div>
+      <div class="btn-group" style="margin:10px 0">
+        <button class="btn btn-sm btn-warn" onclick="fdRandom()">🎲 Random</button>
+        <button class="btn btn-sm" style="background:#1e3a1e;color:#22d67a" onclick="fdAllBig()">All Big (5-9)</button>
+        <button class="btn btn-sm" style="background:#3a1e1e;color:#ff4d6a" onclick="fdAllSmall()">All Small (0-4)</button>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="setFiveDResult()">✅ Set 5D Result</button>
+      <div id="fd-msg" style="margin-top:8px"></div>
+    </div>
+    <div class="card">
+      <h3>Recent Rounds</h3>
+      <div id="fd-rounds-table"><div style="color:#888;font-size:13px">Loading...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- K3 DICE -->
+<div id="page-k3" class="page">
+  <h2>🎰 K3 Dice Control</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Set Dice Result</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>Timer: <span class="timer-badge" id="k3-timer">—</span></div>
+        <div class="period-id" id="k3-period">—</div>
+      </div>
+      <div class="dice-sel">
+        <div><label style="font-size:11px;color:#888">Die 1</label><select id="k3d1">${[1,2,3,4,5,6].map(i=>`<option>${i}</option>`).join('')}</select></div>
+        <div><label style="font-size:11px;color:#888">Die 2</label><select id="k3d2">${[1,2,3,4,5,6].map(i=>`<option>${i}</option>`).join('')}</select></div>
+        <div><label style="font-size:11px;color:#888">Die 3</label><select id="k3d3">${[1,2,3,4,5,6].map(i=>`<option>${i}</option>`).join('')}</select></div>
+      </div>
+      <div id="k3-preview" class="dice-preview"></div>
+      <div class="btn-group" style="margin:10px 0">
+        <button class="btn btn-sm btn-warn" onclick="k3Random()">🎲 Random</button>
+        <button class="btn btn-sm" style="background:#2a1a1a;color:#ff4d6a" onclick="k3Set(1,1,1)">Triple 1</button>
+        <button class="btn btn-sm" style="background:#1a2a1a;color:#22d67a" onclick="k3Set(6,6,6)">Triple 6</button>
+        <button class="btn btn-sm" style="background:#1a1a2a;color:#7c6fff" onclick="k3Set(4,4,3)">Big 11</button>
+        <button class="btn btn-sm" style="background:#2a2a1a;color:#ffd700" onclick="k3Set(2,3,3)">Small 8</button>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="setK3Result()">✅ Set K3 Result</button>
+      <div id="k3-msg" style="margin-top:8px"></div>
+    </div>
+    <div class="card">
+      <h3>Recent Rounds</h3>
+      <div id="k3-rounds-table"><div style="color:#888;font-size:13px">Loading...</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📊 Current Round — Live Bets Breakdown</h3>
+    <div id="k3-live-bets" style="color:#888;font-size:13px">Loading...</div>
+  </div>
+</div>
+
+<!-- AVIATOR -->
+<div id="page-aviator" class="page">
+  <h2>✈️ Aviator Control</h2>
+
+  <!-- Live Status Bar -->
+  <div class="card" style="margin-bottom:16px;padding:12px 16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+    <div>Phase: <b id="av-phase" style="color:#7c6fff">—</b></div>
+    <div>Mult: <b id="av-mult" style="color:#ffd700">—</b></div>
+    <div>Countdown: <b id="av-countdown">—</b></div>
+    <div>Queue: <b id="av-queue-count" style="color:#22d67a">0 rounds</b></div>
+    <button class="btn btn-sm" onclick="loadAviator()" style="margin-left:auto">🔄 Refresh</button>
+  </div>
+
+  <div class="grid2">
+
+    <!-- LEFT: Pattern Queue Builder -->
+    <div class="card">
+      <h3>🎯 Pattern Queue Builder</h3>
+      <p style="font-size:12px;color:#888;margin-bottom:14px;">
+        Queue up to 100 rounds with exact crash values. Rounds play in order, then return to random. 
+        <b style="color:#ff4d6a">Active immediately — next round uses first queued value.</b>
+      </p>
+
+      <!-- Quick preset patterns -->
+      <div style="margin-bottom:14px;">
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Quick Presets</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="btn btn-sm btn-danger" onclick="applyPreset('house')" title="All under 2x — max house edge">🏠 House Mode</button>
+          <button class="btn btn-sm btn-warn" onclick="applyPreset('lure')" title="Start high, then crash low">🎣 Lure & Trap</button>
+          <button class="btn btn-sm" style="background:#1a3a2a;color:#22d67a" onclick="applyPreset('generous')" title="Mix of good and bad rounds">💚 Generous Mix</button>
+          <button class="btn btn-sm" style="background:#2a1a3a;color:#a855f7" onclick="applyPreset('spike')" title="Occasional big spike">⚡ Spike Pattern</button>
+          <button class="btn btn-sm" style="background:#1a2a3a;color:#4fc3f7" onclick="applyPreset('grind')" title="Slowly drain, then small win">⚙️ Grind</button>
+        </div>
+      </div>
+
+      <!-- Manual entry row -->
+      <div style="display:flex;gap:8px;margin-bottom:10px;align-items:flex-end;">
+        <div style="flex:1;">
+          <label style="font-size:11px;color:#888;display:block;margin-bottom:4px;">Add crash value (≥ 1.01)</label>
+          <input type="number" id="av-queue-add-val" step="0.01" min="1.01" value="1.50" placeholder="e.g. 2.50" style="width:100%">
+        </div>
+        <button class="btn btn-primary" onclick="queueAppend()" style="white-space:nowrap">+ Add</button>
+      </div>
+
+      <!-- Bulk entry -->
+      <div style="margin-bottom:14px;">
+        <label style="font-size:11px;color:#888;display:block;margin-bottom:4px;">Bulk add (comma-separated, e.g: 1.2, 3.5, 1.1, 8.0)</label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="av-queue-bulk" placeholder="1.2, 3.5, 1.1, 8.0, 1.3" style="flex:1">
+          <button class="btn btn-sm btn-warn" onclick="queueBulkAdd()">Add All</button>
+        </div>
+      </div>
+
+      <!-- Queue actions -->
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="queueSave()" style="flex:1">✅ Save & Activate Queue</button>
+        <button class="btn btn-sm btn-danger" onclick="queueClear()">🗑 Clear All</button>
+      </div>
+      <div id="av-queue-msg" style="margin-bottom:10px;min-height:20px;font-size:13px;"></div>
+
+      <!-- Queue visual list -->
+      <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">
+        Queue Preview <span id="av-queue-list-count" style="color:#4fc3f7"></span>
+      </div>
+      <div id="av-queue-list" style="max-height:320px;overflow-y:auto;border:1px solid #2a2a3a;border-radius:8px;padding:8px;background:#0d0d1a;">
+        <div style="color:#555;font-size:12px;text-align:center;padding:20px;">Queue is empty — random mode active</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Single override + recent rounds -->
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <h3>⚡ Single Override (Next Round Only)</h3>
+        <p style="font-size:12px;color:#888;margin-bottom:10px;">Overrides both queue and random for the very next round only.</p>
+        <div style="margin-bottom:10px;">
+          <input type="number" id="av-crash-val" step="0.1" min="1.01" value="2.0" placeholder="e.g. 3.50">
+        </div>
+        <div class="btn-group" style="margin-bottom:10px;flex-wrap:wrap;">
+          <button class="btn btn-sm btn-danger" onclick="setAvCrash(1.01)">1.01×</button>
+          <button class="btn btn-sm btn-danger" onclick="setAvCrash(1.1)">1.1×</button>
+          <button class="btn btn-sm btn-warn" onclick="setAvCrash(1.5)">1.5×</button>
+          <button class="btn btn-sm" style="background:#1a2a3a;color:#4fc3f7" onclick="setAvCrash(2.0)">2×</button>
+          <button class="btn btn-sm" style="background:#1a3a2a;color:#22d67a" onclick="setAvCrash(5.0)">5×</button>
+          <button class="btn btn-sm" style="background:#2a1a3a;color:#a855f7" onclick="setAvCrash(10)">10×</button>
+          <button class="btn btn-sm" style="background:#3a2a1a;color:#ffd700" onclick="setAvCrash(50)">50×</button>
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="setAvCrash()">✅ Set Custom Override</button>
+        <div id="av-msg" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card">
+        <h3>📋 Recent Crashes</h3>
+        <div id="av-rounds-table"><div style="color:#888;font-size:13px">Loading...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MINES -->
+<div id="page-mines" class="page">
+  <h2>💣 Mines — Active Sessions</h2>
+  <div class="card">
+    <div class="grid3" style="margin-bottom:16px">
+      <div class="stat-card"><div class="val" id="mines-total">—</div><div class="lbl">Active Sessions</div></div>
+      <div class="stat-card"><div class="val" id="mines-won">—</div><div class="lbl">Total Won</div></div>
+      <div class="stat-card"><div class="val" id="mines-lost">—</div><div class="lbl">Total Lost</div></div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="loadMines()" style="margin-bottom:12px">🔄 Refresh</button>
+    <div id="mines-sessions-table"></div>
+  </div>
+</div>
+
+<!-- SLOTS -->
+<div id="page-slots" class="page">
+  <h2>🎰 Slots Stats</h2>
+  <div class="stats-grid" id="slots-stats">
+    <div class="stat-card"><div class="val" id="sl-total">—</div><div class="lbl">Total Spins</div></div>
+    <div class="stat-card"><div class="val" id="sl-wins">—</div><div class="lbl">Total Wins</div></div>
+    <div class="stat-card"><div class="val" id="sl-losses">—</div><div class="lbl">Total Losses</div></div>
+    <div class="stat-card"><div class="val" id="sl-bet">—</div><div class="lbl">Total Bet</div></div>
+    <div class="stat-card"><div class="val" id="sl-prize">—</div><div class="lbl">Total Prize</div></div>
+    <div class="stat-card"><div class="val" id="sl-profit">—</div><div class="lbl">House Profit</div></div>
+  </div>
+  <div class="card">
+    <h3>Recent Wins</h3>
+    <div id="slots-wins-table"></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>Paytable</h3>
+    <table><thead><tr><th>Symbols</th><th>Multiplier</th></tr></thead><tbody>
+      <tr><td>💎💎💎</td><td>50×</td></tr>
+      <tr><td>7️⃣7️⃣7️⃣</td><td>25×</td></tr>
+      <tr><td>⭐⭐⭐</td><td>15×</td></tr>
+      <tr><td>🔔🔔🔔</td><td>10×</td></tr>
+      <tr><td>🍀🍀🍀</td><td>8×</td></tr>
+      <tr><td>🍇🍇🍇</td><td>5×</td></tr>
+      <tr><td>🍒🍒🍒</td><td>3×</td></tr>
+      <tr><td>🍋🍋🍋</td><td>2×</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- CARD GAMES -->
+<div id="page-cardgames" class="page">
+  <h2>🃏 Card Games</h2>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('cg','dt',this)">🐉 Dragon Tiger</div>
+    <div class="tab" onclick="switchTab('cg','ab',this)">🃏 Andar Bahar</div>
+  </div>
+  <div id="cg-tab-dt" class="tab-content active">
+    <div class="card"><h3>Recent Dragon Tiger Bets</h3><div id="dt-table"></div></div>
+  </div>
+  <div id="cg-tab-ab" class="tab-content">
+    <div class="card"><h3>Recent Andar Bahar Bets</h3><div id="ab-table"></div></div>
+  </div>
+</div>
+
+<!-- USERS -->
+<div id="page-users" class="page">
+  <h2>👥 Users</h2>
+  <div class="card">
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <input type="text" id="user-search" placeholder="Search by name or phone..." style="flex:1">
+      <button class="btn btn-primary" onclick="searchUsers()">Search</button>
+    </div>
+    <div id="users-table"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-sm" onclick="usersPage(-1)">◀ Prev</button>
+      <span id="users-page-info" style="line-height:30px;font-size:13px">—</span>
+      <button class="btn btn-sm" onclick="usersPage(1)">Next ▶</button>
+    </div>
+  </div>
+  <div class="card" id="user-detail-card" style="display:none">
+    <h3>User Detail</h3>
+    <div id="user-detail-content"></div>
+  </div>
+</div>
+
+<!-- DEPOSITS -->
+<div id="page-deposits" class="page">
+  <h2>💰 Deposits</h2>
+  <div class="card">
+    <div class="btn-group" style="margin-bottom:14px">
+      <button class="btn btn-sm btn-warn" onclick="loadDeposits('pending')">⏳ Pending</button>
+      <button class="btn btn-sm btn-success" onclick="loadDeposits('success')">✅ Approved</button>
+      <button class="btn btn-sm btn-danger" onclick="loadDeposits('failed')">❌ Rejected</button>
+    </div>
+    <div id="deposits-table"></div>
+    <div style="color:#555;font-size:12px;margin-top:10px;line-height:1.5">
+      Tip: Approve only after you confirm the UTR in your UPI/FamPay statement.
+    </div>
+  </div>
+</div>
+
+<!-- WITHDRAWALS -->
+<div id="page-withdrawals" class="page">
+  <h2>💸 Withdrawals</h2>
+  <div class="card">
+    <div class="btn-group" style="margin-bottom:14px">
+      <button class="btn btn-sm btn-warn" onclick="loadWithdrawals('pending')">⏳ Pending</button>
+      <button class="btn btn-sm btn-success" onclick="loadWithdrawals('success')">✅ Approved</button>
+      <button class="btn btn-sm btn-danger" onclick="loadWithdrawals('failed')">❌ Rejected</button>
+    </div>
+    <div id="withdrawals-table"></div>
+  </div>
+</div>
+
+
+<!-- LIVE BETS PAGE -->
+<div id="page-livebets" class="page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <h2 style="margin:0">📊 Live Bets Monitor</h2>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="pulse-dot"></span>
+      <span style="font-size:12px;color:#888">Auto-refresh every 3s</span>
+      <button class="btn btn-primary btn-sm" onclick="loadLiveBets()">🔄 Refresh Now</button>
+    </div>
+  </div>
+  <div id="live-bets-container" class="live-bets-grid">
+    <div style="color:#888;font-size:13px">Loading live bets...</div>
+  </div>
+</div>
+
+
+<!-- LIVE FEED PAGE -->
+<div id="page-feed" class="page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <h2 style="margin:0">📡 Live Activity Feed</h2>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22d67a;animation:pulse 1.5s infinite"></span>
+      <span style="font-size:12px;color:#888" id="feed-last-update">—</span>
+      <button class="btn btn-primary btn-sm" onclick="loadFeed()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div class="feed-filters">
+    <div class="feed-chip active" onclick="setFeedFilter(this,'all')">All</div>
+    <div class="feed-chip" onclick="setFeedFilter(this,'win')">🏆 Wins</div>
+    <div class="feed-chip" onclick="setFeedFilter(this,'loss')">💸 Bets/Losses</div>
+    <div class="feed-chip" onclick="setFeedFilter(this,'deposit')">💰 Deposits</div>
+    <div class="feed-chip" onclick="setFeedFilter(this,'withdraw')">🏧 Withdrawals</div>
+    <div class="feed-chip" onclick="setFeedFilter(this,'bonus')">🎁 Bonuses</div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="feed-wrap" id="feed-list">
+      <div style="padding:40px;text-align:center;color:#555">Loading feed...</div>
+    </div>
+  </div>
+</div>
+
+<!-- P&L BY GAME PAGE -->
+<div id="page-pnl" class="page">
+  <h2>📈 Profit & Loss by Game</h2>
+  <div id="pnl-summary-cards" class="stats-grid" style="margin-bottom:20px"></div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="pnl-head">
+      <span>Game</span><span>Total Bets</span><span>Total Payout</span><span>House Profit</span><span>Rounds</span>
+    </div>
+    <div id="pnl-table"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<style>
+#login-overlay{position:fixed;inset:0;background:#0d0f1a;display:flex;align-items:center;justify-content:center;z-index:9999}
+#login-overlay.hidden{display:none}
+.login-box{background:#131628;border:1px solid #252840;border-radius:16px;padding:40px 36px;width:340px;text-align:center}
+.login-box h2{color:#7c6fff;font-size:22px;margin-bottom:6px}
+.login-box p{color:#666;font-size:13px;margin-bottom:24px}
+.login-box input{margin-bottom:12px;text-align:center;letter-spacing:2px}
+.login-box .err{color:#ff4d6a;font-size:12px;margin-top:8px;min-height:18px}
+
+/* LIVE BETS PANEL */
+.live-bets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:20px}
+.lb-card{background:#131628;border:1px solid #252840;border-radius:12px;padding:16px}
+.lb-card h4{font-size:13px;color:#aaa;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.lb-card h4 .lb-game{font-size:15px;color:#fff;font-weight:700}
+.lb-totals{display:flex;gap:12px;margin-bottom:10px;font-size:12px;color:#888}
+.lb-totals b{color:#7c6fff}
+.lb-breakdown{display:flex;flex-direction:column;gap:4px}
+.lb-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;background:#1a1d2e}
+.lb-choice{min-width:80px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:4px}
+.lb-bar-wrap{flex:1;background:#252840;border-radius:3px;height:6px;overflow:hidden}
+.lb-bar{height:100%;border-radius:3px;transition:width .5s}
+.lb-amt{font-size:12px;color:#fff;min-width:70px;text-align:right}
+.lb-count{font-size:11px;color:#888;min-width:30px;text-align:right}
+.lb-empty{color:#555;font-size:12px;padding:8px;text-align:center}
+.pulse-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22d67a;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.lb-timer{font-size:12px;color:#f5c842;font-weight:700}
+</style>
+
+<div id="login-overlay">
+  <div class="login-box">
+    <h2>⚡ LEGIT CLUB Admin</h2>
+    <p>Enter your admin key to continue</p>
+    <input type="password" id="key-input" placeholder="Admin Key" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Unlock Panel</button>
+    <div class="err" id="login-err"></div>
+  </div>
+</div>
+
+<script>
+let KEY = '';
+
+function doLogin() {
+  const val = document.getElementById('key-input').value.trim();
+  if (!val) return;
+  KEY = val;
+  verifyKey();
+}
+
+async function verifyKey() {
+  const errEl = document.getElementById('login-err');
+  errEl.textContent = '';
+  try {
+    const r = await fetch('/api/admin/stats', { headers: { 'x-admin-key': KEY } });
+    if (r.status === 403) {
+      errEl.textContent = 'Wrong admin key. Try again.';
+      document.getElementById('key-input').value = '';
+      document.getElementById('key-input').focus();
+      KEY = '';
+      return;
+    }
+    // Key valid — show panel
+    document.getElementById('login-overlay').classList.add('hidden');
+    loadDashboard();
+  } catch(e) {
+    errEl.textContent = 'Server unreachable. Check connection.';
+  }
+}
+
+async function api(path, method='GET', body=null) {
+  const opts = { method, headers: { 'Content-Type':'application/json', 'x-admin-key': KEY } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch('/api/admin' + path, opts);
+  if (r.status === 403) {
+    KEY = '';
+    document.getElementById('login-overlay').classList.remove('hidden');
+    document.getElementById('login-err').textContent = 'Session expired. Please re-enter your key.';
+    document.getElementById('key-input').value = '';
+    document.getElementById('key-input').focus();
+    return { success: false };
+  }
+  return r.json();
+}
+
+
+// ═══════════════ LIVE BETS ═══════════════
+let liveBetsInterval = null;
+
+function initLiveBets() {
+  loadLiveBets();
+  if (liveBetsInterval) clearInterval(liveBetsInterval);
+  liveBetsInterval = setInterval(loadLiveBets, 3000);
+}
+
+async function loadLiveBets() {
+  const d = await fetch('/api/game/live-bets', { headers: { 'x-admin-key': KEY } }).then(r=>r.json()).catch(()=>({success:false}));
+  if (!d.success) return;
+  const container = document.getElementById('live-bets-container');
+  if (!container) return;
+
+  const COLOR_MAP = { Green:'#22d67a', Red:'#ff4d6a', Violet:'#a855f7' };
+  const NUM_BG = { 0:'#a855f7',1:'#22d67a',2:'#ff4d6a',3:'#22d67a',4:'#ff4d6a',5:'#a855f7',6:'#ff4d6a',7:'#22d67a',8:'#ff4d6a',9:'#22d67a' };
+
+  function breakdownBar(breakdown, maxTotal) {
+    if (!breakdown || Object.keys(breakdown).length === 0)
+      return '<div class="lb-empty">No bets placed yet</div>';
+    const entries = Object.entries(breakdown).sort((a,b) => b[1].total - a[1].total);
+    return entries.map(([choice, info]) => {
+      const pct = maxTotal > 0 ? Math.round((info.total / maxTotal) * 100) : 0;
+      let choiceColor = '#7c6fff';
+      if (COLOR_MAP[choice]) choiceColor = COLOR_MAP[choice];
+      else if (!isNaN(parseInt(choice))) choiceColor = NUM_BG[parseInt(choice)] || '#7c6fff';
+      else if (choice === 'Big') choiceColor = '#ff4d6a';
+      else if (choice === 'Small') choiceColor = '#22d67a';
+      else if (choice === 'Odd') choiceColor = '#f59e0b';
+      else if (choice === 'Even') choiceColor = '#06b6d4';
+      return `<div class="lb-row">
+        <span class="lb-choice" style="background:${choiceColor}22;color:${choiceColor}">${choice}</span>
+        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%;background:${choiceColor}"></div></div>
+        <span class="lb-amt">${fmt(info.total)}</span>
+        <span class="lb-count">${info.count}x</span>
+      </div>`;
+    }).join('');
+  }
+
+  const cards = [];
+
+  // Win Go — 4 modes
+  const WINGO_LABELS = { wingo30s:'⚡ 30s', wingo1m:'🔥 1 Min', wingo3m:'👑 3 Min', wingo5m:'🎯 5 Min' };
+  for (const [gid, gdata] of Object.entries(d.wingo || {})) {
+    const label = WINGO_LABELS[gid] || gid;
+    const empty = !gdata;
+    cards.push(`<div class="lb-card">
+      <h4><span class="lb-game">${label}</span> ${empty ? '' : `<span class="lb-timer">⏱ ${gdata.secLeft}s</span>`}</h4>
+      ${empty ? '<div class="lb-empty">No active round</div>' : `
+      <div class="lb-totals">Total Bet: <b>${fmt(gdata.totalBets)}</b> &nbsp;|&nbsp; Bets: <b>${gdata.betCount}</b> &nbsp;|&nbsp; <span style="color:#888;font-size:11px">${gdata.periodId}</span></div>
+      <div class="lb-breakdown">${breakdownBar(gdata.breakdown, gdata.totalBets)}</div>`}
+    </div>`);
+  }
+
+  // TRX WinGo
+  if (d.trxwingo) {
+    const g = d.trxwingo;
+    cards.push(`<div class="lb-card">
+      <h4><span class="lb-game">🔗 TRX Win Go</span> <span class="lb-timer">⏱ ${g.secLeft}s</span></h4>
+      <div class="lb-totals">Total Bet: <b>${fmt(g.totalBets)}</b> &nbsp;|&nbsp; Bets: <b>${g.betCount}</b></div>
+      <div class="lb-breakdown">${breakdownBar(g.breakdown, g.totalBets)}</div>
+    </div>`);
+  }
+
+  // K3
+  if (d.k3) {
+    const g = d.k3;
+    cards.push(`<div class="lb-card">
+      <h4><span class="lb-game">🎲 K3 Dice</span> <span class="lb-timer">⏱ ${g.secLeft}s</span></h4>
+      <div class="lb-totals">Total Bet: <b>${fmt(g.totalBets)}</b> &nbsp;|&nbsp; Bets: <b>${g.betCount}</b></div>
+      <div class="lb-breakdown">${breakdownBar(g.breakdown, g.totalBets)}</div>
+    </div>`);
+  }
+
+  // 5D
+  if (d.fived) {
+    const g = d.fived;
+    cards.push(`<div class="lb-card">
+      <h4><span class="lb-game">🎯 5D Lottery</span> <span class="lb-timer">⏱ ${g.secLeft}s</span></h4>
+      <div class="lb-totals">Total Bet: <b>${fmt(g.totalBets)}</b> &nbsp;|&nbsp; Bets: <b>${g.betCount}</b></div>
+      <div class="lb-breakdown">${breakdownBar(g.breakdown, g.totalBets)}</div>
+    </div>`);
+  }
+
+  // Aviator
+  if (d.aviator) {
+    const g = d.aviator;
+    const phaseColor = g.phase === 'flying' ? '#22d67a' : g.phase === 'crashed' ? '#ff4d6a' : '#f5c842';
+    cards.push(`<div class="lb-card">
+      <h4><span class="lb-game">✈️ Aviator</span> <span style="color:${phaseColor};font-size:12px;font-weight:700">${g.phase?.toUpperCase()} ${g.phase==='flying'?g.mult.toFixed(2)+'×':''}</span></h4>
+      <div class="lb-totals">Total Bet: <b>${fmt(g.totalBets)}</b> &nbsp;|&nbsp; Players: <b>${g.betCount}</b></div>
+      <div class="lb-breakdown">
+        <div class="lb-row"><span class="lb-choice" style="background:#22d67a22;color:#22d67a">Active</span><div class="lb-bar-wrap"><div class="lb-bar" style="width:${g.betCount>0?Math.round(g.activeBets/g.betCount*100):0}%;background:#22d67a"></div></div><span class="lb-amt">${g.activeBets} players</span></div>
+        <div class="lb-row"><span class="lb-choice" style="background:#7c6fff22;color:#7c6fff">Cashed</span><div class="lb-bar-wrap"><div class="lb-bar" style="width:${g.betCount>0?Math.round(g.cashedOut/g.betCount*100):0}%;background:#7c6fff"></div></div><span class="lb-amt">${g.cashedOut} players</span></div>
+      </div>
+    </div>`);
+  }
+
+  container.innerHTML = cards.length > 0 ? cards.join('') : '<div style="color:#888">No active rounds found</div>';
+}
+
+// NAV
+function showPage(id, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pageEl = document.getElementById('page-' + id);
+  if (pageEl) pageEl.classList.add('active');
+  // Accept explicit element or fall back to querySelector by id match
+  if (navEl) {
+    navEl.classList.add('active');
+  } else {
+    const found = document.querySelector(`.nav-item[onclick*="'${id}'"]`);
+    if (found) found.classList.add('active');
+  }
+  // Stop intervals when leaving pages
+  if (id !== 'livebets' && liveBetsInterval) { clearInterval(liveBetsInterval); liveBetsInterval = null; }
+  if (id !== 'feed' && feedInterval) { clearInterval(feedInterval); feedInterval = null; }
+  const loaders = { dashboard:loadDashboard, wingo:initWingo, trxwingo:initTrxWingo, fived:initFiveD,
+    k3:initK3, aviator:loadAviator, mines:loadMines, slots:loadSlots, cardgames:loadCardGames,
+    users:()=>searchUsers(), deposits:()=>loadDeposits('pending'), withdrawals:()=>loadWithdrawals('pending'), livebets:initLiveBets,
+    feed:initFeed, pnl:loadPnl, cricket:crAdminLoadMatches };
+  if (loaders[id]) loaders[id]();
+}
+function switchTab(group, tab, tabEl) {
+  const parent = tabEl ? tabEl.closest('.page') : document.querySelector('.page.active');
+  parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  parent.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  if (tabEl) tabEl.classList.add('active');
+  document.getElementById(group + '-tab-' + tab).classList.add('active');
+}
+
+// HELPERS
+function fmt(n) { return '₹' + (n||0).toLocaleString('en-IN'); }
+function timeAgo(d) { const s=Math.floor((Date.now()-new Date(d))/1000); return s<60?s+'s':s<3600?Math.floor(s/60)+'m':Math.floor(s/3600)+'h'; }
+function showMsg(id, msg, ok=true) {
+  const el = document.getElementById(id);
+  el.innerHTML = `<div class="alert ${ok?'alert-success':'alert-error'}">${msg}</div>`;
+  setTimeout(() => { if(el) el.innerHTML = ''; }, 3000);
+}
+const NUM_COLOR = {0:'Violet',1:'Green',2:'Red',3:'Green',4:'Red',5:'Violet',6:'Red',7:'Green',8:'Red',9:'Green'};
+const COLOR_STYLE = { Green:'#22d67a', Red:'#ff4d6a', Violet:'#a855f7' };
+
+// ═══════════════ DASHBOARD ═══════════════
+async function loadDashboard() {
+  const [s, a] = await Promise.all([api('/stats'), api('/analytics')]);
+  if (s.success) {
+    document.getElementById('s-users').textContent = s.users;
+    document.getElementById('s-deposit').textContent = fmt(s.totalDeposited);
+    document.getElementById('s-withdraw').textContent = fmt(s.totalWithdrawn);
+    document.getElementById('s-profit').textContent = fmt(s.houseProfit);
+    document.getElementById('s-pending-dep').textContent = s.pendingDeposit || 0;
+    document.getElementById('s-pending').textContent = s.pendingWithdraw;
+    document.getElementById('s-rounds').textContent = s.rounds;
+  }
+  if (a.success) {
+    document.getElementById('t-deposit').textContent = fmt(a.today.deposits);
+    document.getElementById('t-withdraw').textContent = fmt(a.today.withdrawals);
+    document.getElementById('t-users').textContent = a.today.newUsers;
+    document.getElementById('t-rounds').textContent = a.today.rounds;
+  }
+}
+
+// ═══════════════ WIN GO ═══════════════
+let wingoSel = null;
+function buildWingoNums() {
+  const div = document.getElementById('wg-nums');
+  div.innerHTML = '';
+  for (let i=0;i<=9;i++) {
+    const c = NUM_COLOR[i];
+    const btn = document.createElement('button');
+    btn.className = 'num-btn';
+    btn.textContent = i;
+    btn.style.background = COLOR_STYLE[c];
+    btn.style.color = '#fff';
+    btn.onclick = () => { wingoSel = i; document.getElementById('wg-sel').textContent = i; };
+    div.appendChild(btn);
+  }
+}
+const GREEN_NUMS=[1,3,7,9], RED_NUMS=[2,4,6,8], VIOLET_NUMS=[0,5];
+function wingoColorPick(color) {
+  const pool = color==='Green'?GREEN_NUMS:color==='Red'?RED_NUMS:VIOLET_NUMS;
+  wingoSel = pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById('wg-sel').textContent = wingoSel;
+}
+
+function renderInlineLiveBets(breakdown, totalBets, containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!breakdown || Object.keys(breakdown).length === 0) {
+    el.innerHTML = '<div style="color:#555;font-size:12px;padding:8px">No bets placed yet this round</div>';
+    return;
+  }
+  const COLOR_MAP = { Green:'#22d67a', Red:'#ff4d6a', Violet:'#a855f7' };
+  const NUM_BG = { 0:'#a855f7',1:'#22d67a',2:'#ff4d6a',3:'#22d67a',4:'#ff4d6a',5:'#a855f7',6:'#ff4d6a',7:'#22d67a',8:'#ff4d6a',9:'#22d67a' };
+  const entries = Object.entries(breakdown).sort((a,b)=>b[1].total-a[1].total);
+  el.innerHTML = '<div class="lb-breakdown">' + entries.map(([choice, info]) => {
+    const pct = totalBets > 0 ? Math.round((info.total/totalBets)*100) : 0;
+    let choiceColor = '#7c6fff';
+    if (COLOR_MAP[choice]) choiceColor = COLOR_MAP[choice];
+    else if (!isNaN(parseInt(choice))) choiceColor = NUM_BG[parseInt(choice)] || '#7c6fff';
+    else if (choice==='Big') choiceColor='#ff4d6a';
+    else if (choice==='Small') choiceColor='#22d67a';
+    else if (choice==='Odd') choiceColor='#f59e0b';
+    else if (choice==='Even') choiceColor='#06b6d4';
+    return `<div class="lb-row">
+      <span class="lb-choice" style="background:${choiceColor}22;color:${choiceColor}">${choice}</span>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%;background:${choiceColor}"></div></div>
+      <span class="lb-amt">${fmt(info.total)}</span>
+      <span class="lb-count">${info.count} bet${info.count>1?'s':''}</span>
+    </div>`;
+  }).join('') + '</div><div style="margin-top:8px;font-size:12px;color:#888">Total: <b style="color:#7c6fff">' + fmt(totalBets) + '</b></div>';
+}
+async function loadWingoState() {
+  const gid = document.getElementById('wg-gameId').value;
+  const d = await api('/wingo/current?gameId=' + gid);
+  if (d.success) {
+    document.getElementById('wg-timer').textContent = d.sec + 's';
+    document.getElementById('wg-period').textContent = d.periodId;
+  }
+  const r = await api('/wingo/rounds?gameId=' + gid);
+  if (r.success) {
+    const dots = r.rounds.slice(0,8).map(rd => {
+      const c = rd.resultColor || 'Gray';
+      const bg = COLOR_STYLE[c] || '#333';
+      return `<span class="dot" style="background:${bg}">${rd.result}</span>`;
+    }).join('');
+    document.getElementById('wg-history-dots').innerHTML = dots;
+    document.getElementById('wg-rounds-table').innerHTML = `
+      <table><thead><tr><th>Period</th><th>Result</th><th>Bets</th><th>Payout</th><th>House</th></tr></thead><tbody>
+      ${r.rounds.slice(0,10).map(rd=>`
+        <tr><td class="period-id">${rd.periodId}</td>
+        <td><span class="dot" style="background:${COLOR_STYLE[rd.resultColor]||'#333'}">${rd.result??'—'}</span></td>
+        <td>${fmt(rd.totalBets)}</td><td>${fmt(rd.totalPayout)}</td>
+        <td style="color:${(rd.houseProfit||0)>=0?'#22d67a':'#ff4d6a'}">${fmt(rd.houseProfit)}</td></tr>`).join('')}
+      </tbody></table>`;
+  }
+}
+async function loadWingoLiveBets() {
+  const gid = document.getElementById('wg-gameId').value;
+  const d = await fetch('/api/game/live-bets', {headers:{'x-admin-key':KEY}}).then(r=>r.json()).catch(()=>({success:false}));
+  if (!d.success) return;
+  const gdata = d.wingo && d.wingo[gid];
+  const container = document.getElementById('wg-live-bets');
+  if (!container) return;
+  if (!gdata) { container.innerHTML = '<div style="color:#555;font-size:12px">No active round</div>'; return; }
+  const COLOR_MAP = { Green:'#22d67a', Red:'#ff4d6a', Violet:'#a855f7' };
+  const NUM_BG = { 0:'#a855f7',1:'#22d67a',2:'#ff4d6a',3:'#22d67a',4:'#ff4d6a',5:'#a855f7',6:'#ff4d6a',7:'#22d67a',8:'#ff4d6a',9:'#22d67a' };
+  // Show all 4 wingo modes
+  const LABELS = {wingo30s:'⚡ 30s',wingo1m:'🔥 1 Min',wingo3m:'👑 3 Min',wingo5m:'🎯 5 Min'};
+  container.innerHTML = Object.entries(d.wingo).map(([gid2, g]) => {
+    if (!g) return `<div class="lb-card"><h4 class="lb-game">${LABELS[gid2]||gid2}</h4><div class="lb-empty">No active round</div></div>`;
+    const entries = Object.entries(g.breakdown||{}).sort((a,b)=>b[1].total-a[1].total);
+    const rows = entries.length === 0 ? '<div class="lb-empty">No bets yet</div>' : entries.map(([choice,info]) => {
+      const pct = g.totalBets>0?Math.round(info.total/g.totalBets*100):0;
+      let choiceColor='#7c6fff';
+      if(COLOR_MAP[choice])choiceColor=COLOR_MAP[choice];
+      else if(!isNaN(parseInt(choice)))choiceColor=NUM_BG[parseInt(choice)]||'#7c6fff';
+      return `<div class="lb-row"><span class="lb-choice" style="background:${choiceColor}22;color:${choiceColor}">${choice}</span><div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%;background:${choiceColor}"></div></div><span class="lb-amt">${fmt(info.total)}</span><span class="lb-count">${info.count}x</span></div>`;
+    }).join('');
+    return `<div class="lb-card"><h4><span class="lb-game">${LABELS[gid2]||gid2}</span><span class="lb-timer">⏱ ${g.secLeft}s · ${g.betCount} bets</span></h4><div class="lb-breakdown">${rows}</div><div style="margin-top:6px;font-size:11px;color:#888">Total: <b style="color:#7c6fff">${fmt(g.totalBets)}</b></div></div>`;
+  }).join('');
+}
+async function initWingo() { buildWingoNums(); loadWingoState(); loadWingoLiveBets(); setInterval(()=>{loadWingoState();loadWingoLiveBets();}, 4000); }
+async function setWingoResult() {
+  if (wingoSel === null) return showMsg('wg-msg','Select a number first',false);
+  const gid = document.getElementById('wg-gameId').value;
+  const d = await api('/wingo/current?gameId=' + gid);
+  const r = await api('/wingo/result','POST',{periodId:d.periodId,result:wingoSel,gameId:gid});
+  if (!r.success) return showMsg('wg-msg', r.message, false);
+  if (r.queued) {
+    // Result queued — round still running, profit not available yet
+    showMsg('wg-msg', `⏳ Queued: ${r.result} (${r.color}) | Bets so far: ${fmt(r.totalBets)} | House profit will show after round ends`, true);
+  } else {
+    showMsg('wg-msg', `✅ Set: ${r.result} (${r.color}) | Bets:${fmt(r.totalBets)} Payout:${fmt(r.totalPayout)} House:${fmt(r.houseProfit)}`, true);
+  }
+  loadWingoState();
+}
+
+// ═══════════════ TRX WINGO ═══════════════
+let trxSel = null;
+function buildTrxNums() {
+  const div = document.getElementById('trx-nums');
+  div.innerHTML = '';
+  for(let i=0;i<=9;i++){
+    const c=NUM_COLOR[i]; const btn=document.createElement('button');
+    btn.className='num-btn'; btn.textContent=i;
+    btn.style.background=COLOR_STYLE[c]; btn.style.color='#fff';
+    btn.onclick=()=>{trxSel=i;document.getElementById('trx-sel').textContent=i;};
+    div.appendChild(btn);
+  }
+}
+function trxColorPick(color) {
+  const pool=color==='Green'?GREEN_NUMS:color==='Red'?RED_NUMS:VIOLET_NUMS;
+  trxSel=pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById('trx-sel').textContent=trxSel;
+}
+async function loadTrxState() {
+  const d=await api('/trxwingo/state');
+  if(d.success){document.getElementById('trx-timer').textContent=(d.sec||0)+'s';document.getElementById('trx-period').textContent=d.periodId||'—';}
+  const r=await api('/trxwingo/rounds');
+  if(r.success) document.getElementById('trx-rounds-table').innerHTML=`
+    <table><thead><tr><th>Period</th><th>Result</th><th>Hash</th><th>Bets</th></tr></thead><tbody>
+    ${r.rounds.slice(0,10).map(rd=>`<tr>
+      <td class="period-id">${rd.periodId}</td>
+      <td><span class="dot" style="background:${COLOR_STYLE[rd.resultColor]||'#333'}">${rd.result??'—'}</span></td>
+      <td class="hash">${(rd.trxHash||'').slice(0,12)}...</td>
+      <td>${fmt(rd.totalBets)}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+async function initTrxWingo(){buildTrxNums();loadTrxState();setInterval(loadTrxState,5000);}
+async function setTrxResult(){
+  if(trxSel===null) return showMsg('trx-msg','Select a number first',false);
+  const r=await api('/trxwingo/result','POST',{result:trxSel});
+  showMsg('trx-msg',r.success?`✅ TRX result queued: ${trxSel}`:r.message,r.success);
+}
+
+// ═══════════════ 5D LOTTERY ═══════════════
+function fdGetNums(){return['fd-a','fd-b','fd-c','fd-d','fd-e'].map(id=>parseInt(document.getElementById(id).value));}
+function fdUpdatePreview(){
+  const nums=fdGetNums(); const sum=nums.reduce((a,b)=>a+b,0);
+  document.getElementById('fd-preview').innerHTML=`Result: <b style="color:#7c6fff;font-size:18px">${nums.join(' ')}</b> &nbsp; Sum: <b>${sum}</b> &nbsp; ${sum>=23?'<span class="badge badge-green">BIG</span>':'<span class="badge badge-red">SMALL</span>'} ${sum%2===0?'<span class="badge badge-blue">EVEN</span>':'<span class="badge badge-violet">ODD</span>'}`;
+}
+function fdRandom(){['fd-a','fd-b','fd-c','fd-d','fd-e'].forEach(id=>{document.getElementById(id).value=Math.floor(Math.random()*10);});fdUpdatePreview();}
+function fdAllBig(){['fd-a','fd-b','fd-c','fd-d','fd-e'].forEach(id=>{document.getElementById(id).value=5+Math.floor(Math.random()*5);});fdUpdatePreview();}
+function fdAllSmall(){['fd-a','fd-b','fd-c','fd-d','fd-e'].forEach(id=>{document.getElementById(id).value=Math.floor(Math.random()*5);});fdUpdatePreview();}
+['fd-a','fd-b','fd-c','fd-d','fd-e'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('change',fdUpdatePreview);});
+async function loadFiveDState(){
+  const d=await api('/fived/state');
+  if(d.success){document.getElementById('fd-timer').textContent=(d.sec||0)+'s';document.getElementById('fd-period').textContent=d.periodId||'—';}
+  const r=await api('/fived/rounds');
+  if(r.success) document.getElementById('fd-rounds-table').innerHTML=`
+    <table><thead><tr><th>Period</th><th>Result</th><th>Sum</th><th>Bets</th><th>Payout</th></tr></thead><tbody>
+    ${r.rounds.slice(0,10).map(rd=>{const sum=(rd.result||[]).reduce((a,b)=>a+b,0);return`<tr>
+      <td class="period-id">${rd.periodId}</td>
+      <td><b style="color:#7c6fff;font-size:14px">${(rd.result||[]).join(' ')}</b></td>
+      <td>${sum} <span class="badge ${sum>=23?'badge-green':'badge-red'}">${sum>=23?'Big':'Small'}</span></td>
+      <td>${fmt(rd.totalBets)}</td><td>${fmt(rd.totalPayout)}</td></tr>`}).join('')}
+    </tbody></table>`;
+}
+async function initFiveD(){fdUpdatePreview();loadFiveDState();setInterval(loadFiveDState,5000);}
+async function setFiveDResult(){
+  const nums=fdGetNums();
+  const r=await api('/fived/result','POST',{nums});
+  showMsg('fd-msg',r.success?`✅ 5D result queued: ${nums.join('-')}`:r.message,r.success);
+}
+
+// ═══════════════ K3 DICE ═══════════════
+function k3UpdatePreview(){
+  const d=[parseInt(document.getElementById('k3d1').value),parseInt(document.getElementById('k3d2').value),parseInt(document.getElementById('k3d3').value)];
+  const sum=d[0]+d[1]+d[2]; const isTriple=d[0]===d[1]&&d[1]===d[2];
+  const big=sum>=11&&sum<=17&&!isTriple,small=sum>=4&&sum<=10&&!isTriple;
+  document.getElementById('k3-preview').innerHTML=`Dice: <b style="color:#ffd700">${d[0]} ${d[1]} ${d[2]}</b> &nbsp; Sum: <b>${sum}</b> &nbsp;
+    ${isTriple?`<span class="badge badge-violet">TRIPLE</span>`:big?`<span class="badge badge-green">BIG</span>`:`<span class="badge badge-red">SMALL</span>`}
+    <span class="badge badge-blue">${sum%2===0?'EVEN':'ODD'}</span>`;
+}
+function k3Random(){[1,2,3].forEach(i=>{document.getElementById('k3d'+i).value=Math.floor(Math.random()*6)+1;});k3UpdatePreview();}
+function k3Set(a,b,c){document.getElementById('k3d1').value=a;document.getElementById('k3d2').value=b;document.getElementById('k3d3').value=c;k3UpdatePreview();}
+[1,2,3].forEach(i=>{const el=document.getElementById('k3d'+i);if(el)el.addEventListener('change',k3UpdatePreview);});
+async function loadK3State(){
+  const d=await api('/k3/state');
+  if(d.success){document.getElementById('k3-timer').textContent=(d.sec||0)+'s';document.getElementById('k3-period').textContent=d.periodId||'—';}
+  const r=await api('/k3/rounds');
+  if(r.success) document.getElementById('k3-rounds-table').innerHTML=`
+    <table><thead><tr><th>Period</th><th>Dice</th><th>Sum</th><th>Bets</th><th>House</th></tr></thead><tbody>
+    ${r.rounds.slice(0,10).map(rd=>`<tr>
+      <td class="period-id">${rd.periodId}</td>
+      <td style="font-size:16px">${(rd.dice||[]).join(' ')}</td>
+      <td>${rd.sum} <span class="badge ${(rd.sum||0)>=11?'badge-green':'badge-red'}">${(rd.sum||0)>=11?'Big':'Small'}</span></td>
+      <td>${fmt(rd.totalBets)}</td>
+      <td style="color:${(rd.houseProfit||0)>=0?'#22d67a':'#ff4d6a'}">${fmt(rd.houseProfit)}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+async function initK3(){k3UpdatePreview();loadK3State();setInterval(loadK3State,5000);}
+async function setK3Result(){
+  const dice=[parseInt(document.getElementById('k3d1').value),parseInt(document.getElementById('k3d2').value),parseInt(document.getElementById('k3d3').value)];
+  const r=await api('/k3/result','POST',{dice});
+  showMsg('k3-msg',r.success?`✅ ${r.message} | Dice:${dice.join(',')} Sum:${dice.reduce((a,b)=>a+b,0)}`:r.message,r.success);
+}
+
+// ═══════════════ AVIATOR ═══════════════
+let avQueueLocal = []; // local copy for editing before saving
+
+async function loadAviator() {
+  const d = await api('/aviator/state');
+  if (d.success) {
+    document.getElementById('av-phase').textContent = d.phase;
+    document.getElementById('av-mult').textContent = (d.mult||1).toFixed(2) + 'x';
+    document.getElementById('av-countdown').textContent = d.countdown || 0;
+    avQueueLocal = d.queue || [];
+    renderAvQueue();
+  }
+  const r = await api('/aviator/rounds');
+  if (r.success) document.getElementById('av-rounds-table').innerHTML = `
+    <table><thead><tr><th>Period</th><th>Crash</th><th>Time</th></tr></thead><tbody>
+    ${r.rounds.slice(0,15).map(rd => `<tr>
+      <td class="period-id">${(rd.periodId||'').slice(-8)}</td>
+      <td><b style="color:${(rd.actualCrash||0)<2?'#ff4d6a':(rd.actualCrash||0)<5?'#f5c842':'#22d67a'}">${(rd.actualCrash||0).toFixed(2)}×</b></td>
+      <td style="color:#888">${timeAgo(rd.crashedAt)}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+
+function renderAvQueue() {
+  const listEl = document.getElementById('av-queue-list');
+  const countEl = document.getElementById('av-queue-list-count');
+  const headerCount = document.getElementById('av-queue-count');
+  if (headerCount) headerCount.textContent = avQueueLocal.length > 0 ? avQueueLocal.length + ' rounds queued' : '0 rounds (random)';
+  if (countEl) countEl.textContent = avQueueLocal.length ? `(${avQueueLocal.length} rounds)` : '';
+  if (!avQueueLocal.length) {
+    listEl.innerHTML = '<div style="color:#555;font-size:12px;text-align:center;padding:20px;">Queue is empty — random mode active</div>';
+    return;
+  }
+  listEl.innerHTML = avQueueLocal.map((v, i) => {
+    const color = v < 1.5 ? '#ff4d6a' : v < 2 ? '#ff8c00' : v < 5 ? '#f5c842' : v < 10 ? '#22d67a' : '#a855f7';
+    const label = v < 1.5 ? '💀 Crash' : v < 2 ? '📉 Low' : v < 5 ? '📊 Mid' : v < 10 ? '🚀 High' : '🌟 Moon';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:6px;margin-bottom:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);">
+      <span style="color:#555;font-size:11px;min-width:24px;text-align:right">#${i+1}</span>
+      <span style="flex:1;font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:${color}">${parseFloat(v).toFixed(2)}×</span>
+      <span style="font-size:10px;color:${color};opacity:0.7">${label}</span>
+      <button onclick="queueRemove(${i})" style="background:rgba(255,50,50,0.15);border:1px solid rgba(255,50,50,0.3);color:#ff6b6b;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function queueAppend() {
+  const v = parseFloat(document.getElementById('av-queue-add-val').value);
+  if (!v || v < 1.01) return showMsg('av-queue-msg', '❌ Value must be ≥ 1.01', false);
+  avQueueLocal.push(v);
+  renderAvQueue();
+  showMsg('av-queue-msg', `Added ${v.toFixed(2)}× — click Save to activate`, true);
+}
+
+function queueRemove(idx) {
+  avQueueLocal.splice(idx, 1);
+  renderAvQueue();
+}
+
+function queueBulkAdd() {
+  const raw = document.getElementById('av-queue-bulk').value;
+  const vals = raw.split(',').map(s => parseFloat(s.trim())).filter(v => !isNaN(v) && v >= 1.01);
+  if (!vals.length) return showMsg('av-queue-msg', '❌ No valid values found', false);
+  const invalid = raw.split(',').map(s => parseFloat(s.trim())).filter(v => isNaN(v) || v < 1.01);
+  avQueueLocal.push(...vals);
+  renderAvQueue();
+  document.getElementById('av-queue-bulk').value = '';
+  showMsg('av-queue-msg', `Added ${vals.length} values${invalid.length ? ` (${invalid.length} invalid skipped)` : ''} — click Save`, true);
+}
+
+async function queueSave() {
+  if (!avQueueLocal.length) return showMsg('av-queue-msg', '⚠️ Queue is empty — use Clear to reset to random', false);
+  const r = await api('/aviator/queue/set', 'POST', { queue: avQueueLocal });
+  showMsg('av-queue-msg', r.success ? `✅ ${r.message}` : '❌ ' + r.message, r.success);
+  if (r.success) { avQueueLocal = r.queue; renderAvQueue(); }
+}
+
+async function queueClear() {
+  if (!confirm('Clear entire pattern queue? Aviator will return to random mode.')) return;
+  avQueueLocal = [];
+  const r = await api('/aviator/queue/clear', 'POST', {});
+  showMsg('av-queue-msg', r.success ? '✅ Queue cleared — random mode active' : '❌ ' + r.message, r.success);
+  renderAvQueue();
+}
+
+// Preset patterns
+const PRESETS = {
+  house:     [1.01, 1.2, 1.05, 1.3, 1.1, 1.01, 1.4, 1.08, 1.2, 1.01],
+  lure:      [5.0, 8.0, 3.5, 1.1, 1.01, 1.3, 1.2, 1.05, 1.1, 1.4],
+  generous:  [1.5, 2.5, 1.2, 4.0, 1.8, 3.0, 1.1, 6.5, 2.0, 1.4],
+  spike:     [1.2, 1.1, 1.3, 1.05, 25.0, 1.2, 1.4, 1.1, 1.3, 1.01],
+  grind:     [1.8, 1.5, 1.3, 1.1, 1.05, 1.4, 1.2, 1.01, 2.5, 1.3],
+};
+const PRESET_NAMES = { house:'🏠 House Mode', lure:'🎣 Lure & Trap', generous:'💚 Generous Mix', spike:'⚡ Spike Pattern', grind:'⚙️ Grind' };
+
+function applyPreset(key) {
+  const vals = PRESETS[key];
+  if (!vals) return;
+  if (avQueueLocal.length && !confirm(`Replace current queue with "${PRESET_NAMES[key]}" preset?`)) return;
+  avQueueLocal = [...vals];
+  renderAvQueue();
+  showMsg('av-queue-msg', `Preset "${PRESET_NAMES[key]}" loaded — click Save to activate`, true);
+}
+
+async function setAvCrash(val) {
+  const v = val || parseFloat(document.getElementById('av-crash-val').value);
+  if (!v || v < 1.01) return showMsg('av-msg', 'Must be ≥ 1.01', false);
+  const r = await api('/aviator/set-crash', 'POST', { crashAt: v });
+  showMsg('av-msg', r.success ? `✅ ${r.message}` : r.message, r.success);
+}
+
+
+
+// ═══════════════ MINES ═══════════════
+async function loadMines(){
+  const d=await api('/mines/sessions');
+  if(!d.success) return;
+  document.getElementById('mines-total').textContent=d.sessions.length;
+  document.getElementById('mines-won').textContent=d.totalWon;
+  document.getElementById('mines-lost').textContent=d.totalLost;
+  document.getElementById('mines-sessions-table').innerHTML=d.sessions.length===0?'<div style="color:#888;font-size:13px;padding:12px">No active sessions</div>':`
+    <table><thead><tr><th>User</th><th>Bet</th><th>Mines</th><th>Revealed</th><th>Multiplier</th><th>Started</th><th>Action</th></tr></thead><tbody>
+    ${d.sessions.map(s=>`<tr>
+      <td>${s.user.name}<br><span style="color:#888;font-size:11px">${s.user.phone}</span></td>
+      <td>${fmt(s.betAmount)}</td><td>${s.minesCount}</td><td>${s.revealed.length}</td>
+      <td>${s.currentMultiplier.toFixed(2)}×</td><td>${timeAgo(s.createdAt)}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="forceEndMines('${s._id}')">💣 End</button></td></tr>`).join('')}
+    </tbody></table>`;
+}
+async function forceEndMines(gameId){
+  if(!confirm('Force-end this mines session? User loses their bet.')) return;
+  const r=await api('/mines/force-end','POST',{gameId});
+  alert(r.message); loadMines();
+}
+
+// ═══════════════ SLOTS ═══════════════
+async function loadSlots(){
+  const d=await api('/slots/stats');
+  if(d.success){
+    document.getElementById('sl-total').textContent=d.total;
+    document.getElementById('sl-wins').textContent=d.wins;
+    document.getElementById('sl-losses').textContent=d.losses;
+    document.getElementById('sl-bet').textContent=fmt(d.totalBet);
+    document.getElementById('sl-prize').textContent=fmt(d.totalPrize);
+    document.getElementById('sl-profit').textContent=fmt(d.houseProfit);
+  }
+  const r=await api('/slots/recent');
+  if(r.success) document.getElementById('slots-wins-table').innerHTML=r.games.length===0?'<div style="color:#888">No wins yet</div>':`
+    <table><thead><tr><th>User</th><th>Bet</th><th>Win</th><th>Multiplier</th><th>Line</th><th>Time</th></tr></thead><tbody>
+    ${r.games.map(g=>`<tr>
+      <td>${g.userId?.name||'—'}</td><td>${fmt(g.betAmount)}</td><td>${fmt(g.prize)}</td>
+      <td style="color:#ffd700">${g.multiplier}×</td><td>${g.winLine||'—'}</td>
+      <td>${timeAgo(g.createdAt)}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+
+// ═══════════════ CARD GAMES ═══════════════
+async function loadCardGames(){
+  const[dt,ab]=await Promise.all([api('/cardgames/dragontiger'),api('/cardgames/andarbahar')]);
+  if(dt.success) document.getElementById('dt-table').innerHTML=dt.bets.length===0?'<div style="color:#888">No bets yet</div>':`
+    <table><thead><tr><th>User</th><th>Note</th><th>Amount</th><th>Type</th><th>Time</th></tr></thead><tbody>
+    ${dt.bets.map(b=>`<tr>
+      <td>${b.user?.name||'—'}</td>
+      <td style="font-size:11px">${b.note||b.note||'—'}</td>
+      <td>${fmt(b.amount)}</td>
+      <td><span class="badge ${b.type==='win'?'badge-green':'badge-red'}">${b.type}</span></td>
+      <td>${timeAgo(b.createdAt)}</td></tr>`).join('')}
+    </tbody></table>`;
+  if(ab.success) document.getElementById('ab-table').innerHTML=ab.bets.length===0?'<div style="color:#888">No bets yet</div>':`
+    <table><thead><tr><th>User</th><th>Note</th><th>Amount</th><th>Type</th><th>Time</th></tr></thead><tbody>
+    ${ab.bets.map(b=>`<tr>
+      <td>${b.user?.name||'—'}</td>
+      <td style="font-size:11px">${b.note||'—'}</td>
+      <td>${fmt(b.amount)}</td>
+      <td><span class="badge ${b.type==='win'?'badge-green':'badge-red'}">${b.type}</span></td>
+      <td>${timeAgo(b.createdAt)}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+
+// ═══════════════ USERS ═══════════════
+let usersCurrentPage=1;
+async function searchUsers(page=1){
+  usersCurrentPage=page;
+  const q=document.getElementById('user-search').value;
+  const d=await api(`/users?q=${encodeURIComponent(q)}&page=${page}&limit=15`);
+  if(!d.success) return;
+  document.getElementById('users-page-info').textContent=`Page ${d.page} · ${d.total} users`;
+  document.getElementById('users-table').innerHTML=`
+    <table><thead><tr><th>Name</th><th>Phone</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    ${d.users.map(u=>`<tr>
+      <td>${u.name}</td><td>${u.phone}</td><td>${fmt((u.balance||0)+(u.bonusBalance||0))}${u.bonusBalance>0?`<span style="font-size:10px;color:#f5c842;margin-left:4px">(+₹${u.bonusBalance} bonus)</span>`:''}</td>
+      <td>
+        <span class="badge ${u.isBlocked?'badge-red':'badge-green'}">${u.isBlocked?'Blocked':'Active'}</span>
+        ${u.godMode?'<span class="badge" style="background:rgba(220,38,38,0.2);color:#ff4d6a;border:1px solid rgba(220,38,38,0.4);margin-left:4px">😈 GOD</span>':''}
+      </td>
+      <td>
+        <button class="btn btn-sm" style="background:#1a2a3a;color:#4fc3f7" onclick="openPlayerDrawer('${u._id}')">👤 Full Profile</button>
+        <button class="btn btn-sm ${u.isBlocked?'btn-success':'btn-danger'}" onclick="toggleBlock('${u._id}',${!u.isBlocked})">${u.isBlocked?'Unblock':'Block'}</button>
+        <button class="btn btn-sm" style="${u.godMode?'background:rgba(220,38,38,0.3);color:#ff4d6a':'background:#1a0a0a;color:#888;border:1px solid #2a1a1a'}" onclick="toggleGodMode('${u._id}',${!u.godMode})">${u.godMode?'😈 GOD ON':'👿 God'}</button>
+      </td></tr>`).join('')}
+    </tbody></table>`;
+}
+function usersPage(dir){searchUsers(Math.max(1,usersCurrentPage+dir));}
+async function toggleBlock(id,block){
+  const r=await api(`/users/${id}/block`,'POST',{block});
+  if(r.success) searchUsers(usersCurrentPage);
+}
+async function toggleGodMode(id, enable) {
+  const label = enable ? '😈 ENABLE GOD MODE?\n\nThis user will LOSE EVERY SINGLE BET across ALL games until you disable it.\nThey will have NO idea.' : 'Disable God Mode for this user?';
+  if (!confirm(label)) return;
+  const r = await api(`/users/${id}/godmode`, 'POST', { enable });
+  if (r.success) {
+    alert(r.message);
+    searchUsers(usersCurrentPage);
+    if (document.getElementById('playerDrawer').classList.contains('open')) {
+      openPlayerDrawer(id);
+    }
+  } else {
+    alert('Error: ' + r.message);
+  }
+}
+
+// ── Global God Mode ──────────────────────────────────────────────────────────
+let globalGodModeState = false;
+
+function renderGlobalGodMode(enabled) {
+  globalGodModeState = enabled;
+  const panel = document.getElementById('global-godmode-panel');
+  const btn   = document.getElementById('global-godmode-btn');
+  const dot   = document.getElementById('global-godmode-indicator');
+  const status = document.getElementById('global-godmode-status');
+  if (!panel) return;
+  if (enabled) {
+    panel.style.borderColor = 'rgba(220,38,38,0.8)';
+    panel.style.background  = 'rgba(40,5,5,0.95)';
+    panel.style.animation   = 'godmodePulse 1.5s infinite';
+    btn.textContent = '✅ Disable Global God Mode';
+    btn.style.background = 'linear-gradient(135deg,#7c3aed,#dc2626)';
+    btn.style.color = '#fff';
+    btn.style.border = 'none';
+    dot.style.background = '#dc2626';
+    dot.style.boxShadow = '0 0 10px #dc2626';
+    status.innerHTML = '<b style="color:#ff4d6a">😈 ACTIVE — Every user is losing every bet right now</b>';
+  } else {
+    panel.style.borderColor = 'rgba(220,38,38,0.3)';
+    panel.style.background  = 'rgba(15,5,5,0.8)';
+    panel.style.animation   = 'none';
+    btn.textContent = '😈 Enable Global God Mode';
+    btn.style.background = 'linear-gradient(135deg,#3a1a1a,#2a0a0a)';
+    btn.style.color = '#ff4d6a';
+    btn.style.border = '1.5px solid rgba(255,50,50,0.3)';
+    dot.style.background = '#333';
+    dot.style.boxShadow = 'none';
+    status.textContent = 'Status: OFF — Normal mode';
+  }
+}
+
+async function toggleGlobalGodMode() {
+  const enable = !globalGodModeState;
+  const msg = enable
+    ? '😈 ENABLE GLOBAL GOD MODE?\n\nEVERY single user will lose EVERY single bet across ALL games immediately.\n\nThis affects all active players right now.'
+    : '✅ Disable Global God Mode?\n\nAll users return to normal. Individual per-user God Mode settings remain.';
+  if (!confirm(msg)) return;
+  const r = await api('/godmode/global', 'POST', { enable });
+  if (r.success) {
+    renderGlobalGodMode(r.enabled);
+    if (r.enabled) showMsg('', '', true); // silent — the UI update is enough
+  } else {
+    alert('Error: ' + r.message);
+  }
+}
+
+async function loadGlobalGodMode() {
+  const r = await api('/godmode/global');
+  if (r.success) renderGlobalGodMode(r.enabled);
+}
+// viewUser and adjustBalance now handled by drawer (openPlayerDrawer)
+async function adjustBalance(id){
+  const delta=parseFloat(document.getElementById('adj-amt').value);
+  const note=document.getElementById('adj-note').value;
+  if(isNaN(delta)||delta===0) return alert('Enter a valid amount');
+  const r=await api(`/users/${id}/adjust`,'POST',{delta,note});
+  if(r.success){alert(`Balance adjusted. New balance: ${fmt(r.newBalance)}`);}
+  else alert(r.message);
+}
+
+// ═══════════════ WITHDRAWALS ═══════════════
+async function loadWithdrawals(status){
+  const d=await api('/withdrawals?status='+status);
+  if(!d.success) return;
+  document.getElementById('withdrawals-table').innerHTML=d.withdrawals.length===0?`<div style="color:#888;padding:12px">No ${status} withdrawals</div>`:`
+    <table><thead><tr><th>User</th><th>Amount</th><th>UPI ID</th><th>Status</th><th>Date</th>${status==='pending'?'<th>Action</th>':''}</tr></thead><tbody>
+    ${d.withdrawals.map(w=>`<tr>
+      <td>${w.user?.name||'—'}<br><span style="color:#888;font-size:11px">${w.user?.phone||'—'}</span></td>
+      <td>${fmt(w.amount)}</td>
+      <td><span style="color:#f5c842;font-size:12px;font-weight:600">${w.withdrawUpi||w.note?.replace('Manual withdrawal to ','')||'—'}</span></td>
+      <td><span class="badge ${w.status==='success'?'badge-green':w.status==='failed'?'badge-red':'badge-gray'}">${w.status}</span></td>
+      <td style="font-size:11px">${new Date(w.createdAt).toLocaleDateString()}</td>
+      ${status==='pending'?`<td>
+        <button class="btn btn-success btn-sm" onclick="processWithdrawal('${w._id}','success','${w.withdrawUpi||''}',${w.amount})">✅ Approve</button>
+        <button class="btn btn-danger btn-sm" onclick="processWithdrawal('${w._id}','failed','${w.withdrawUpi||''}',${w.amount})">❌ Reject</button>
+      </td>`:''}
+    </tr>`).join('')}
+    </tbody></table>`;
+}
+async function processWithdrawal(id,status,upi,amount){
+  if(status==='success'){
+    const confirmed=confirm(`✅ APPROVE WITHDRAWAL\n\nAmount: ₹${amount}\nSend to UPI: ${upi||'(not recorded)'}\n\nHave you already sent the payment manually?\nClick OK to mark as Successful for the user.`);
+    if(!confirmed) return;
+  } else {
+    const confirmed=confirm(`❌ REJECT WITHDRAWAL\n\nAmount: ₹${amount}\nUPI: ${upi||'(not recorded)'}\n\nThis will refund ₹${amount} back to the user's wallet.\nClick OK to confirm rejection.`);
+    if(!confirmed) return;
+  }
+  const r=await api(`/withdrawals/${id}`,'POST',{status});
+  if(r.success){
+    alert(status==='success'?`✅ Marked as Successful!\nUser will now see "Withdrawal Successful ₹${amount}" in their account.`:`❌ Rejected & ₹${amount} refunded to user's wallet.`);
+    loadWithdrawals('pending');
+  } else alert(r.message);
+}
+
+// ═══════════════ DEPOSITS ═══════════════
+async function loadDeposits(status){
+  const d=await api('/deposits?status='+status);
+  if(!d.success) return;
+  document.getElementById('deposits-table').innerHTML=d.deposits.length===0?`<div style="color:#888;padding:12px">No ${status} deposits</div>`:`
+    <table><thead><tr><th>User</th><th>Amount</th><th>UTR</th><th>Screenshot</th><th>OCR</th><th>Provider</th><th>Status</th><th>Date</th>${status==='pending'?'<th>Action</th>':''}</tr></thead><tbody>
+    ${d.deposits.map(x=>`<tr>
+      <td>${x.user?.name||'—'}<br><span style="color:#888;font-size:11px">${x.user?.phone||'—'}</span></td>
+      <td>${fmt(x.amount)}</td>
+      <td style="font-family:monospace;color:#aaa">${(x.upiUtr||'—')}</td>
+      <td>${x.screenshotUrl?`<a href="${x.screenshotUrl}" target="_blank" style="color:#7c6fff">View</a>`:'—'}</td>
+      <td><span class="badge ${x.ocrVerdict==='match'?'badge-green':x.ocrVerdict==='no_match'?'badge-red':x.ocrVerdict==='error'?'badge-red':'badge-gray'}">${x.ocrVerdict||'unknown'}</span></td>
+      <td>${(x.provider||'—')}${x.payerUpi?`<br><span style="color:#666;font-size:11px">${x.payerUpi}</span>`:''}</td>
+      <td><span class="badge ${x.status==='success'?'badge-green':x.status==='failed'?'badge-red':'badge-gray'}">${x.status}</span></td>
+      <td style="font-size:11px">${new Date(x.createdAt).toLocaleDateString()}</td>
+      ${status==='pending'?`<td>
+        <button class="btn btn-success btn-sm" onclick="processDeposit('${x._id}','success')">✅ Approve</button>
+        <button class="btn btn-danger btn-sm" onclick="processDeposit('${x._id}','failed')">❌ Reject</button>
+      </td>`:''}
+    </tr>`).join('')}
+    </tbody></table>`;
+}
+async function processDeposit(id,status){
+  const action = status === 'success' ? 'APPROVE' : 'REJECT';
+  if (!confirm(`Are you sure you want to ${action} this deposit? This cannot be undone.`)) return;
+  const r=await api(`/deposits/${id}`,'POST',{status});
+  if(r.success) loadDeposits('pending'); else alert(r.message);
+}
+
+
+// ═══════════════ LIVE FEED ═══════════════
+let feedData = [];
+let feedFilter = 'all';
+let feedInterval = null;
+
+const FEED_ICONS = { win:'🏆', loss:'💸', deposit:'💰', withdraw:'🏧', bonus:'🎁' };
+const FEED_COLORS = { win:'#22d67a', loss:'#ff4d6a', deposit:'#4f8ef7', withdraw:'#f5c842', bonus:'#a855f7' };
+const FEED_CLASSES = { win:'fi-win', loss:'fi-loss', deposit:'fi-deposit', withdraw:'fi-withdraw', bonus:'fi-bonus' };
+
+function initFeed() {
+  loadFeed();
+  if (feedInterval) clearInterval(feedInterval);
+  feedInterval = setInterval(loadFeed, 4000);
+}
+
+async function loadFeed() {
+  const d = await api('/feed?limit=120');
+  if (!d.success) return;
+  feedData = d.feed;
+  renderFeed();
+  document.getElementById('feed-last-update').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN');
+}
+
+function setFeedFilter(el, type) {
+  document.querySelectorAll('.feed-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  feedFilter = type;
+  renderFeed();
+}
+
+function renderFeed() {
+  const list = document.getElementById('feed-list');
+  if (!list) return;
+  const items = feedFilter === 'all' ? feedData : feedData.filter(f => f.type === feedFilter);
+  if (!items.length) {
+    list.innerHTML = '<div style="padding:40px;text-align:center;color:#555">No activity yet</div>';
+    return;
+  }
+  list.innerHTML = items.map(f => {
+    const color = FEED_COLORS[f.type] || '#aaa';
+    const icon  = FEED_ICONS[f.type]  || '📋';
+    const cls   = FEED_CLASSES[f.type] || '';
+    const name  = f.user?.name || 'Unknown';
+    const phone = f.user?.phone ? f.user.phone.slice(-4).padStart(f.user.phone.length,'*') : '—';
+    const note  = f.note || f.type;
+    const amt   = (f.type==='win'||f.type==='deposit'||f.type==='bonus') ? '+'+fmt(f.amount) : '-'+fmt(f.amount);
+    const userId = f.user?._id || '';
+    return `<div class="feed-item" style="cursor:${userId?'pointer':'default'}" onclick="${userId?`openPlayerDrawer('${userId}')`:''}">
+      <div class="feed-icon ${cls}">${icon}</div>
+      <div class="feed-info">
+        <div class="feed-name">${name} <span style="color:#555;font-size:11px">${phone}</span></div>
+        <div class="feed-note">${note}</div>
+      </div>
+      <div class="feed-right">
+        <div class="feed-amt" style="color:${color}">${amt}</div>
+        <div class="feed-time">${timeAgo(f.createdAt)} ago</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════ PLAYER PROFILE DRAWER ═══════════════
+let drawerBets = [];
+let drawerBetFilter = 'all';
+
+async function openPlayerDrawer(userId) {
+  document.getElementById('playerDrawer').classList.add('open');
+  document.getElementById('drawerBg').style.display = 'block';
+  document.getElementById('drawer-name').textContent = 'Loading...';
+  document.getElementById('drawer-phone').textContent = '';
+  document.getElementById('drawer-balance').textContent = '...';
+  document.getElementById('drawer-stats').innerHTML = '';
+  document.getElementById('drawer-bets-list').innerHTML = '<div style="padding:30px;text-align:center;color:#555">Loading bets...</div>';
+
+  const d = await api('/users/' + userId + '/profile');
+  if (!d.success) return;
+  const u = d.user;
+  const s = d.stats;
+
+  document.getElementById('drawer-name').textContent = u.name;
+  document.getElementById('drawer-phone').textContent = u.phone + (u.isBlocked ? ' 🔴 BLOCKED' : ' 🟢 Active');
+  document.getElementById('drawer-balance').textContent = fmt((u.balance||0)+(u.bonusBalance||0));
+  // Show bonus breakdown if user has bonus
+  const bonusInfo = document.getElementById('drawer-bonus-info');
+  if (bonusInfo) {
+    if ((u.bonusBalance||0) > 0) {
+      bonusInfo.style.display = 'block';
+      bonusInfo.innerHTML = `<span style="color:#f5c842">₹${u.bonusBalance} bonus</span> + <span style="color:#22d67a">₹${u.balance} real</span>`;
+    } else {
+      bonusInfo.style.display = 'none';
+    }
+  }
+
+  // Stats cards
+  document.getElementById('drawer-stats').innerHTML = [
+    { val: s.totalBets, lbl: 'Total Bets' },
+    { val: s.winRate + '%', lbl: 'Win Rate' },
+    { val: s.favoriteGame, lbl: 'Fav Game' },
+    { val: fmt(s.totalBetAmount), lbl: 'Total Wagered' },
+    { val: fmt(s.totalWonAmount), lbl: 'Total Won' },
+    { val: fmt(u.totalDeposited||0), lbl: 'Deposited' },
+  ].map(st => `<div class="pstat"><div class="pstat-val">${st.val}</div><div class="pstat-lbl">${st.lbl}</div></div>`).join('');
+
+  // Bets
+  drawerBets = d.bets;
+  drawerBetFilter = 'all';
+  document.querySelectorAll('#bet-game-filters .feed-chip').forEach((c,i) => c.classList.toggle('active', i===0));
+  renderDrawerBets();
+
+  // Transactions
+  document.getElementById('drawer-txns-list').innerHTML = renderTxnTable(d.transactions);
+
+  // Info & Tools
+  document.getElementById('drawer-info-content').innerHTML = `
+    <div class="card" style="margin-bottom:14px">
+      <h3>Account Info</h3>
+      <table style="width:100%;font-size:13px"><tbody>
+        <tr><td style="color:#888;padding:5px 0;width:140px">User ID</td><td style="font-family:monospace;font-size:11px">${u._id}</td></tr>
+        <tr><td style="color:#888;padding:5px 0">Joined</td><td>${new Date(u.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</td></tr>
+        <tr><td style="color:#888;padding:5px 0">Referral Code</td><td>${u.referralCode||'—'}</td></tr>
+        <tr><td style="color:#888;padding:5px 0">Referred By</td><td>${u.referredBy||'—'}</td></tr>
+        <tr><td style="color:#888;padding:5px 0">Total Withdrawn</td><td>${fmt(u.totalWithdrawn||0)}</td></tr>
+        <tr><td style="color:#888;padding:5px 0">Total Won</td><td style="color:#22d67a">${fmt(u.totalWon||0)}</td></tr>
+        <tr><td style="color:#888;padding:5px 0">Total Lost</td><td style="color:#ff4d6a">${fmt(u.totalLost||0)}</td></tr>
+      </tbody></table>
+    </div>
+    <div class="card">
+      <h3>Admin Tools</h3>
+      <div class="btn-group" style="margin-bottom:12px">
+        <button class="btn ${u.isBlocked?'btn-success':'btn-danger'} btn-sm" onclick="toggleBlock('${u._id}',${!u.isBlocked});setTimeout(()=>openPlayerDrawer('${u._id}'),600)">${u.isBlocked?'✅ Unblock':'🚫 Block User'}</button>
+        <button id="godmode-btn-${u._id}" class="btn btn-sm ${u.godMode?'btn-success':''}" 
+          style="${u.godMode?'background:linear-gradient(135deg,#7c3aed,#dc2626);color:#fff;border:none;font-weight:800;animation:godmodePulse 1.5s infinite':'background:#1a0a0a;color:#ff4d6a;border:1px solid rgba(255,50,50,0.4)'}"
+          onclick="toggleGodMode('${u._id}',${!u.godMode})">
+          ${u.godMode?'😈 GOD MODE ON — Click to Disable':'👿 Enable God Mode'}
+        </button>
+      </div>
+      ${u.godMode?`<div style="padding:10px 14px;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.4);border-radius:8px;margin-bottom:12px;font-size:12px;color:#ff6b6b;">
+        <b>⚠️ GOD MODE ACTIVE</b> — This user loses every single bet across all games. Aviator cashout is blocked. They have no idea.
+      </div>`:''}
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="number" id="adj-drawer-amt" placeholder="Amount (neg=debit)" style="width:180px">
+        <input type="text" id="adj-drawer-note" placeholder="Note" style="width:160px">
+        <button class="btn btn-primary btn-sm" onclick="adjustBalanceDrawer('${u._id}')">💰 Adjust Balance</button>
+      </div>
+    </div>`;
+}
+
+function renderDrawerBets() {
+  const list = document.getElementById('drawer-bets-list');
+  const items = drawerBetFilter === 'all' ? drawerBets : drawerBets.filter(b => b.game === drawerBetFilter);
+  if (!items.length) { list.innerHTML = '<div style="padding:20px;text-align:center;color:#555">No bets found</div>'; return; }
+  list.innerHTML = items.map(b => {
+    const timeStr = b.time ? new Date(b.time).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
+    return `<div class="bet-row">
+      <span style="color:#7c6fff;font-weight:600">${b.game}</span>
+      <span style="font-size:11px;color:#ccc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${b.choice} → ${b.result||'—'}">${b.choice} → <span style="color:#aaa">${b.result||'—'}</span></span>
+      <span style="color:#fff">${fmt(b.amount)}</span>
+      <span style="color:${b.won?'#22d67a':'#ff4d6a'}">${b.won?'+'+fmt(b.payout):'-'+fmt(b.amount)}</span>
+      <span><span class="won-badge ${b.won?'w':'l'}">${b.won?'WIN':'LOSS'}</span></span>
+    </div>`;
+  }).join('');
+}
+
+function filterBets(el, game) {
+  document.querySelectorAll('#bet-game-filters .feed-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  drawerBetFilter = game;
+  renderDrawerBets();
+}
+
+function renderTxnTable(txns) {
+  if (!txns || !txns.length) return '<div style="padding:20px;text-align:center;color:#555">No transactions</div>';
+  const TYPE_COLOR = { win:'#22d67a', loss:'#ff4d6a', deposit:'#4f8ef7', withdraw:'#f5c842', bonus:'#a855f7' };
+  return '<div>' + txns.map(t => `
+    <div style="display:grid;grid-template-columns:70px 1fr 90px 90px;gap:8px;padding:8px 10px;border-bottom:1px solid #111827;font-size:12px;align-items:center">
+      <span style="background:${TYPE_COLOR[t.type]}22;color:${TYPE_COLOR[t.type]};padding:2px 7px;border-radius:4px;font-weight:700;text-align:center">${t.type}</span>
+      <span style="color:#888;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.note||'—'}">${t.note||'—'}</span>
+      <span style="color:${(t.type==='win'||t.type==='deposit'||t.type==='bonus')?'#22d67a':'#ff4d6a'};font-weight:600">${(t.type==='win'||t.type==='deposit'||t.type==='bonus')?'+':'-'}${fmt(t.amount)}</span>
+      <span style="color:#555">${timeAgo(t.createdAt)} ago</span>
+    </div>`).join('') + '</div>';
+}
+
+function switchDrawerTab(tab) {
+  ['bets','txns','info'].forEach(t => {
+    document.getElementById('dtab-content-'+t).style.display = t===tab ? 'block' : 'none';
+    const btn = document.getElementById('dtab-'+t);
+    if (btn) { btn.className = t===tab ? 'btn btn-primary btn-sm' : 'btn btn-sm'; btn.style.cssText = t===tab ? 'flex:1;border-radius:6px' : 'flex:1;border-radius:6px;background:transparent;color:#aaa'; }
+  });
+}
+
+function closePlayerDrawer() {
+  document.getElementById('playerDrawer').classList.remove('open');
+  document.getElementById('drawerBg').style.display = 'none';
+}
+
+async function adjustBalanceDrawer(id) {
+  const delta = parseFloat(document.getElementById('adj-drawer-amt').value);
+  const note  = document.getElementById('adj-drawer-note').value;
+  if (isNaN(delta)||delta===0) return alert('Enter a valid amount');
+  const r = await api('/users/'+id+'/adjust','POST',{delta,note});
+  if (r.success) { alert('Balance adjusted. New: '+fmt(r.newBalance)); openPlayerDrawer(id); }
+  else alert(r.message);
+}
+
+// viewUser opens full profile drawer
+
+// ═══════════════ P&L BY GAME ═══════════════
+async function loadPnl() {
+  const d = await api('/pnl');
+  if (!d.success) return;
+  const games = d.games;
+  const totalProfit = games.reduce((s,g) => s+g.profit, 0);
+  const totalBets   = games.reduce((s,g) => s+g.bets, 0);
+  const maxProfit   = Math.max(...games.map(g => g.profit), 1);
+
+  document.getElementById('pnl-summary-cards').innerHTML = [
+    { val: fmt(totalBets),   lbl: 'Total Wagered',   color:'#4f8ef7' },
+    { val: fmt(totalProfit), lbl: 'Total House Profit', color: totalProfit>=0?'#22d67a':'#ff4d6a' },
+    { val: games.reduce((s,g)=>s+g.rounds,0), lbl: 'Total Rounds', color:'#7c6fff' },
+  ].map(s => `<div class="stat-card"><div class="val" style="color:${s.color}">${s.val}</div><div class="lbl">${s.lbl}</div></div>`).join('');
+
+  const GAME_ICONS = { 'WinGo':'🎯','TRX WinGo':'🔗','K3 Dice':'🎲','5D Lottery':'🎯','Aviator':'✈️','Mines':'💣','Slots':'🎰' };
+  document.getElementById('pnl-table').innerHTML = games.sort((a,b)=>b.profit-a.profit).map(g => {
+    const pct = maxProfit > 0 ? Math.max(Math.round((g.profit / maxProfit) * 100), 0) : 0;
+    const pColor = g.profit >= 0 ? '#22d67a' : '#ff4d6a';
+    const icon = Object.entries(GAME_ICONS).find(([k]) => g.game.startsWith(k))?.[1] || '🎮';
+    return `<div class="pnl-row">
+      <span style="font-weight:700;color:#fff">${icon} ${g.game}</span>
+      <span style="color:#4f8ef7">${fmt(g.bets)}</span>
+      <span style="color:#f5c842">${fmt(g.payout)}</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-weight:700;color:${pColor}">${fmt(g.profit)}</span>
+        </div>
+        <div class="profit-bar-wrap" style="margin-top:4px"><div class="profit-bar" style="width:${pct}%;background:${pColor}"></div></div>
+      </div>
+      <span style="color:#888">${g.rounds.toLocaleString()}</span>
+    </div>`;
+  }).join('');
+}
+
+
+// Always ask for key on every page load — no localStorage caching
+document.getElementById('login-overlay').classList.remove('hidden');
+document.getElementById('key-input').focus();
+
+// Live queue update via socket — auto-decrements when a queued round is used
+(function initAdminSocket() {
+  const SOCKET_URL = window.location.origin;
+  const script = document.createElement('script');
+  script.src = SOCKET_URL + '/socket.io/socket.io.js';
+  script.onload = () => {
+    const sock = io(SOCKET_URL, { reconnection: true });
+    sock.on('admin:av_queue_update', ({ queue }) => {
+      avQueueLocal = queue || [];
+      renderAvQueue();
+      const el = document.getElementById('av-queue-count');
+      if (el) { el.style.color = '#ffd700'; setTimeout(() => { el.style.color = '#22d67a'; }, 800); }
+    });
+    // v30: sync global god mode state across all admin sessions
+    sock.on('admin:global_godmode', ({ enabled }) => {
+      renderGlobalGodMode(enabled);
+    });
+  };
+  document.body.appendChild(script);
+})();
+
+// Load global god mode status on page load
+loadGlobalGodMode();
+
+</script>
+
+<!-- PLAYER PROFILE DRAWER -->
+<div id="playerDrawer">
+  <div class="drawer-header">
+    <button class="drawer-close" onclick="closePlayerDrawer()">✕</button>
+    <div>
+      <div style="font-size:17px;font-weight:700;color:#fff" id="drawer-name">—</div>
+      <div style="font-size:12px;color:#666" id="drawer-phone">—</div>
+    </div>
+    <div style="margin-left:auto;text-align:right">
+      <div style="font-size:20px;font-weight:700;color:#22d67a" id="drawer-balance">—</div>
+      <div id="drawer-bonus-info" style="display:none;font-size:11px;margin-top:3px;color:rgba(255,255,255,0.5);"></div>
+      <div style="font-size:11px;color:#888">Balance</div>
+    </div>
+  </div>
+  <div class="drawer-body">
+    <!-- Profile stats row -->
+    <div class="profile-stats" id="drawer-stats"></div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:2px;margin-bottom:16px;background:#1a1d2e;border-radius:8px;padding:3px">
+      <button id="dtab-bets" class="btn btn-primary btn-sm" style="flex:1;border-radius:6px" onclick="switchDrawerTab('bets')">🎲 All Bets</button>
+      <button id="dtab-txns" class="btn btn-sm" style="flex:1;border-radius:6px;background:transparent;color:#aaa" onclick="switchDrawerTab('txns')">💳 Transactions</button>
+      <button id="dtab-info" class="btn btn-sm" style="flex:1;border-radius:6px;background:transparent;color:#aaa" onclick="switchDrawerTab('info')">👤 Info & Tools</button>
+    </div>
+
+    <!-- Bets tab -->
+    <div id="dtab-content-bets">
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap" id="bet-game-filters">
+        <div class="feed-chip active" onclick="filterBets(this,'all')">All Games</div>
+        <div class="feed-chip" onclick="filterBets(this,'WinGo')">Win Go</div>
+        <div class="feed-chip" onclick="filterBets(this,'TRX WinGo')">TRX</div>
+        <div class="feed-chip" onclick="filterBets(this,'K3 Dice')">K3</div>
+        <div class="feed-chip" onclick="filterBets(this,'5D')">5D</div>
+        <div class="feed-chip" onclick="filterBets(this,'Aviator')">Aviator</div>
+        <div class="feed-chip" onclick="filterBets(this,'Mines')">Mines</div>
+        <div class="feed-chip" onclick="filterBets(this,'Slots')">Slots</div>
+      </div>
+      <div class="bet-row-head">
+        <span>Game</span><span>Choice → Result</span><span>Bet</span><span>Payout</span><span>W/L</span>
+      </div>
+      <div id="drawer-bets-list"></div>
+    </div>
+
+    <!-- Transactions tab -->
+    <div id="dtab-content-txns" style="display:none">
+      <div id="drawer-txns-list"></div>
+    </div>
+
+    <!-- Info tab -->
+    <div id="dtab-content-info" style="display:none">
+      <div id="drawer-info-content"></div>
+    </div>
+  </div>
+</div>
+<div id="drawerBg" onclick="closePlayerDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:499"></div>
+
+<!-- ════════════════════════════════════════════════
+     CRICKET ADMIN PAGE
+════════════════════════════════════════════════ -->
+<div id="page-cricket" class="page">
+<style>
+/* Cricket Admin Styles */
+.cr-admin-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
+.cr-admin-grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:16px; }
+@media(max-width:900px){ .cr-admin-grid{ grid-template-columns:1fr; } }
+.cr-match-select-row { display:flex; gap:10px; align-items:center; margin-bottom:16px; }
+.cr-match-select-row select { flex:1; }
+.cr-match-select-row .btn { white-space:nowrap; }
+.cr-stat-pill { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; margin-right:4px; }
+.cr-pill-live2 { background:rgba(255,80,50,0.2); color:#ff6040; border:1px solid rgba(255,80,50,0.4); }
+.cr-pill-upcoming2 { background:rgba(0,180,255,0.1); color:#40d0ff; border:1px solid rgba(0,180,255,0.3); }
+.cr-pill-completed2 { background:rgba(100,100,100,0.15); color:#aaa; border:1px solid #333; }
+.cr-pill-cancelled2 { background:rgba(200,50,50,0.1); color:#f88; border:1px solid rgba(200,50,50,0.3); }
+.cr-match-row { display:flex; align-items:center; gap:10px; padding:12px; border-radius:10px; background:#1e2136; margin-bottom:8px; cursor:pointer; transition:.2s; border:1px solid transparent; }
+.cr-match-row:hover { border-color:#3a3d5c; }
+.cr-match-row.selected-match { border-color:#7c6fff; background:#1a1e38; }
+.cr-match-title-col { flex:1; }
+.cr-match-title-main { font-size:14px; font-weight:600; color:#fff; }
+.cr-match-title-sub { font-size:11px; color:#777; margin-top:2px; }
+.cr-match-row-actions { display:flex; gap:6px; flex-shrink:0; }
+.cr-market-row { padding:12px; border-radius:10px; background:#1e2136; margin-bottom:8px; border:1px solid #252840; }
+.cr-market-row-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.cr-market-label { font-size:13px; font-weight:700; color:#ddd; }
+.cr-market-badge { font-size:11px; padding:3px 8px; border-radius:8px; font-weight:700; }
+.cr-mbadge-open { background:rgba(0,200,100,0.15); color:#4ade80; }
+.cr-mbadge-locked { background:rgba(255,165,0,0.15); color:#ffa500; }
+.cr-mbadge-settled { background:rgba(150,150,150,0.1); color:#888; }
+.cr-market-opts { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+.cr-opt-tag { padding:4px 10px; border-radius:8px; font-size:12px; font-weight:600; background:#252840; color:#ccc; border:1px solid #3a3d5c; }
+.cr-opt-tag.winner-opt { background:rgba(0,200,100,0.15); color:#4ade80; border-color:rgba(0,200,100,0.3); }
+.cr-market-actions { display:flex; gap:6px; flex-wrap:wrap; }
+.cr-score-inputs { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.cr-score-inputs3 { grid-template-columns:1fr 1fr 1fr; }
+.stat-green { color:#4ade80; }
+.stat-red { color:#f87171; }
+.stat-yellow { color:#fbbf24; }
+.cr-section-sep { height:1px; background:#252840; margin:18px 0; }
+.cr-no-match { text-align:center; padding:32px; color:#555; font-size:14px; }
+.cr-odds-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.cr-odds-row { display:flex; align-items:center; gap:8px; }
+.cr-odds-row label { font-size:12px; color:#aaa; white-space:nowrap; min-width:90px; }
+.cr-odds-row input { width:80px; flex-shrink:0; }
+.cr-stats-table td:nth-child(2),
+.cr-stats-table td:nth-child(3),
+.cr-stats-table td:nth-child(4) { text-align:right; }
+</style>
+
+<h2>🏏 Cricket Betting Admin</h2>
+
+<!-- ── SEED BUTTON ── -->
+<div style="margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+  <button onclick="crAdminSeedIPL()" style="background:linear-gradient(135deg,#0057ff,#00c2ff);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px">
+    🏆 Seed IPL 2026 Matches
+  </button>
+  <span id="crSeedStatus" style="font-size:13px;color:#4ade80"></span>
+</div>
+
+<!-- ── TOP STATS ── -->
+<div class="stats-grid" id="crAdminStats">
+  <div class="stat-card"><div class="val stat-yellow" id="crStatTotal">–</div><div class="lbl">Total Matches</div></div>
+  <div class="stat-card"><div class="val stat-green" id="crStatLive">–</div><div class="lbl">Live Now</div></div>
+  <div class="stat-card"><div class="val" id="crStatBets">–</div><div class="lbl">Total Bets ₹</div></div>
+  <div class="stat-card"><div class="val stat-green" id="crStatProfit">–</div><div class="lbl">House Profit ₹</div></div>
+</div>
+
+<div class="cr-admin-grid">
+
+  <!-- ── LEFT: Create Match ── -->
+  <div>
+    <div class="card">
+      <h3>➕ Create New Match</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div><label style="font-size:11px;color:#888">Match ID (unique)</label><input id="crNewId" placeholder="e.g. ipl_2025_01"/></div>
+        <div><label style="font-size:11px;color:#888">Tournament</label><input id="crNewTournament" value="IPL"/></div>
+        <div style="grid-column:span 2"><label style="font-size:11px;color:#888">Title</label><input id="crNewTitle" placeholder="e.g. MI vs CSK — Match 1"/></div>
+        <div><label style="font-size:11px;color:#888">Team A (full)</label><input id="crNewTeamA" placeholder="Mumbai Indians"/></div>
+        <div><label style="font-size:11px;color:#888">Team A Short</label><input id="crNewTeamAShort" placeholder="MI" maxlength="5"/></div>
+        <div><label style="font-size:11px;color:#888">Team B (full)</label><input id="crNewTeamB" placeholder="Chennai Super Kings"/></div>
+        <div><label style="font-size:11px;color:#888">Team B Short</label><input id="crNewTeamBShort" placeholder="CSK" maxlength="5"/></div>
+        <div><label style="font-size:11px;color:#888">Venue</label><input id="crNewVenue" placeholder="Wankhede Stadium"/></div>
+        <div><label style="font-size:11px;color:#888">Format</label>
+          <select id="crNewType"><option>T20</option><option>ODI</option><option>Test</option></select></div>
+        <div style="grid-column:span 2"><label style="font-size:11px;color:#888">Scheduled At</label>
+          <input type="datetime-local" id="crNewScheduled"/></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="crAdminCreateMatch()">Create Match + Markets</button>
+      <div id="crCreateResult" style="margin-top:10px;font-size:13px;"></div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT: Match List ── -->
+  <div>
+    <div class="card" style="max-height:520px;overflow-y:auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h3 style="margin:0">All Matches</h3>
+        <button class="btn btn-sm btn-primary" onclick="crAdminLoadMatches()">↻ Refresh</button>
+      </div>
+      <div id="crAdminMatchList"><div class="cr-no-match">Loading…</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SELECTED MATCH OPERATIONS ── -->
+<div id="crAdminMatchOps" style="display:none">
+  <div class="cr-section-sep"></div>
+  <h3 id="crAdminOpsTitle">Match Operations</h3>
+
+  <div class="cr-admin-grid">
+
+    <!-- Live Controls -->
+    <div class="card">
+      <h3>⚡ Match Control</h3>
+      <div class="btn-group" style="margin-bottom:12px">
+        <button class="btn btn-success" onclick="crAdminGoLive()">🟢 Go Live</button>
+        <button class="btn btn-primary" onclick="crAdminCompleteMatch()">🏆 Complete Match</button>
+        <button class="btn btn-danger btn-sm" onclick="crAdminCancelMatch()">✖ Cancel</button>
+      </div>
+      <div style="margin-bottom:8px"><label style="font-size:11px;color:#888">Winner (for Complete)</label>
+        <input id="crWinner" placeholder="e.g. MI or CSK (team short name)"/></div>
+    </div>
+
+    <!-- Score Update -->
+    <div class="card">
+      <h3>📊 Update Live Score</h3>
+      <div class="cr-score-inputs">
+        <div><label style="font-size:11px;color:#888">Team A Innings 1</label><input id="crScA1" placeholder="e.g. 182/4 (20)"/></div>
+        <div><label style="font-size:11px;color:#888">Team B Innings 1</label><input id="crScB1" placeholder="e.g. 145/8 (18.3)"/></div>
+        <div><label style="font-size:11px;color:#888">Current Over</label><input id="crScOver" type="number" placeholder="12"/></div>
+        <div><label style="font-size:11px;color:#888">Current Ball</label><input id="crScBall" type="number" placeholder="3"/></div>
+        <div><label style="font-size:11px;color:#888">Batting Team</label><input id="crScBatting" placeholder="MI"/></div>
+        <div><label style="font-size:11px;color:#888">Last Ball</label><input id="crScLastBall" placeholder="4 (FOUR!)"/></div>
+      </div>
+      <div style="margin-bottom:8px"><label style="font-size:11px;color:#888">Commentary</label>
+        <input id="crScCommentary" placeholder="Rohit pulls it over mid-wicket for SIX!"/></div>
+      <button class="btn btn-primary" style="width:100%" onclick="crAdminUpdateScore()">📡 Push Score Update</button>
+    </div>
+  </div>
+
+  <!-- Add Markets -->
+  <div class="cr-admin-grid">
+    <div class="card">
+      <h3>➕ Add Over Runs Market</h3>
+      <div style="margin-bottom:10px"><label style="font-size:11px;color:#888">Over Number</label>
+        <input id="crAddOverNum" type="number" placeholder="e.g. 19"/></div>
+      <button class="btn btn-success" onclick="crAdminAddOver()">Add Over Market</button>
+    </div>
+    <div class="card">
+      <h3>➕ Add Ball Outcome Market</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div><label style="font-size:11px;color:#888">Over</label><input id="crAddBallOver" type="number" placeholder="19"/></div>
+        <div><label style="font-size:11px;color:#888">Ball</label><input id="crAddBallNum" type="number" placeholder="6"/></div>
+      </div>
+      <button class="btn btn-success" onclick="crAdminAddBall()">Add Ball Market</button>
+    </div>
+  </div>
+
+  <!-- Settle Toss -->
+  <div class="card" style="border:1px solid rgba(250,200,50,0.3);background:rgba(250,200,50,0.04)">
+    <h3>🪙 Settle Toss</h3>
+    <p style="font-size:12px;color:#aaa;margin:0 0 10px">Use this right before/after the toss. Locks betting automatically then pays winners.</p>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end">
+      <div>
+        <label style="font-size:11px;color:#888">Toss Winner (team short code)</label>
+        <input id="crTossWinner" placeholder="e.g. MI or CSK"/>
+      </div>
+      <button class="btn btn-warn" onclick="crAdminSettleToss()">🪙 Declare Toss Winner</button>
+    </div>
+  </div>
+
+  <!-- Markets List -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <h3 style="margin:0">📋 Markets</h3>
+      <button class="btn btn-sm btn-primary" onclick="crAdminLoadSingleMatch()">↻ Refresh</button>
+    </div>
+    <div id="crAdminMarketsList"><div class="cr-no-match">Select a match to see markets</div></div>
+  </div>
+
+  <!-- Settle Market -->
+  <div class="card">
+    <h3>✅ Settle Market</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label style="font-size:11px;color:#888">Market ID</label><input id="crSettleMarketId" placeholder="e.g. match_winner"/></div>
+      <div><label style="font-size:11px;color:#888">Winning Key</label><input id="crSettleKey" placeholder="e.g. MI or 4 or 6-10"/></div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="btn btn-success" style="width:100%" onclick="crAdminSettleMarket()">Settle & Pay Winners</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Odds -->
+  <div class="card">
+    <h3>📈 Update Odds</h3>
+    <div style="margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div><label style="font-size:11px;color:#888">Market ID</label><input id="crOddsMarketId" placeholder="e.g. match_winner"/></div>
+      <div><label style="font-size:11px;color:#888">Options JSON</label><input id="crOddsOptions" placeholder='[{"key":"MI","odds":1.9}]'/></div>
+    </div>
+    <button class="btn btn-primary" onclick="crAdminUpdateOdds()">Update Odds Live</button>
+  </div>
+
+  <!-- Lock Market -->
+  <div class="card">
+    <h3>🔒 Lock Market</h3>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end">
+      <div><label style="font-size:11px;color:#888">Market ID</label><input id="crLockMarketId" placeholder="e.g. over_19_runs"/></div>
+      <button class="btn btn-warn" onclick="crAdminLockMarket()">Lock (Stop Bets)</button>
+    </div>
+  </div>
+
+  <!-- Match Stats -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <h3 style="margin:0">📊 Match P&amp;L Stats</h3>
+      <button class="btn btn-sm btn-primary" onclick="crAdminLoadStats()">Load Stats</button>
+    </div>
+    <div id="crAdminStatsArea"><div class="cr-no-match" style="padding:12px">Click "Load Stats" to view</div></div>
+  </div>
+</div>
+
+</div>
+<!-- END CRICKET ADMIN PAGE -->
+
+<script>
+// ════════════════════════════════════════════════
+//  CRICKET ADMIN MODULE
+// ════════════════════════════════════════════════
+let crSelectedMatchId = null;
+
+async function crAdminSeedIPL() {
+  const btn = event.target;
+  btn.disabled = true; btn.textContent = '⏳ Seeding…';
+  const status = document.getElementById('crSeedStatus');
+  status.textContent = '';
+  try {
+    const res = await fetch('/api/admin/cricket/seed', { method:'POST', headers: crAdminHeaders() });
+    const data = await res.json();
+    if (data.success) {
+      status.textContent = `✅ ${data.message}`;
+      status.style.color = '#4ade80';
+      crAdminLoadMatches();
+    } else {
+      status.textContent = `❌ ${data.message}`;
+      status.style.color = '#f87171';
+    }
+  } catch(e) {
+    status.textContent = '❌ Network error';
+    status.style.color = '#f87171';
+  }
+  btn.disabled = false; btn.textContent = '🏆 Seed IPL 2026 Matches';
+}
+
+function crAdminHeaders() {
+  return { 'Content-Type':'application/json', 'x-admin-key': KEY };
+}
+
+async function crAdminApi(method, path, body) {
+  const opts = { method, headers: crAdminHeaders() };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch('/api/admin/cricket' + path, opts);
+  return res.json();
+}
+
+function crShowMsg(elId, msg, ok) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = `<div class="alert alert-${ok?'success':'error'}">${msg}</div>`;
+  setTimeout(() => { if(el) el.innerHTML=''; }, 4000);
+}
+
+// ── Load all matches ────────────────────────────
+async function crAdminLoadMatches() {
+  const list = document.getElementById('crAdminMatchList');
+  list.innerHTML = '<div class="cr-no-match">Loading…</div>';
+  try {
+    const data = await crAdminApi('GET', '/matches');
+    if (!data.success || !data.matches.length) {
+      list.innerHTML = '<div class="cr-no-match">No matches yet. Create one ↑</div>';
+      return;
+    }
+    // update stats
+    const live = data.matches.filter(m=>m.status==='live').length;
+    const totalBets = data.matches.reduce((s,m)=>s+(m.totalBetsAmount||0),0);
+    const totalProfit = data.matches.reduce((s,m)=>s+(m.houseProfit||0),0);
+    document.getElementById('crStatTotal').textContent = data.matches.length;
+    document.getElementById('crStatLive').textContent = live;
+    document.getElementById('crStatBets').textContent = '₹'+totalBets.toLocaleString('en-IN');
+    document.getElementById('crStatProfit').textContent = '₹'+totalProfit.toLocaleString('en-IN');
+
+    list.innerHTML = data.matches.map(m => {
+      const pillCls = m.status==='live'?'cr-pill-live2':m.status==='upcoming'?'cr-pill-upcoming2':m.status==='completed'?'cr-pill-completed2':'cr-pill-cancelled2';
+      const dt = new Date(m.scheduledAt).toLocaleDateString('en-IN',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const openMkts = (m.markets||[]).filter(mk=>mk.status==='open').length;
+      return `<div class="cr-match-row${crSelectedMatchId===m.matchId?' selected-match':''}" onclick="crAdminSelectMatch('${m.matchId}','${m.title}')">
+        <div class="cr-match-title-col">
+          <div class="cr-match-title-main">${m.title}</div>
+          <div class="cr-match-title-sub">${dt} · ${m.matchType} · ${openMkts} open markets · ₹${(m.totalBetsAmount||0).toLocaleString('en-IN')}</div>
+        </div>
+        <span class="cr-stat-pill ${pillCls}">${m.status.toUpperCase()}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = `<div class="cr-no-match" style="color:#f87171">Error: ${e.message}</div>`;
+  }
+}
+
+// ── Select match for ops ────────────────────────
+function crAdminSelectMatch(matchId, title) {
+  crSelectedMatchId = matchId;
+  document.getElementById('crAdminMatchOps').style.display = '';
+  document.getElementById('crAdminOpsTitle').textContent = '⚡ Operations: ' + title;
+  crAdminLoadMatches();
+  crAdminLoadSingleMatch();
+  crAdminLoadStats();
+}
+
+async function crAdminLoadSingleMatch() {
+  if (!crSelectedMatchId) return;
+  const list = document.getElementById('crAdminMarketsList');
+  list.innerHTML = '<div class="cr-no-match">Loading markets…</div>';
+  try {
+    const res = await fetch(`/api/admin/cricket/match/${crSelectedMatchId}/stats`, { headers: crAdminHeaders() });
+    // fetch full match for markets
+    const matchRes = await fetch(`/api/cricket/matches/${crSelectedMatchId}`);
+    const matchData = await matchRes.json();
+    if (!matchData.success) { list.innerHTML = '<div class="cr-no-match">Could not load match</div>'; return; }
+    const match = matchData.match;
+    if (!match.markets || !match.markets.length) {
+      list.innerHTML = '<div class="cr-no-match">No markets on this match</div>'; return;
+    }
+    list.innerHTML = match.markets.map(mk => {
+      const badgeCls = mk.status==='open'?'cr-mbadge-open':mk.status==='locked'?'cr-mbadge-locked':'cr-mbadge-settled';
+      const opts = mk.options.map(o=>`<span class="cr-opt-tag${mk.result===o.key?' winner-opt':''}">${o.label} @${o.odds}x${mk.result===o.key?' ✓':''}</span>`).join('');
+      return `<div class="cr-market-row">
+        <div class="cr-market-row-header">
+          <div>
+            <span class="cr-market-label">${mk.label}</span>
+            <span style="font-size:11px;color:#666;margin-left:8px">${mk.marketId}</span>
+          </div>
+          <span class="cr-market-badge ${badgeCls}">${mk.status.toUpperCase()}</span>
+        </div>
+        <div class="cr-market-opts">${opts}</div>
+        <div class="cr-market-actions">
+          ${mk.status==='open'?`<button class="btn btn-sm btn-warn" onclick="crQuickLock('${mk.marketId}')">🔒 Lock</button>`:''}
+          ${mk.status!=='settled'?`<button class="btn btn-sm" style="background:#1e3a28;color:#4ade80" onclick="crQuickSettle('${mk.marketId}','${mk.options.map(o=>o.key).join(',')}')">✅ Settle</button>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = `<div class="cr-no-match" style="color:#f87171">${e.message}</div>`;
+  }
+}
+
+// ── Create match ────────────────────────────────
+async function crAdminCreateMatch() {
+  const body = {
+    matchId: document.getElementById('crNewId').value.trim(),
+    title: document.getElementById('crNewTitle').value.trim(),
+    teamA: document.getElementById('crNewTeamA').value.trim(),
+    teamB: document.getElementById('crNewTeamB').value.trim(),
+    teamAShort: document.getElementById('crNewTeamAShort').value.trim(),
+    teamBShort: document.getElementById('crNewTeamBShort').value.trim(),
+    tournament: document.getElementById('crNewTournament').value.trim(),
+    venue: document.getElementById('crNewVenue').value.trim(),
+    matchType: document.getElementById('crNewType').value,
+    scheduledAt: document.getElementById('crNewScheduled').value,
+  };
+  if (!body.matchId||!body.title||!body.teamA||!body.teamB||!body.teamAShort||!body.teamBShort||!body.scheduledAt) {
+    crShowMsg('crCreateResult','Please fill all required fields',false); return;
+  }
+  try {
+    const data = await crAdminApi('POST','/match',body);
+    crShowMsg('crCreateResult', data.message || (data.success?'Match created!':'Error'), data.success);
+    if (data.success) {
+      crAdminLoadMatches();
+      ['crNewId','crNewTitle','crNewTeamA','crNewTeamB','crNewTeamAShort','crNewTeamBShort','crNewVenue'].forEach(id => { const el=document.getElementById(id); if(el)el.value=''; });
+    }
+  } catch(e) { crShowMsg('crCreateResult',e.message,false); }
+}
+
+// ── Go live ─────────────────────────────────────
+async function crAdminGoLive() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  if (!confirm('Open betting and set match LIVE?')) return;
+  try {
+    const data = await crAdminApi('POST','/match/live',{ matchId: crSelectedMatchId });
+    alert(data.message || (data.success?'Match is LIVE!':'Error'));
+    crAdminLoadMatches();
+  } catch(e) { alert(e.message); }
+}
+
+// ── Complete match ───────────────────────────────
+async function crAdminCompleteMatch() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  const winner = document.getElementById('crWinner').value.trim();
+  if (!winner) return alert('Enter winning team short name (e.g. MI)');
+  if (!confirm(`Complete match with winner = "${winner}"? This will settle all markets.`)) return;
+  try {
+    const data = await crAdminApi('POST','/match/complete',{ matchId: crSelectedMatchId, winner });
+    alert(`${data.message}\nBets settled: ${data.totalSettled}\nTotal paid out: ₹${data.totalPaid}`);
+    crAdminLoadMatches();
+    crAdminLoadSingleMatch();
+  } catch(e) { alert(e.message); }
+}
+
+// ── Cancel match ─────────────────────────────────
+async function crAdminCancelMatch() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  if (!confirm('Cancel this match and REFUND all bets?')) return;
+  try {
+    const data = await crAdminApi('DELETE',`/match/${crSelectedMatchId}`);
+    alert(data.message || 'Done');
+    crAdminLoadMatches();
+  } catch(e) { alert(e.message); }
+}
+
+// ── Update score ─────────────────────────────────
+async function crAdminUpdateScore() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  const update = { matchId: crSelectedMatchId };
+  const a1=document.getElementById('crScA1').value.trim(); if(a1) update.teamAInnings1=a1;
+  const b1=document.getElementById('crScB1').value.trim(); if(b1) update.teamBInnings1=b1;
+  const ov=document.getElementById('crScOver').value; if(ov!=='') update.currentOver=parseInt(ov);
+  const bl=document.getElementById('crScBall').value; if(bl!=='') update.currentBall=parseInt(bl);
+  const bt=document.getElementById('crScBatting').value.trim(); if(bt) update.batting=bt;
+  const lb=document.getElementById('crScLastBall').value.trim(); if(lb) update.lastBall=lb;
+  const cm=document.getElementById('crScCommentary').value.trim(); if(cm) update.commentary=cm;
+  try {
+    const data = await crAdminApi('POST','/score',update);
+    if (data.success) { showAlert('Score pushed live!','success'); }
+    else alert(data.message||'Error');
+  } catch(e) { alert(e.message); }
+}
+
+// ── Add over market ──────────────────────────────
+async function crAdminAddOver() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  const overNumber = document.getElementById('crAddOverNum').value;
+  if (!overNumber) return alert('Enter over number');
+  try {
+    const data = await crAdminApi('POST','/market/add-over',{ matchId: crSelectedMatchId, overNumber: parseInt(overNumber) });
+    alert(data.message||'Done'); crAdminLoadSingleMatch();
+  } catch(e) { alert(e.message); }
+}
+
+// ── Add ball market ──────────────────────────────
+async function crAdminAddBall() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  const over = document.getElementById('crAddBallOver').value;
+  const ball = document.getElementById('crAddBallNum').value;
+  if (!over||!ball) return alert('Enter over and ball');
+  try {
+    const data = await crAdminApi('POST','/market/add-ball',{ matchId: crSelectedMatchId, over: parseInt(over), ball: parseInt(ball) });
+    alert(data.message||'Done'); crAdminLoadSingleMatch();
+  } catch(e) { alert(e.message); }
+}
+
+// ── Settle toss ──────────────────────────────────
+async function crAdminSettleToss() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  const winner = document.getElementById('crTossWinner').value.trim();
+  if (!winner) return alert('Enter the toss winner team short code (e.g. MI)');
+  if (!confirm(`Confirm: ${winner} won the toss?\nThis will lock toss betting and pay all winners.`)) return;
+  try {
+    const data = await crAdminApi('POST', '/market/settle-toss', { matchId: crSelectedMatchId, winner });
+    if (data.success) {
+      alert(`✅ Toss settled!\n${winner} won the toss.\nBets settled: ${data.settled}\nPaid out: ₹${data.paid}`);
+      document.getElementById('crTossWinner').value = '';
+      crAdminLoadSingleMatch();
+      crAdminLoadMatches();
+    } else {
+      alert('Error: ' + data.message);
+    }
+  } catch(e) { alert('Network error: ' + e.message); }
+}
+
+// ── Settle market ────────────────────────────────
+async function crAdminSettleMarket() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  const marketId = document.getElementById('crSettleMarketId').value.trim();
+  const winningKey = document.getElementById('crSettleKey').value.trim();
+  if (!marketId||!winningKey) return alert('Enter market ID and winning key');
+  if (!confirm(`Settle market "${marketId}" with winner = "${winningKey}"?`)) return;
+  try {
+    const data = await crAdminApi('POST','/market/settle',{ matchId: crSelectedMatchId, marketId, winningKey });
+    alert(`${data.message}\nBets settled: ${data.settled}\nPaid out: ₹${data.paid}`);
+    crAdminLoadSingleMatch();
+    crAdminLoadMatches();
+  } catch(e) { alert(e.message); }
+}
+
+// ── Lock market ──────────────────────────────────
+async function crAdminLockMarket() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  const marketId = document.getElementById('crLockMarketId').value.trim();
+  if (!marketId) return alert('Enter market ID');
+  try {
+    const data = await crAdminApi('POST','/market/lock',{ matchId: crSelectedMatchId, marketId });
+    alert(data.message||'Done'); crAdminLoadSingleMatch();
+  } catch(e) { alert(e.message); }
+}
+
+// ── Quick lock from markets list ─────────────────
+async function crQuickLock(marketId) {
+  if (!confirm(`Lock market "${marketId}"?`)) return;
+  try {
+    const data = await crAdminApi('POST','/market/lock',{ matchId: crSelectedMatchId, marketId });
+    crAdminLoadSingleMatch();
+  } catch(e) { alert(e.message); }
+}
+
+// ── Quick settle from markets list ───────────────
+async function crQuickSettle(marketId, keysStr) {
+  const key = prompt(`Settle market "${marketId}"\nEnter winning key (options: ${keysStr}):`);
+  if (!key) return;
+  try {
+    const data = await crAdminApi('POST','/market/settle',{ matchId: crSelectedMatchId, marketId, winningKey: key.trim() });
+    alert(`${data.message} — paid ₹${data.paid} to ${data.settled} winners`);
+    crAdminLoadSingleMatch(); crAdminLoadMatches();
+  } catch(e) { alert(e.message); }
+}
+
+// ── Update odds ──────────────────────────────────
+async function crAdminUpdateOdds() {
+  if (!crSelectedMatchId) return alert('Select a match first');
+  const marketId = document.getElementById('crOddsMarketId').value.trim();
+  const raw = document.getElementById('crOddsOptions').value.trim();
+  if (!marketId||!raw) return alert('Fill market ID and options JSON');
+  try {
+    const options = JSON.parse(raw);
+    const data = await crAdminApi('POST','/market/odds',{ matchId: crSelectedMatchId, marketId, options });
+    alert(data.message||'Done'); crAdminLoadSingleMatch();
+  } catch(e) { alert('JSON parse error or: '+e.message); }
+}
+
+// ── Load stats ───────────────────────────────────
+async function crAdminLoadStats() {
+  if (!crSelectedMatchId) return;
+  const area = document.getElementById('crAdminStatsArea');
+  try {
+    const res = await fetch(`/api/admin/cricket/match/${crSelectedMatchId}/stats`, { headers: crAdminHeaders() });
+    const data = await res.json();
+    if (!data.success) { area.innerHTML='<div class="cr-no-match">Could not load stats</div>'; return; }
+    const m = data.match;
+    const byMarket = data.byMarket || {};
+    const marketRows = Object.entries(byMarket).map(([mkId, mkData]) => {
+      const choices = Object.entries(mkData.byChoice||{}).map(([k,v])=>`<span style="font-size:11px;color:#888">${k}: ₹${v.toLocaleString('en-IN')}</span>`).join(' · ');
+      return `<tr><td>${mkId}</td><td>₹${(mkData.total||0).toLocaleString('en-IN')}</td><td>${mkData.bets||0}</td><td>${choices}</td></tr>`;
+    }).join('');
+    area.innerHTML = `
+      <div class="stats-grid" style="margin-bottom:12px">
+        <div class="stat-card"><div class="val">${data.totalBets}</div><div class="lbl">Total Bets</div></div>
+        <div class="stat-card"><div class="val stat-yellow">₹${(m.totalBetsAmount||0).toLocaleString('en-IN')}</div><div class="lbl">Total Staked</div></div>
+        <div class="stat-card"><div class="val stat-red">₹${(m.totalPayout||0).toLocaleString('en-IN')}</div><div class="lbl">Total Paid Out</div></div>
+        <div class="stat-card"><div class="val stat-green">₹${(m.houseProfit||0).toLocaleString('en-IN')}</div><div class="lbl">House Profit</div></div>
+      </div>
+      ${marketRows?`<table class="cr-stats-table"><thead><tr><th>Market</th><th>Staked</th><th>Bets</th><th>By Choice</th></tr></thead><tbody>${marketRows}</tbody></table>`:'<div class="cr-no-match" style="padding:12px">No bets yet on this match</div>'}
+    `;
+  } catch(e) { area.innerHTML=`<div class="cr-no-match" style="color:#f87171">${e.message}</div>`; }
+}
+
+
+function showAlert(msg, type) {
+  const a = document.createElement('div');
+  a.className = `alert alert-${type}`;
+  a.textContent = msg;
+  a.style.cssText = 'position:fixed;top:20px;right:24px;z-index:9999;padding:12px 20px;border-radius:10px;font-size:13px;';
+  document.body.appendChild(a);
+  setTimeout(()=>a.remove(), 3000);
+}
+</script>
+</body>
+</html>

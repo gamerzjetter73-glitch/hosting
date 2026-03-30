@@ -1,0 +1,35 @@
+{
+  "name": "legitclub-backend",
+  "version": "17.0.0",
+  "description": "LEGIT CLUB gaming platform — v17 (production-ready)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "backup": "node scripts/backup.js",
+    "seed:ipl": "node scripts/seedIPLMatches.js",
+    "gen-secret": "node -e \"console.log(require('crypto').randomBytes(64).toString('hex'))\""
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.2",
+    "razorpay": "^2.9.2",
+    "socket.io": "^4.6.1",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
