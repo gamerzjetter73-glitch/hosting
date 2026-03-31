@@ -795,7 +795,7 @@ async function loadTrxHistory() {
 }
 
 // FIX: was using selectAmt(this,'trxAmt',10) with wrong signature — now uses hidden input correctly
-function getTrxAmt() { return parseInt(document.getElementById('trxAmt').value)||10; }
+function getTrxAmt() { return parseInt(document.getElementById('trxAmt').value)||1; }
 
 async function placeTrxBet(choice, odds) {
   if (!authToken) return showAuthScreen();
@@ -893,7 +893,7 @@ function fdSelectPos(pos) {
   const msg=document.getElementById('fd-wm-msg'); if(msg) msg.textContent='Selected: Position '+pos;
 }
 
-function getFdAmt() { return parseInt(document.getElementById('fdAmt').value)||10; }
+function getFdAmt() { return parseInt(document.getElementById('fdAmt').value)||1; }
 
 async function placeFiveDbet(choice) {
   if (!authToken) return showAuthScreen();
@@ -990,7 +990,7 @@ function k3SumOdds(sum) {
 // ═══════════════════════════════════════════════════
 //  SLOTS — fixed
 // ═══════════════════════════════════════════════════
-function getSlAmt() { return parseInt(document.getElementById('slAmt').value)||10; }
+function getSlAmt() { return parseInt(document.getElementById('slAmt').value)||1; }
 
 async function spinSlots() {
   if (!authToken) return showAuthScreen();
@@ -1979,7 +1979,7 @@ let av25 = {
   mult:       1.0,
   betAmt:     0,           // 0 = no active bet
   cashedOut:  false,
-  chipAmt:    10,          // currently selected chip amount
+  chipAmt:    1,          // currently selected chip amount
   points:     [],          // canvas flight path
   flyStart:   null,        // timestamp when flying started (for canvas)
   histPage:   1,
@@ -2098,7 +2098,7 @@ function av25CustomInput(val) {
   }
 }
 function av25ClearAmt() {
-  av25.chipAmt = 10;
+  av25.chipAmt = 1;
   const inp = document.getElementById('av25CustomInput'); if (inp) inp.value = '';
   const chips = document.querySelectorAll('#aviatorOverlay .av25-chip');
   chips.forEach((c, i) => c.classList.toggle('sel', i === 0));
@@ -2217,7 +2217,7 @@ function av25OnCashedOut({ userId, mult, prize }) {
 // ── Place bet ────────────────────────────────────────
 async function av25PlaceBet() {
   if (!authToken) return showAuthScreen();
-  const amt = av25.chipAmt || 10;
+  const amt = av25.chipAmt || 1;
   if (wallet < amt) return showToast('❌ Insufficient balance', 'rgba(255,80,80,0.5)');
   av25BetBtn(true); // prevent double tap
   const data = await api('POST', '/game/aviator/bet', { amount: amt });

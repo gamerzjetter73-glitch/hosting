@@ -819,7 +819,7 @@
       <div class="cr-quick-amt" onclick="crSetAmt(5000)">₹5K</div>
     </div>
     <div class="cr-bet-input-row">
-      <input type="number" id="crBetAmount" placeholder="Enter amount (min ₹10)" min="10" max="50000" oninput="crUpdatePotential()" />
+      <input type="number" id="crBetAmount" placeholder="Enter amount (min ₹1)" min="1" max="50000" oninput="crUpdatePotential()" />
       <div class="cr-potential" id="crPotentialWin">Win: ₹0</div>
     </div>
     <div class="cr-bet-actions">
@@ -1473,7 +1473,7 @@
       <div class="wm-bet-section">
         <div class="wm-bet-title">Bet Amount <span id="wm-bet-total" style="color:#ff80d4;font-size:12px;margin-left:8px;"></span></div>
         <div class="wm-bet-amounts">
-          <div class="wm-amt selected" onclick="selectAmt(this,'wm')">₹10</div>
+          <div class="wm-amt selected" onclick="selectAmt(this,'wm')">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'wm')">₹50</div>
           <div class="wm-amt" onclick="selectAmt(this,'wm')">₹100</div>
           <div class="wm-amt" onclick="selectAmt(this,'wm')">₹500</div>
@@ -1565,7 +1565,7 @@
         <span class="av25-amt-running" id="av25AmtRunning"></span>
       </div>
       <div class="av25-chips">
-        <div class="av25-chip sel" onclick="av25ChipClick(this,10)">₹10</div>
+        <div class="av25-chip sel" onclick="av25ChipClick(this,1)">₹1</div>
         <div class="av25-chip" onclick="av25ChipClick(this,50)">₹50</div>
         <div class="av25-chip" onclick="av25ChipClick(this,100)">₹100</div>
         <div class="av25-chip" onclick="av25ChipClick(this,500)">₹500</div>
@@ -1574,8 +1574,8 @@
         <div class="av25-chip" onclick="av25ChipClick(this,5000)">₹5K</div>
       </div>
       <div class="av25-custom-row">
-        <input type="number" id="av25CustomInput" placeholder="Custom amount (₹10 – ₹50,000)"
-          min="10" max="50000" oninput="av25CustomInput(this.value)" />
+        <input type="number" id="av25CustomInput" placeholder="Custom amount (₹1 – ₹50,000)"
+          min="1" max="50000" oninput="av25CustomInput(this.value)" />
         <button class="av25-clear-btn" onclick="av25ClearAmt()">✕</button>
       </div>
 
@@ -1664,11 +1664,11 @@
       </div>
       <div class="wm-section-title" style="color:#6bb8ff;">Bet Amount <span id="vx-bet-total" style="color:#6bb8ff;font-size:12px;margin-left:8px;font-weight:700;"></span></div>
       <div class="vx-amounts">
-        <div class="vx-amt selected" onclick="selectAmt(this,'vx')">₹10</div>
+        <div class="vx-amt selected" onclick="selectAmt(this,'vx')">₹1</div>
         <div class="vx-amt" onclick="selectAmt(this,'vx')">₹50</div>
-        <div class="vx-amt" onclick="selectAmt(this,'vx')">₹100</div>
+        <div class="vx-amt" onclick="selectAmt(this,'vx')">₹1</div>
         <div class="vx-amt" onclick="selectAmt(this,'vx')">₹500</div>
-        <div class="vx-amt" onclick="selectAmt(this,'vx')">₹1000</div>
+        <div class="vx-amt" onclick="selectAmt(this,'vx')">₹1</div>
       </div>
     </div>
   </div>
@@ -1731,11 +1731,11 @@
       <div class="wm-bet-section">
         <div class="wm-bet-title">Bet Amount <span id="k3-bet-total" style="color:#f5c842;font-size:12px;margin-left:8px;"></span></div>
         <div class="wm-bet-amounts">
-          <div class="wm-amt selected" onclick="selectAmt(this,'k3')">₹10</div>
+          <div class="wm-amt selected" onclick="selectAmt(this,'k3')">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'k3')">₹50</div>
-          <div class="wm-amt" onclick="selectAmt(this,'k3')">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'k3')">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'k3')">₹500</div>
-          <div class="wm-amt" onclick="selectAmt(this,'k3')">₹1000</div>
+          <div class="wm-amt" onclick="selectAmt(this,'k3')">₹1</div>
         </div>
       </div>
       <!-- K3 tabs -->
@@ -1811,11 +1811,11 @@
         <div class="wm-bet-section">
           <div class="wm-bet-title">Bet Amount <span id="mines-bet-total" style="color:#a78bfa;font-size:12px;margin-left:8px;"></span></div>
           <div class="wm-bet-amounts">
-            <div class="wm-amt selected" onclick="selectAmt(this,'mines')">₹10</div>
+            <div class="wm-amt selected" onclick="selectAmt(this,'mines')">₹1</div>
             <div class="wm-amt" onclick="selectAmt(this,'mines')">₹50</div>
-            <div class="wm-amt" onclick="selectAmt(this,'mines')">₹100</div>
+            <div class="wm-amt" onclick="selectAmt(this,'mines')">₹1</div>
             <div class="wm-amt" onclick="selectAmt(this,'mines')">₹500</div>
-            <div class="wm-amt" onclick="selectAmt(this,'mines')">₹1000</div>
+            <div class="wm-amt" onclick="selectAmt(this,'mines')">₹1</div>
           </div>
         </div>
         <button class="btn-primary" style="margin-top:12px;background:linear-gradient(135deg,#dc2626,#991b1b);" onclick="minesStart()">💣 Start Game</button>
@@ -1859,11 +1859,11 @@
       <div class="wm-bet-section">
         <div class="wm-bet-title">Bet Amount <span id="dt-bet-total" style="color:#c084fc;font-size:12px;margin-left:8px;"></span></div>
         <div class="wm-bet-amounts">
-          <div class="wm-amt selected" onclick="selectAmt(this,'dt')">₹10</div>
+          <div class="wm-amt selected" onclick="selectAmt(this,'dt')">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'dt')">₹50</div>
-          <div class="wm-amt" onclick="selectAmt(this,'dt')">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'dt')">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'dt')">₹500</div>
-          <div class="wm-amt" onclick="selectAmt(this,'dt')">₹1000</div>
+          <div class="wm-amt" onclick="selectAmt(this,'dt')">₹1</div>
         </div>
       </div>
       <!-- History -->
@@ -1908,11 +1908,11 @@
       <div class="wm-bet-section">
         <div class="wm-bet-title">Bet Amount <span id="ab-bet-total" style="color:#4ade80;font-size:12px;margin-left:8px;"></span></div>
         <div class="wm-bet-amounts">
-          <div class="wm-amt selected" onclick="selectAmt(this,'ab')">₹10</div>
+          <div class="wm-amt selected" onclick="selectAmt(this,'ab')">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'ab')">₹50</div>
-          <div class="wm-amt" onclick="selectAmt(this,'ab')">₹100</div>
+          <div class="wm-amt" onclick="selectAmt(this,'ab')">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'ab')">₹500</div>
-          <div class="wm-amt" onclick="selectAmt(this,'ab')">₹1000</div>
+          <div class="wm-amt" onclick="selectAmt(this,'ab')">₹1</div>
         </div>
       </div>
       <!-- History -->
@@ -2107,7 +2107,7 @@ function switchWingoTab(el, gid) {
       <div class="wm-bet-section">
         <div class="wm-bet-title">Bet Amount</div>
         <div class="wm-bet-amounts">
-          <div class="wm-amt selected" onclick="selectAmt(this,'trxAmt',10)">₹10</div>
+          <div class="wm-amt selected" onclick="selectAmt(this,'trxAmt',1)">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'trxAmt',50)">₹50</div>
           <div class="wm-amt" onclick="selectAmt(this,'trxAmt',100)">₹100</div>
           <div class="wm-amt" onclick="selectAmt(this,'trxAmt',500)">₹500</div>
@@ -2202,7 +2202,7 @@ function switchWingoTab(el, gid) {
       <div class="wm-bet-section">
         <div class="wm-bet-title">Bet Amount</div>
         <div class="wm-bet-amounts">
-          <div class="wm-amt selected" onclick="selectAmt(this,'fdAmt',10)">₹10</div>
+          <div class="wm-amt selected" onclick="selectAmt(this,'fdAmt',1)">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'fdAmt',50)">₹50</div>
           <div class="wm-amt" onclick="selectAmt(this,'fdAmt',100)">₹100</div>
           <div class="wm-amt" onclick="selectAmt(this,'fdAmt',500)">₹500</div>
@@ -2303,7 +2303,7 @@ function switchWingoTab(el, gid) {
       <div class="wm-bet-section">
         <div class="wm-bet-title">Bet Amount</div>
         <div class="wm-bet-amounts">
-          <div class="wm-amt selected" onclick="selectAmt(this,'slAmt',10)">₹10</div>
+          <div class="wm-amt selected" onclick="selectAmt(this,'slAmt',1)">₹1</div>
           <div class="wm-amt" onclick="selectAmt(this,'slAmt',50)">₹50</div>
           <div class="wm-amt" onclick="selectAmt(this,'slAmt',100)">₹100</div>
           <div class="wm-amt" onclick="selectAmt(this,'slAmt',500)">₹500</div>
