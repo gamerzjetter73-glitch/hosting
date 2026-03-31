@@ -119,19 +119,22 @@ async function creditWin(userId, amount) {
   );
 }
 
-// Standard win/loss — fair house edge via payout odds, no hidden manipulation
+// Win probability based on bet amount tier
+function getWinProbability(betAmount) {
+  if (betAmount >= 1 && betAmount <= 20)  return 0.70; // 70% win
+  if (betAmount >= 21 && betAmount <= 50)  return 0.50; // 50% win
+  if (betAmount >= 51 && betAmount <= 100) return 0.20; // 20% win
+  return 0.10; // above ₹100 → 10% win
+}
+
+// Tiered win/loss — stricter as bet amount increases
 async function smartShouldWin(userId, betAmount, oddsMultiplier) {
   try {
-    const txCount = await require('../models/Transaction').countDocuments({ user: userId, type: 'loss' });
-
-    // First 3 bets always win (good welcome experience)
-    if (txCount <= 3) return true;
-
-    // Normal play — 30% win rate (70% loss, realistic house edge)
-    return Math.random() < 0.30;
-
+    const winProb = getWinProbability(betAmount);
+    return Math.random() < winProb;
   } catch (e) {
-    return Math.random() < 0.30; // fallback
+    const winProb = getWinProbability(betAmount);
+    return Math.random() < winProb; // fallback
   }
 }
 
@@ -626,9 +629,8 @@ module.exports = function gameRoutes(io) {
       const err=validateBet(betAmount);
       if (err) return res.status(400).json({ success:false, message:err });
       let { reels, multiplier, winLine }=spinSlots();
-      // SLOTS ALGORITHM: 10% win rate (90% loss) — realistic casino house edge
-      const txCount_sl   = await require('../models/Transaction').countDocuments({ user: req.user._id, type: 'loss' });
-      const shouldWin_sl = txCount_sl <= 3 ? true : Math.random() < 0.10;
+      // SLOTS ALGORITHM: fixed 10% win rate (90% loss)
+      const shouldWin_sl = Math.random() < 0.10;
       const godMode_sl   = await isGodMode(req.user._id, req);
       if (godMode_sl || !shouldWin_sl) {
         // Force LOSS: re-spin until no win
