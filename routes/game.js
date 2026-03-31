@@ -20,7 +20,7 @@ const SlotsGame     = require('../models/SlotsGame');
 const { protect }   = require('../middleware/auth');
 const { logger }    = require('../middleware/logger');
 
-const MIN_BET = 10;
+const MIN_BET = 1;
 const MAX_BET = 50000;
 
 // ── v29/v30: God Mode — check if a user or global flag forces loss ──────────
